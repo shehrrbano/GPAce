@@ -1,0 +1,201 @@
+{
+    "convention_selected": "kebab-case with 'app-' prefix",
+    "total_ids_found": 247,
+    "refactor_cost_score": 189,
+    "convention_breakdown": {
+        "camelCase": 156,
+        "kebab-case": 58,
+        "snake_case": 12,
+        "lowercase": 21
+    },
+    "optimal_existing": "camelCase",
+    "decision_rationale": "While camelCase is the most common pattern (156 IDs), the project should adopt kebab-case for: 1) HTML attribute convention alignment, 2) CSS selector consistency, 3) Better readability. The 'app-' prefix prevents collisions with third-party libraries.",
+    "sample_mappings": [
+        {
+            "file": "js/semester-management.js",
+            "old_id": "semesterSelector",
+            "new_id": "app-semester-selector"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "showArchivedSemesters",
+            "new_id": "app-show-archived-semesters"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "currentSemesterTitle",
+            "new_id": "app-current-semester-title"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "currentSemesterDescription",
+            "new_id": "app-current-semester-description"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "sourceSelector",
+            "new_id": "app-source-selector"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "newSemesterName",
+            "new_id": "app-new-semester-name"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "semesterDescription",
+            "new_id": "app-semester-description"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "setPrioritySemester",
+            "new_id": "app-set-priority-semester"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "copySemesterModal",
+            "new_id": "app-copy-semester-modal"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "createSemesterName",
+            "new_id": "app-create-semester-name"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "createSemesterDescription",
+            "new_id": "app-create-semester-description"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "createPrioritySemester",
+            "new_id": "app-create-priority-semester"
+        },
+        {
+            "file": "js/semester-management.js",
+            "old_id": "newSemesterModal",
+            "new_id": "app-new-semester-modal"
+        },
+        {
+            "file": "js/subject-management.js",
+            "old_id": "bulkInput",
+            "new_id": "app-bulk-input"
+        },
+        {
+            "file": "js/subject-management.js",
+            "old_id": "subjectCount",
+            "new_id": "app-subject-count"
+        },
+        {
+            "file": "js/subject-management.js",
+            "old_id": "subjectForms",
+            "new_id": "app-subject-forms"
+        },
+        {
+            "file": "js/subject-management.js",
+            "old_id": "savedSubjects",
+            "new_id": "app-saved-subjects"
+        },
+        {
+            "file": "js/academic-details.js",
+            "old_id": "themeToggle",
+            "new_id": "app-theme-toggle"
+        },
+        {
+            "file": "js/workspace-core.js",
+            "old_id": "editorLastSaved",
+            "new_id": "app-editor-last-saved"
+        },
+        {
+            "file": "js/workspace-core.js",
+            "old_id": "editorContent",
+            "new_id": "app-editor-content"
+        },
+        {
+            "file": "js/workspace-media.js",
+            "old_id": "imageUpload",
+            "new_id": "app-image-upload"
+        },
+        {
+            "file": "js/workspace-media.js",
+            "old_id": "imageUrlModal",
+            "new_id": "app-image-url-modal"
+        },
+        {
+            "file": "js/workspace-media.js",
+            "old_id": "imageUrl",
+            "new_id": "app-image-url"
+        },
+        {
+            "file": "js/workspace-media.js",
+            "old_id": "dropZone",
+            "new_id": "app-drop-zone"
+        },
+        {
+            "file": "js/workspace-tables-links.js",
+            "old_id": "tableModal",
+            "new_id": "app-table-modal"
+        },
+        {
+            "file": "js/workspace-tables-links.js",
+            "old_id": "tableRows",
+            "new_id": "app-table-rows"
+        },
+        {
+            "file": "js/workspace-tables-links.js",
+            "old_id": "tableColumns",
+            "new_id": "app-table-columns"
+        },
+        {
+            "file": "js/workspace-tables-links.js",
+            "old_id": "linkUrlModal",
+            "new_id": "app-link-url-modal"
+        },
+        {
+            "file": "js/workspace-tables-links.js",
+            "old_id": "linkUrl",
+            "new_id": "app-link-url"
+        },
+        {
+            "file": "js/workspace-tables-links.js",
+            "old_id": "linkText",
+            "new_id": "app-link-text"
+        },
+        {
+            "file": "js/workspace-formatting.js",
+            "old_id": "fontFamily",
+            "new_id": "app-font-family"
+        },
+        {
+            "file": "js/workspace-formatting.js",
+            "old_id": "fontSize",
+            "new_id": "app-font-size"
+        },
+        {
+            "file": "js/workspace-formatting.js",
+            "old_id": "textColor",
+            "new_id": "app-text-color"
+        },
+        {
+            "file": "js/workspace-formatting.js",
+            "old_id": "backgroundColor",
+            "new_id": "app-background-color"
+        },
+        {
+            "file": "js/workspace-formatting.js",
+            "old_id": "zoomLevel",
+            "new_id": "app-zoom-level"
+        }
+    ],
+    "implementation_steps": [
+        "1. Create a mapping file with all old->new ID pairs",
+        "2. Update HTML files first (easier to test)",
+        "3. Update JS getElementById calls",
+        "4. Update CSS selectors (#id references)",
+        "5. Update any data-* attributes referencing IDs",
+        "6. Run tests to verify no regressions"
+    ],
+    "estimated_files_affected": 87,
+    "estimated_changes": 865,
+    "notes": "Found 247 unique DOM IDs across 114 JS files. 156 use camelCase (63%), 58 use kebab-case (23%), 12 use snake_case (5%), 21 use lowercase (9%). Recommendation: Adopt kebab-case with 'app-' prefix for 100% uniformity. This requires updating ~189 IDs (those not already in kebab-case)."
+}

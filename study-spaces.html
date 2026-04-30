@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPAce — Daily Setup</title>
+    <link rel="icon" type="image/png" href="assets/images/gpace-logo-white.png">
+    <link rel="shortcut icon" type="image/png" href="assets/images/gpace-logo-white.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <link href="css/sideDrawer.css" rel="stylesheet">
+    <link href="css/study-spaces.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Floating API Settings button -->
+    <button class="position-fixed" style="top: 84px; right: 20px; z-index: 1000;" id="apiSettingsBtn">
+        <i class="bi bi-gear"></i> API Settings
+    </button>
+
+    <main class="container ds-stage">
+
+        <!-- Page header -->
+        <header class="ds-header slide-in">
+            <div>
+                <h1 class="ds-h1">Daily Setup</h1>
+                <p class="ds-sub">Define your active window, drop your timetable, and organise study spaces. GPAce uses these to plan your sessions and energy curve.</p>
+            </div>
+            <div class="ds-status">
+                <div class="status-chip ok" id="dsStatusChip">
+                    <span class="dot"></span>
+                    <span id="dsStatusText">All saved</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============================================================
+             1. Daily Productivity Window
+             ============================================================ -->
+        <section class="ds-card pw-card slide-in">
+            <div class="card-head">
+                <div class="card-head-l">
+                    <div class="card-icon"><i class="bi bi-clock"></i></div>
+                    <div>
+                        <h2 class="card-title">Daily Productivity Window</h2>
+                        <p class="card-sub">When you're awake and ready to work — GPAce schedules around this.</p>
+                    </div>
+                </div>
+                <div class="card-head-r">
+                    <div class="window-pill">
+                        <i class="bi bi-hourglass-split"></i>
+                        <span>Active window</span>
+                        <strong id="activeWindowLabel">—h —m</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pw-grid">
+                <!-- Wake -->
+                <div class="time-slot">
+                    <div class="slot-icon wake"><i class="bi bi-brightness-high"></i></div>
+                    <div class="slot-body">
+                        <label for="wakeTime" class="slot-label">Wake Up</label>
+                        <div class="time-input-wrap">
+                            <input type="time" id="wakeTime" name="wakeTime" class="time-select" value="08:00">
+                        </div>
+                        <div class="mode-row">
+                            <span class="label">Discipline</span>
+                            <div class="seg-radio" data-target="wakeBuffer">
+                                <button type="button" class="sr-btn active" data-value="0">Strict</button>
+                                <button type="button" class="sr-btn" data-value="30">Flexible</button>
+                                <button type="button" class="sr-btn" data-value="60">Loose</button>
+                            </div>
+                            <select id="wakeBuffer" name="wakeBuffer" hidden>
+                                <option value="0">No buffer</option>
+                                <option value="30">±30 min</option>
+                                <option value="60">±1 hour</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day Arc (24h semicircle) -->
+                <div class="day-arc">
+                    <svg id="dayArc" viewBox="0 0 220 130" width="220" height="130" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="arcActive" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="oklch(0.78 0.13 80)" />
+                                <stop offset="50%" stop-color="oklch(0.82 0.10 217)" />
+                                <stop offset="100%" stop-color="oklch(0.62 0.16 280)" />
+                            </linearGradient>
+                        </defs>
+                        <g id="dayArcG"></g>
+                    </svg>
+                </div>
+
+                <!-- Sleep -->
+                <div class="time-slot">
+                    <div class="slot-icon sleep"><i class="bi bi-moon-stars"></i></div>
+                    <div class="slot-body">
+                        <label for="sleepTime" class="slot-label">Sleep</label>
+                        <div class="time-input-wrap">
+                            <input type="time" id="sleepTime" name="sleepTime" class="time-select" value="23:00">
+                        </div>
+                        <div class="mode-row">
+                            <span class="label">Discipline</span>
+                            <div class="seg-radio" data-target="sleepBuffer">
+                                <button type="button" class="sr-btn" data-value="0">Strict</button>
+                                <button type="button" class="sr-btn active" data-value="30">Flexible</button>
+                                <button type="button" class="sr-btn" data-value="60">Loose</button>
+                            </div>
+                            <select id="sleepBuffer" name="sleepBuffer" hidden>
+                                <option value="0">No buffer</option>
+                                <option value="30" selected>±30 min</option>
+                                <option value="60">±1 hour</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pw-foot">
+                <div class="helper">
+                    <i class="bi bi-stars"></i>
+                    <span>Aim for 7–8h sleep. <strong>Strict</strong> locks the window; <strong>Flexible</strong> lets GPAce nudge ±30 min.</span>
+                </div>
+                <button class="btn-primary" id="saveSettings">
+                    <i class="bi bi-bookmark-check"></i>
+                    <span>Save schedule</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             2. Class Timetable (drop zone + analysis)
+             ============================================================ -->
+        <section class="ds-card tt-card slide-in">
+            <div class="card-head">
+                <div class="card-head-l">
+                    <div class="card-icon"><i class="bi bi-calendar2-week"></i></div>
+                    <div>
+                        <h2 class="card-title">Class Timetable</h2>
+                        <p class="card-sub">Drop your schedule and we'll work around your fixed classes.</p>
+                    </div>
+                </div>
+                <div class="card-head-r">
+                    <button class="btn-ghost danger" id="removeTimetableBtn" style="display:none;">
+                        <i class="bi bi-trash"></i> Remove
+                    </button>
+                </div>
+            </div>
+
+            <div id="timetableUpload" class="dropzone" role="button" tabindex="0">
+                <input type="file" id="timetableInput" accept="image/*" hidden>
+                <div class="drop-icon"><i class="bi bi-cloud-upload"></i></div>
+                <div class="drop-title">Drag &amp; drop your timetable</div>
+                <div class="drop-sub">PDF, image, .ics or .csv — we'll parse the slots automatically</div>
+                <div class="drop-formats">
+                    <span>PDF</span><span>PNG</span><span>JPG</span><span>ICS</span><span>CSV</span>
+                </div>
+                <div class="drop-or">or</div>
+                <button type="button" class="btn-ghost" id="browseFilesBtn">
+                    <i class="bi bi-folder2-open"></i> Browse files
+                </button>
+            </div>
+
+            <!-- Image preview rendered by ScheduleController -->
+            <div id="timetablePreview" class="image-preview"></div>
+
+            <!-- Analysis results rendered by TimetableController -->
+            <div id="timetableAnalysis" class="analysis-results" style="display:none;">
+                <div class="analysis-card">
+                    <h4>Schedule Analysis</h4>
+                    <div class="analysis-grid">
+                        <div id="scheduleResults" class="analysis-section">
+                            <div class="section-header">
+                                <h5>Class Schedule</h5>
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div class="schedule-container"></div>
+                        </div>
+                        <div id="freeTimeResults" class="analysis-section">
+                            <div class="section-header">
+                                <h5>Free Time Analysis</h5>
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                            <div class="free-time-container"></div>
+                        </div>
+                        <div id="weeklyStats" class="analysis-section">
+                            <div class="section-header">
+                                <h5>Weekly Overview</h5>
+                                <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div class="stats-container"></div>
+                        </div>
+                        <div id="studyRecommendations" class="analysis-section">
+                            <div class="section-header">
+                                <h5>Study &amp; Break Recommendations</h5>
+                                <i class="bi bi-lightbulb"></i>
+                            </div>
+                            <div class="recommendations-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             3. Study Spaces grid
+             ============================================================ -->
+        <section class="ss-section slide-in">
+            <div class="ss-head">
+                <div class="ss-head-l">
+                    <h2>My Study Spaces</h2>
+                    <p class="card-sub">Each space groups location, amenities and notes for one place you grind in.</p>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                    <div class="sync-status d-none" id="syncStatus"></div>
+                    <button class="btn-ghost" id="syncNowBtn" title="Sync now">
+                        <i class="bi bi-arrow-repeat"></i> Sync
+                    </button>
+                    <button class="btn-ghost" id="helpBtn" data-bs-toggle="modal" data-bs-target="#helpModal" title="Help">
+                        <i class="bi bi-question-circle"></i>
+                    </button>
+                    <button class="btn-primary" id="newSpaceBtn">
+                        <i class="bi bi-plus-lg"></i> New space
+                    </button>
+                </div>
+            </div>
+
+            <div class="ss-grid" id="studySpacesContainer">
+                <!-- Cards injected by StudySpaceController.displayStudySpaces() -->
+
+                <!-- Persistent "Add space" tile (also serves as upload trigger) -->
+                <button type="button" class="ss-add" id="studySpaceUpload">
+                    <input type="file" id="spaceImageInput" accept="image/*" hidden>
+                    <div class="ss-add-icon"><i class="bi bi-plus-lg"></i></div>
+                    <div class="ss-add-label">Add study space</div>
+                    <div class="ss-add-sub">Course, project, or anywhere you grind on</div>
+                </button>
+            </div>
+
+            <div id="noSpacesMessage" class="no-spaces d-none" hidden>
+                <i class="bi bi-info-circle"></i>
+                No study spaces yet — drop an image on the tile above to add your first one.
+            </div>
+
+            <!-- Hidden view-toggle buttons (kept for controller compat) -->
+            <button id="gridViewBtn" hidden></button>
+            <button id="listViewBtn" hidden></button>
+        </section>
+
+        <!-- Sync indicator (controller writes here) -->
+        <div class="d-none">
+            <div id="syncStatusIndicator"></div>
+            <span id="syncStatusText"></span>
+        </div>
+    </main>
+
+    <!-- ============================================================
+         Add / Edit Study Space modal-form
+         (StudySpaceController references these IDs)
+         ============================================================ -->
+    <div class="ss-form-modal" id="studySpaceFormModal" role="dialog" aria-modal="true">
+        <div class="ss-form-dialog">
+            <div class="ss-form-head">
+                <h3>Study Space details</h3>
+                <button class="btn-icon" id="closeStudySpaceForm" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+            </div>
+
+            <div class="study-space-form">
+                <div class="ss-form-preview" id="ssFormPreview" style="display:none;"></div>
+
+                <div class="field">
+                    <label for="spaceName">Name</label>
+                    <input type="text" class="form-control location-input" id="spaceName" name="spaceName" placeholder="e.g., Library Study Room">
+                </div>
+                <div class="field">
+                    <label for="spaceLocation">Location</label>
+                    <input type="text" class="form-control location-input" id="spaceLocation" name="spaceLocation" placeholder="e.g., Main Campus Library, 2nd Floor">
+                </div>
+                <div class="field">
+                    <label id="amenitiesLabel">Amenities</label>
+                    <div class="amenities" role="group" aria-labelledby="amenitiesLabel">
+                        <label for="amenity-wifi"><input type="checkbox" id="amenity-wifi" name="amenities" value="wifi"> Wi-Fi</label>
+                        <label for="amenity-power"><input type="checkbox" id="amenity-power" name="amenities" value="power"> Power outlets</label>
+                        <label for="amenity-quiet"><input type="checkbox" id="amenity-quiet" name="amenities" value="quiet"> Quiet zone</label>
+                        <label for="amenity-food"><input type="checkbox" id="amenity-food" name="amenities" value="food"> Food allowed</label>
+                        <label for="amenity-group"><input type="checkbox" id="amenity-group" name="amenities" value="group"> Group space</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="spaceDescription">Description</label>
+                    <textarea class="form-control location-input" id="spaceDescription" name="spaceDescription" rows="3" placeholder="Describe the study space..."></textarea>
+                </div>
+
+                <div class="ss-form-foot">
+                    <button class="btn-ghost" id="cancelStudySpace">Cancel</button>
+                    <button class="btn-primary save-button" id="saveStudySpace">
+                        <i class="bi bi-check-lg"></i> Save space
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Settings Modal -->
+    <div class="modal fade" id="apiSettingsModal" tabindex="-1" aria-labelledby="apiSettingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="apiSettingsModalLabel">API Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="geminiApiKey" class="form-label">Gemini API Key</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="geminiApiKey" name="geminiApiKey" placeholder="Enter your Gemini API key">
+                            <button class="btn btn-outline-secondary" type="button" id="toggleApiKeyBtn" aria-label="Toggle API Key Visibility">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">Get your API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google MakerSuite</a></small>
+                    </div>
+                    <div id="apiKeyStatus" class="alert" style="display: none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveApiKeyBtn">Save &amp; Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel">Daily Setup — Help</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6><i class="bi bi-clock me-2"></i> Productivity window</h6>
+                    <p>Set your wake/sleep times and choose a discipline mode. <strong>Strict</strong> locks the times; <strong>Flexible</strong> nudges ±30 min; <strong>Loose</strong> nudges ±1 h.</p>
+
+                    <h6><i class="bi bi-calendar2-week me-2"></i> Class timetable</h6>
+                    <p>Drop a screenshot or file of your timetable. GPAce parses the slots and surfaces free-time blocks for studying.</p>
+
+                    <h6><i class="bi bi-bookmark me-2"></i> Study spaces</h6>
+                    <p>Click <em>Add study space</em>, drop an image, then fill in the name, location and amenities. Spaces auto-sync to the cloud when you're signed in.</p>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        All your data is stored in Firebase and synced across your devices.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error toast -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+    <!-- Sync toast -->
+    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
+        <div id="syncToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <i class="bi bi-cloud-check me-2"></i>
+                <strong class="me-auto">Sync Status</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">Your study spaces have been synced successfully.</div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         External dependencies
+         ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
+
+    <!-- Gemini AI SDK for ImageAnalyzer -->
+    <script src="https://unpkg.com/@anthropic-ai/sdk@latest/dist/web.js" defer></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+    }
+    </script>
+    <script type="module">
+        import { GoogleGenerativeAI } from '@google/generative-ai';
+        window.GoogleGenerativeAI = GoogleGenerativeAI;
+    </script>
+
+    <script src="/socket.io/socket.io.js" onerror="console.warn('Socket.IO not available')"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Core Services -->
+    <script type="module" src="js/services/StorageService.js"></script>
+    <script type="module" src="js/services/SecureStorage.js"></script>
+    <script type="module" src="js/utils/Sanitizer.js"></script>
+    <script type="module" src="js/utils/Logger.js"></script>
+
+    <!-- Firestore Functions Bridge -->
+    <script type="module">
+        import {
+            saveStudySpacesToFirestore,
+            loadStudySpacesFromFirestore,
+            deleteStudySpaceFromFirestore,
+            forceSyncStudySpaces
+        } from './js/studySpacesFirestore.js';
+
+        window.saveStudySpacesToFirestore = saveStudySpacesToFirestore;
+        window.loadStudySpacesFromFirestore = loadStudySpacesFromFirestore;
+        window.deleteStudySpaceFromFirestore = deleteStudySpaceFromFirestore;
+        window.forceSyncStudySpaces = forceSyncStudySpaces;
+
+        window.dispatchEvent(new Event('firestoreFunctionsReady'));
+    </script>
+
+    <script type="module" src="js/auth.js"></script>
+
+    <!-- Page logic -->
+    <script defer src="js/imageAnalyzer.js"></script>
+    <script defer src="js/timetableAnalyzer.js"></script>
+    <script defer src="js/apiSettingsManager.js"></script>
+    <script defer src="js/studySpaceAnalyzer.js"></script>
+
+    <script defer src="js/controllers/ScheduleController.js"></script>
+    <script defer src="js/controllers/TimetableController.js"></script>
+    <script defer src="js/controllers/StudySpaceController.js"></script>
+    <script defer src="js/studySpacesManager.js"></script>
+
+    <!-- ============================================================
+         Page-specific UI orchestration
+         (Day arc, segmented mode, status chip, modal-form, save button)
+         ============================================================ -->
+    <script defer>
+    (() => {
+        'use strict';
+
+        // ── helpers ────────────────────────────────────────────────────
+        const $ = (id) => document.getElementById(id);
+        const fmtDuration = (mins) => {
+            if (mins == null || isNaN(mins)) return '—h —m';
+            const h = Math.floor(mins / 60);
+            const m = mins % 60;
+            return `${h}h ${String(m).padStart(2, '0')}m`;
+        };
+        const minsBetween = (a, b) => {
+            if (!a || !b) return null;
+            const [ah, am] = a.split(':').map(Number);
+            const [bh, bm] = b.split(':').map(Number);
+            let diff = (bh * 60 + bm) - (ah * 60 + am);
+            if (diff < 0) diff += 24 * 60;
+            return diff;
+        };
+        const timeToMin = (s) => {
+            if (!s) return 0;
+            const [h, m] = s.split(':').map(Number);
+            return h * 60 + m;
+        };
+
+        // ── Active window pill + Day arc ─────────────────────────────
+        const wakeInput = $('wakeTime');
+        const sleepInput = $('sleepTime');
+        const arcG = document.querySelector('#dayArcG');
+        const activeLabel = $('activeWindowLabel');
+
+        /**
+         * describeArc - Generates an SVG path string for a progress arc
+         * @param {number} progress - 0.0 to 1.0
+         * @returns {string} SVG path 'd' attribute
+         */
+        const describeArc = (progress) => {
+            const cx = 110, cy = 120, r = 88;
+            const startAngle = Math.PI; // 180 degrees (left)
+            const endAngle = Math.PI + (Math.PI * progress); // Progresses toward 2*PI (right)
+
+            const x1 = cx + r * Math.cos(startAngle);
+            const y1 = cy + r * Math.sin(startAngle);
+            const x2 = cx + r * Math.cos(endAngle);
+            const y2 = cy + r * Math.sin(endAngle);
+
+            return `M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`;
+        };
+
+        const renderDayArc = () => {
+            if (!arcG) return;
+
+            // 1. Fetch Task Data
+            const storage = window.getStorage ? window.getStorage() : null;
+            const activeTasks = storage ? storage.get('calculatedPriorityTasks', []) : [];
+            
+            let completedCount = 0;
+            let totalCount = activeTasks.length;
+
+            // Count today's completed tasks across projects
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.includes('completed_v5')) {
+                        const wrapper = JSON.parse(localStorage.getItem(key));
+                        if (wrapper && wrapper.data) {
+                            const todayCompleted = wrapper.data.filter(t => 
+                                t.completedAt && t.completedAt.startsWith(today)
+                            );
+                            completedCount += todayCompleted.length;
+                        }
+                    }
+                }
+            } catch (e) { console.warn('[DayArc] Error counting completed tasks:', e); }
+
+            totalCount += completedCount;
+            const progress = totalCount > 0 ? Math.min(1, completedCount / totalCount) : 0;
+            const percentage = Math.round(progress * 100);
+
+            // 2. Generate SVG Geometry
+            const cx = 110, cy = 120, r = 88;
+            const pt = (a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+
+            const trackPath = describeArc(1); // Full semicircle
+            const progressPath = describeArc(progress);
+            
+            const startMarkerPos = pt(Math.PI);
+            const endMarkerPos = pt(Math.PI + Math.PI * progress);
+
+            // 3. Construct SVG Content
+            let html = '';
+            
+            // Track (background)
+            html += `<path d="${trackPath}" fill="none" stroke="var(--ring-track)" stroke-width="6" stroke-linecap="round" />`;
+            
+            // Progress Arc
+            if (progress > 0) {
+                html += `<path d="${progressPath}" fill="none" stroke="url(#arcActive)" stroke-width="6" stroke-linecap="round" 
+                          style="transition: all 0.5s ease-out;" />`;
+            }
+
+            // Ticks and Time Labels
+            [0, 3, 6, 9, 12, 15, 18, 21, 24].forEach(mHours => {
+                const m = mHours * 60;
+                const a = Math.PI + Math.PI * (m / (24 * 60));
+                const [x1, y1] = [cx + (r - 10) * Math.cos(a), cy + (r - 10) * Math.sin(a)];
+                const [x2, y2] = [cx + (r + 4) * Math.cos(a), cy + (r + 4) * Math.sin(a)];
+                const [tx, ty] = [cx + (r + 16) * Math.cos(a), cy + (r + 16) * Math.sin(a)];
+                const lab = (m === 0 || m === 1440) ? '12a' : (m === 720 ? '12p' : (((m / 60) % 12) || 12) + (m / 60 < 12 ? 'a' : 'p'));
+                
+                html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--ring-tick)" stroke-width="1" />`;
+                html += `<text x="${tx}" y="${ty}" font-size="8" fill="var(--ds-text-muted)" text-anchor="middle" dominant-baseline="middle">${lab}</text>`;
+            });
+
+            // Start/End Marker Circles
+            html += `<circle cx="${startMarkerPos[0]}" cy="${startMarkerPos[1]}" r="6" fill="oklch(0.78 0.13 80)" stroke="white" stroke-width="2" />`;
+            html += `<circle cx="${endMarkerPos[0]}" cy="${endMarkerPos[1]}" r="6" fill="oklch(0.62 0.16 280)" stroke="white" stroke-width="2" 
+                      style="transition: all 0.5s ease-out;" />`;
+
+            // Center Text
+            html += `<text x="${cx}" y="${cy - 30}" text-anchor="middle" font-size="10" fill="var(--ds-text-muted)" letter-spacing="0.1em">TASK PROGRESS</text>`;
+            html += `<text x="${cx}" y="${cy - 5}" text-anchor="middle" font-size="24" font-weight="bold" fill="white">${percentage}%</text>`;
+
+            arcG.innerHTML = html;
+
+            if (activeLabel) activeLabel.textContent = `${completedCount} / ${totalCount} tasks done`;
+        };
+
+        // Listen for task updates
+        window.addEventListener('gpac_tasks_updated', () => renderDayArc());
+        window.addEventListener('storage', (e) => {
+            if (e.key && (e.key.includes('tasks') || e.key.includes('completed'))) {
+                renderDayArc();
+            }
+        });
+        setInterval(renderDayArc, 5000);
+
+        // ── Saved / unsaved status chip ──────────────────────────────
+        const chip = $('dsStatusChip');
+        const chipText = $('dsStatusText');
+        const setStatus = (saved) => {
+            if (!chip) return;
+            chip.classList.toggle('ok', saved);
+            chip.classList.toggle('warn', !saved);
+            if (chipText) chipText.textContent = saved ? 'All saved' : 'Unsaved changes';
+        };
+        setStatus(true);
+
+        const markUnsaved = () => setStatus(false);
+        wakeInput?.addEventListener('change', () => { renderDayArc(); markUnsaved(); });
+        sleepInput?.addEventListener('change', () => { renderDayArc(); markUnsaved(); });
+        wakeInput?.addEventListener('input', renderDayArc);
+        sleepInput?.addEventListener('input', renderDayArc);
+        renderDayArc();
+
+        // ── Segmented discipline radios → drive the hidden buffer selects
+        document.querySelectorAll('.seg-radio').forEach((seg) => {
+            const targetId = seg.dataset.target;
+            const select = $(targetId);
+            seg.querySelectorAll('.sr-btn').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    seg.querySelectorAll('.sr-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (select) {
+                        select.value = btn.dataset.value;
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    markUnsaved();
+                });
+            });
+        });
+
+        // Sync segmented buttons to select value when controller restores schedule
+        const syncSegFromSelect = () => {
+            document.querySelectorAll('.seg-radio').forEach((seg) => {
+                const select = $(seg.dataset.target);
+                if (!select) return;
+                const v = select.value;
+                seg.querySelectorAll('.sr-btn').forEach((btn) => {
+                    btn.classList.toggle('active', btn.dataset.value === v);
+                });
+            });
+        };
+        // Re-sync after controller load (a settle delay covers the async init)
+        setTimeout(syncSegFromSelect, 1200);
+
+        // ── Save schedule button: visual feedback (manager listens to scheduleChanged)
+        $('saveSettings')?.addEventListener('click', () => {
+            // Trigger the manager's save by dispatching the event the manager listens for
+            window.dispatchEvent(new CustomEvent('scheduleChanged'));
+            setStatus(true);
+        });
+        // Status flips to "saved" whenever the manager confirms a save (it dispatches via console.log only,
+        // so we optimistically mark saved when the user explicitly clicks).
+
+        // ── Browse files button (delegates to dropzone click)
+        $('browseFilesBtn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            $('timetableInput')?.click();
+        });
+
+        // Remove timetable button — clears preview & analysis
+        $('removeTimetableBtn')?.addEventListener('click', () => {
+            const preview = $('timetablePreview');
+            const analysis = $('timetableAnalysis');
+            if (preview) preview.innerHTML = '';
+            if (analysis) analysis.style.display = 'none';
+            $('removeTimetableBtn').style.display = 'none';
+            const dz = $('timetableUpload');
+            if (dz) dz.style.display = '';
+        });
+
+        // Show "Remove" button + collapse dropzone visually when a preview appears
+        const previewEl = $('timetablePreview');
+        if (previewEl) {
+            const obs = new MutationObserver(() => {
+                const hasImg = previewEl.querySelector('img');
+                $('removeTimetableBtn').style.display = hasImg ? '' : 'none';
+            });
+            obs.observe(previewEl, { childList: true, subtree: true });
+        }
+
+        // ── Add-Space modal-form
+        // The form lives inside #studySpaceFormModal in the DOM; StudySpaceController.handleImageUpload
+        // opens the modal directly. We just wire close/cancel + the explicit "New space" button.
+        const modal = $('studySpaceFormModal');
+        const closeModal = () => modal?.classList.remove('show');
+
+        $('newSpaceBtn')?.addEventListener('click', () => $('spaceImageInput')?.click());
+        $('closeStudySpaceForm')?.addEventListener('click', closeModal);
+        // saveStudySpace + cancelStudySpace are wired by StudySpaceController; resetForm()
+        // removes the .show class itself, so we don't need extra handlers here.
+        modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    })();
+    </script>
+
+    <!-- Sidebar + cross-tab sync + injected header -->
+    <script type="module" src="js/sideDrawer.js"></script>
+    <script type="module" src="js/cross-tab-sync.js"></script>
+    <script type="module" src="/js/inject-header.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+rules_version = '2';
+
+/**
+ * Firestore Security Rules for GPAce
+ * 
+ * SECURITY PRINCIPLES:
+ * 1. All user data is private and accessible only by the authenticated user
+ * 2. No cross-user data access allowed
+ * 3. Required fields are validated where critical
+ * 4. All writes update timestamp metadata
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user owns this document path
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Check if the request has all required fields
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+    
+    // Validate timestamp is recent (within 5 minutes)
+    function isRecentTimestamp(field) {
+      return request.resource.data[field] is timestamp 
+        && request.resource.data[field] >= request.time - duration.value(5, 'm');
+    }
+    
+    // ============================================
+    // USER DATA (PRIVATE)
+    // ============================================
+    
+    match /users/{userId} {
+      // User profile document
+      allow read, write: if isOwner(userId);
+      
+      // ----------------------------------------
+      // TASKS COLLECTION
+      // Path: users/{userId}/tasks/{projectId}
+      // Document contains: { tasks: [], version: number, lastUpdated: timestamp }
+      // ----------------------------------------
+      match /tasks/{projectId} {
+        allow read: if isOwner(userId);
+        
+        // Task writes require tasks array and version
+        allow create: if isOwner(userId)
+          && hasRequiredFields(['tasks', 'version']);
+        
+        allow update: if isOwner(userId)
+          && hasRequiredFields(['tasks', 'version']);
+        
+        allow delete: if isOwner(userId);
+      }
+      
+      // ----------------------------------------
+      // COMPLETED TASKS (History)
+      // Path: users/{userId}/completed-tasks/{projectId}
+      // ----------------------------------------
+      match /completed-tasks/{projectId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // ----------------------------------------
+      // SETTINGS COLLECTION
+      // Includes: task-notes, priorityTasks, text-expansion, etc.
+      // ----------------------------------------
+      match /settings/{settingId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // ----------------------------------------
+      // ACADEMIC DATA
+      // Path: users/{userId}/academic/{documentId}
+      // ----------------------------------------
+      match /academic/{documentId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // ----------------------------------------
+      // SEMESTERS
+      // Path: users/{userId}/semesters/{semesterId}
+      // ----------------------------------------
+      match /semesters/{semesterId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // ----------------------------------------
+      // ALARMS
+      // Path: users/{userId}/alarms/{alarmId}
+      // ----------------------------------------
+      match /alarms/{alarmId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // ----------------------------------------
+      // FLASHCARDS
+      // Path: users/{userId}/flashcards/{deckId}
+      // ----------------------------------------
+      match /flashcards/{deckId} {
+        allow read, write: if isOwner(userId);
+        
+        // Cards within a deck
+        match /cards/{cardId} {
+          allow read, write: if isOwner(userId);
+        }
+      }
+      
+      // ----------------------------------------
+      // WORKSPACES
+      // Path: users/{userId}/workspaces/{workspaceId}
+      // ----------------------------------------
+      match /workspaces/{workspaceId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+    
+    // ============================================
+    // LEGACY PATH (taskLinks.js - NOW DEPRECATED)
+    // Deny all access to incorrect path
+    // ============================================
+    match /projects/{projectId} {
+      // Block all access - this was a bug
+      allow read, write: if false;
+      
+      match /tasks/{taskId} {
+        allow read, write: if false;
+      }
+    }
+    
+    // ============================================
+    // CATCH-ALL: Deny everything else
+    // ============================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

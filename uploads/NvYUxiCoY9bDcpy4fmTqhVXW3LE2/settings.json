@@ -1,0 +1,14 @@
+{
+  "schedule": {
+    "wakeTime": null,
+    "wakeBuffer": 0,
+    "sleepTime": null,
+    "sleepBuffer": 30,
+    "timetableImage": {
+      "path": "/uploads/default/image-1777530277372-14372659.jpeg",
+      "fileName": "image-1777530277372-14372659.jpeg",
+      "uploadTime": "2026-04-30T06:24:37.751Z"
+    }
+  },
+  "lastSaved": "2026-04-30T09:41:26.103Z"
+}

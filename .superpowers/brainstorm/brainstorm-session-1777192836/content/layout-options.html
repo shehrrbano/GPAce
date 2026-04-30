@@ -1,0 +1,79 @@
+<h2>Workspace Responsive Redesign</h2>
+<p class="subtitle">Choose the layout approach that fits your workflow best.</p>
+
+<div class="cards" data-choice="approach" onclick="toggleSelect(this)">
+  <div class="card" data-choice="sidebar-integrated">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">Option A: Sidebar Integration (Recommended)</div>
+        <div class="mockup-body" style="display: flex; height: 180px;">
+          <div class="mock-sidebar" style="width: 60px; display: flex; flex-direction: column; gap: 10px; padding: 10px; background: #1e293b;">
+            <div class="placeholder" style="height: 30px; background: #38bdf8;"></div>
+            <div class="placeholder" style="height: 30px;"></div>
+            <div class="placeholder" style="height: 30px;"></div>
+          </div>
+          <div class="mock-content" style="flex: 1; padding: 10px;">
+            <div class="mock-nav" style="margin-bottom: 10px;">Desktop: 250px Sidebar | Tablet: 60px Rail</div>
+            <div class="placeholder" style="height: 80px;">Main Editor Area</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Sidebar Integration</h3>
+      <p>Moves all tools (Insert, AI, Export) into the vertical sidebar. Consistent vertical flow.</p>
+      <div class="pros-cons">
+        <div class="pros"><ul><li>Maximizes editor width</li><li>Unified tool location</li></ul></div>
+        <div class="cons"><ul><li>Tall sidebar on desktop</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="hybrid-ribbon">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">Option B: Hybrid Ribbon</div>
+        <div class="mockup-body" style="height: 180px;">
+          <div class="mock-nav" style="height: 40px; background: #1e293b;">INSERT | AI | EXPORT</div>
+          <div style="display: flex; height: 140px;">
+            <div class="mock-sidebar" style="width: 40px;"></div>
+            <div class="mock-content" style="flex: 1; padding: 10px;">
+              <div class="placeholder" style="height: 100px;">Main Editor Area</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Hybrid Ribbon</h3>
+      <p>Keeps horizontal ribbon on Desktop. Transforms to Sidebar Rail on Tablet.</p>
+      <div class="pros-cons">
+        <div class="pros"><ul><li>Familiar desktop UI</li><li>Full-width tool access</li></ul></div>
+        <div class="cons"><ul><li>Layout shifts between sizes</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Mobile Strategy (Common to all)</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="width: 200px; height: 350px; margin: 0 auto; border: 4px solid #334155; border-radius: 20px; position: relative; overflow: hidden;">
+      <div class="mock-content" style="padding: 10px; height: 280px;">
+         <div class="placeholder" style="height: 200px;">Mobile Editor</div>
+      </div>
+      <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 60px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; padding: 0 10px;">
+        <div class="placeholder" style="width: 30px; height: 30px; border-radius: 50%;"></div>
+        <div class="placeholder" style="width: 30px; height: 30px; border-radius: 50%;"></div>
+        <div class="placeholder" style="width: 30px; height: 30px; border-radius: 50%;"></div>
+        <div class="placeholder" style="width: 30px; height: 30px; border-radius: 50%;"></div>
+      </div>
+    </div>
+  </div>
+  <p class="subtitle" style="text-align: center; margin-top: 10px;">Mobile: Sidebar hidden. Bottom Tab Bar with 4 main actions + "More" menu.</p>
+</div>
+
+<div class="section">
+  <h3>Clarifying Question</h3>
+  <p>For the Mobile Tab Bar, which 4 icons are most important for you? (e.g., AI Dictate, Summarize, Insert Image, Export PDF, Save, etc.)</p>
+</div>

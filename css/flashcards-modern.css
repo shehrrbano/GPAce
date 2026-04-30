@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Flashcards / Learning Hub — Modern Deep Blue Redesign
+   Matching Daily Drip / Study Spaces / Performance Tracker
+   ========================================================================== */
+
+:root {
+  --dd-bg:           #050b18;
+  --dd-bg-2:         #0a1326;
+  --dd-card:         linear-gradient(180deg, rgba(31, 41, 55, 0.55), rgba(17, 26, 44, 0.55));
+  --dd-card-solid:   #0f1830;
+  --dd-line:         rgba(255, 255, 255, 0.08);
+  --dd-line-strong:  rgba(255, 255, 255, 0.14);
+  --dd-text:         #f1f5f9;
+  --dd-text-2:       #cbd5e1;
+  --dd-text-muted:   #64748b;
+
+  --accent-hue: 195; /* Cyan */
+  --accent:        oklch(0.65 0.15 var(--accent-hue));
+  --accent-deep:   oklch(0.50 0.15 var(--accent-hue));
+  --accent-light:  oklch(0.85 0.12 var(--accent-hue));
+  --accent-soft:   oklch(0.65 0.15 var(--accent-hue) / 0.12);
+  --accent-border: oklch(0.65 0.15 var(--accent-hue) / 0.25);
+  --accent-glow:   rgba(0, 229, 255, 0.25);
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --gap: 24px;
+  --shadow-card: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.40 0.10 var(--accent-hue) / 0.18), transparent 70%),
+    var(--dd-bg);
+  color: var(--dd-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding-top: 72px; 
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.flashcards-stage {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* --- Header --- */
+.fc-header { margin-bottom: 8px; }
+.fc-h1 { font-size: 32px; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.03em; color: #fff; }
+.fc-sub { font-size: 15px; color: var(--dd-text-muted); margin: 0; line-height: 1.55; max-width: 64ch; }
+
+/* --- Decks Container --- */
+.card {
+  background: var(--dd-card);
+  border: 1px solid var(--dd-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+}
+
+.card-header {
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--dd-line);
+  padding: 24px 32px;
+}
+
+.card-header h5 { font-size: 20px; font-weight: 700; color: #fff; margin: 0; }
+
+/* --- Deck Card Grid --- */
+.deck-card {
+  height: 100%;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--dd-line);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.deck-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--dd-line-strong);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.deck-title { font-size: 18px; font-weight: 700; color: #fff; margin: 0; }
+.deck-desc { font-size: 13.5px; color: var(--dd-text-muted); line-height: 1.5; flex: 1; }
+
+.badge-outline {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent-light);
+  border: 1px solid var(--accent-border);
+}
+
+.deck-footer {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--dd-line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deck-subject { font-size: 12px; font-weight: 600; color: var(--dd-text-muted); display: flex; align-items: center; gap: 6px; }
+
+/* --- Buttons --- */
+.btn-primary {
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep)) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 10px 24px !important;
+  font-weight: 700 !important;
+  color: #000 !important; /* High contrast cyan button text */
+  box-shadow: 0 4px 15px var(--accent-glow) !important;
+  transition: all 0.2s !important;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px var(--accent-glow) !important;
+}
+
+/* --- Modals --- */
+.modal-content {
+  background: var(--dd-bg-2);
+  border: 1px solid var(--dd-line-strong);
+  border-radius: 20px;
+  color: #fff;
+}
+
+.form-control, .form-select {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid var(--dd-line) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+  padding: 12px 16px !important;
+}
+
+.form-control:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 4px var(--accent-soft) !important; }
+
+/* --- Table --- */
+.table { color: #fff !important; }
+.table thead th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dd-text-muted); border-bottom: 1px solid var(--dd-line-strong); padding: 16px; }
+.table tbody td { padding: 16px; border-bottom: 1px solid var(--dd-line); }
+
+/* --- Flashcard Study --- */
+.flashcard-container { perspective: 1200px; width: 100%; max-width: 600px; height: 380px; margin: 0 auto; }
+.flashcard { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.flashcard.flipped { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 24px; padding: 40px; box-shadow: var(--shadow-card); border: 1px solid var(--dd-line-strong); background: var(--dd-card-solid); }
+.flashcard-back { transform: rotateY(180deg); background: linear-gradient(145deg, var(--dd-bg-2), var(--dd-card-solid)); }
+.flashcard-content { font-size: 24px; font-weight: 600; text-align: center; color: #fff; line-height: 1.4; }

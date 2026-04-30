@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPAce — Daily Drip</title>
+    <link rel="icon" type="image/png" href="assets/images/gpace-logo-white.png">
+    <link rel="shortcut icon" type="image/png" href="assets/images/gpace-logo-white.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- <link type="text/css" rel="stylesheet" href="main.css"> -->
+    <link href="css/sideDrawer.css" rel="stylesheet">
+    <link href="css/daily-calendar.css" rel="stylesheet">
+    <link href="css/task-display.css" rel="stylesheet">
+</head>
+
+<body>
+    <main class="container">
+
+        <!-- Legacy invisible nodes — kept so sleepScheduleManager / currentTaskManager
+             keep writing to them; we mirror values into the visible strip below.
+             Empty by default so nothing renders until the backend populates them. -->
+        <div class="sleep-schedule" aria-hidden="true">
+            <div class="schedule-item">
+                <div class="time-info">
+                    <span id="wakeTimeDisplay"></span>
+                    <span id="wakeBufferDisplay" class="buffer-time"></span>
+                </div>
+            </div>
+            <div class="schedule-item total-time">
+                <div class="time-info">
+                    <span id="totalTimeDisplay"></span>
+                </div>
+            </div>
+            <div class="schedule-item">
+                <div class="time-info">
+                    <span id="sleepTimeDisplay"></span>
+                    <span id="sleepBufferDisplay" class="buffer-time"></span>
+                </div>
+            </div>
+        </div>
+        <div id="currentTaskDisplay" class="current-task-header" aria-hidden="true">
+            <h1 id="taskTitle"></h1>
+        </div>
+        <div class="time-summary" aria-hidden="true">
+            <div class="time-stats">
+                <div class="stat-item"><span id="totalAvailableTime"></span></div>
+                <div class="stat-item"><span id="freeStudyTime"></span></div>
+                <div class="stat-item"><span id="scheduledTime"></span></div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             1. Top strip — Wake / Active window / Sleep
+             ============================================================ -->
+        <section class="dd-strip">
+            <div class="strip-side wake">
+                <div class="strip-icon"><i class="bi bi-sunrise"></i></div>
+                <div class="strip-body">
+                    <div class="strip-row">
+                        <span class="strip-label">Wake</span>
+                        <span class="strip-val" id="ddWakeVal"></span>
+                    </div>
+                    <div class="strip-row sub">
+                        <span>Buffer</span>
+                        <span id="ddWakeBuffer"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strip-center">
+                <div class="strip-icon center"><i class="bi bi-clock"></i></div>
+                <div>
+                    <div class="strip-kicker">Active window</div>
+                    <div class="strip-big" id="ddActiveBig"></div>
+                </div>
+            </div>
+
+            <div class="strip-side sleep">
+                <div class="strip-icon"><i class="bi bi-moon-stars"></i></div>
+                <div class="strip-body">
+                    <div class="strip-row">
+                        <span class="strip-label">Sleep</span>
+                        <span class="strip-val" id="ddSleepVal"></span>
+                    </div>
+                    <div class="strip-row sub">
+                        <span>Buffer</span>
+                        <span id="ddSleepBuffer"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             2. Selected task card
+             ============================================================ -->
+        <section class="selected-card" id="ddSelectedCard">
+            <div class="sel-l">
+                <div class="sel-kicker muted" id="ddSelKicker"></div>
+                <h2 class="sel-title" id="ddSelTitle"></h2>
+                <div class="sel-meta" id="ddSelMeta"></div>
+            </div>
+            <div class="sel-r" id="ddSelActions" hidden>
+                <button class="btn-ghost" id="ddReplanBtn"><i class="bi bi-stars"></i> Re-plan</button>
+                <button class="btn-primary" id="ddStartBtn"><i class="bi bi-play-fill"></i> Start session</button>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             3. Stats trio
+             ============================================================ -->
+        <section class="stats-trio">
+            <div class="stat-pill accent">
+                <div class="sp-icon"><i class="bi bi-clock"></i></div>
+                <div class="sp-body">
+                    <div class="sp-label">Total available</div>
+                    <div class="sp-value" id="ddStatTotal"></div>
+                </div>
+            </div>
+            <div class="stat-pill">
+                <div class="sp-icon"><i class="bi bi-book"></i></div>
+                <div class="sp-body">
+                    <div class="sp-label">Study time</div>
+                    <div class="sp-value" id="ddStatStudy"></div>
+                </div>
+            </div>
+            <div class="stat-pill">
+                <div class="sp-icon"><i class="bi bi-calendar-check"></i></div>
+                <div class="sp-body">
+                    <div class="sp-label">Scheduled</div>
+                    <div class="sp-value" id="ddStatScheduled"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             4 + 5. Calendar surface
+             View tabs + date nav live INSIDE .calendar-container so
+             CalendarViewManager finds them (avoids duplicate injection).
+             ============================================================ -->
+        <section class="calendar-container">
+            <!-- The .view-controls class on the outer wrapper marks this row as the
+                 boundary CalendarViewManager.render() inserts non-daily content AFTER. -->
+            <div class="calendar-header view-controls">
+                <div class="view-tabs">
+                    <button class="view-btn active" data-view="daily">
+                        <i class="bi bi-calendar-day"></i> Daily
+                    </button>
+                    <button class="view-btn" data-view="weekly">
+                        <i class="bi bi-calendar-week"></i> Weekly
+                    </button>
+                    <button class="view-btn" data-view="monthly">
+                        <i class="bi bi-calendar-month"></i> Monthly
+                    </button>
+                    <button class="view-btn" data-view="yearly">
+                        <i class="bi bi-calendar4"></i> Yearly
+                    </button>
+                </div>
+                <div class="date-controls">
+                    <button id="prevDay" class="nav-button"><i class="bi bi-chevron-left"></i></button>
+                    <h2 id="currentDate"></h2>
+                    <button id="nextDay" class="nav-button"><i class="bi bi-chevron-right"></i></button>
+                </div>
+                <!-- time-settings inputs are read by CalendarManager but seeded from
+                     the persisted dailySchedule, NOT a hardcoded default. -->
+                <div class="time-settings">
+                    <label for="wakeTime">Wake time:</label>
+                    <input type="time" id="wakeTime" name="wakeTime">
+                    <label for="sleepTime">Sleep time:</label>
+                    <input type="time" id="sleepTime" name="sleepTime">
+                    <button id="applyTimes" class="settings-button">Apply</button>
+                </div>
+            </div>
+
+            <div class="calendar-grid-container">
+                <div class="time-axis" id="time-axis"></div>
+                <div class="calendar-grid"></div>
+            </div>
+
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-color class-block"></span>
+                    <span>Class</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color study-block"></span>
+                    <span>Study Time</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color break-block"></span>
+                    <span>Break</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color free-block"></span>
+                    <span>Free Time</span>
+                </div>
+                <div class="legend-summary" id="ddLegendSummary"></div>
+            </div>
+
+            <div class="event-details" style="display: none;"></div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div class="modal-backdrop"></div>
+    <div class="event-edit-modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Event</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="eventTitle">Title</label>
+                <input type="text" id="eventTitle" name="eventTitle" placeholder="Event title">
+            </div>
+            <div class="form-group">
+                <label for="eventType">Type</label>
+                <select id="eventType" name="eventType">
+                    <option value="class">Class</option>
+                    <option value="study">Study</option>
+                    <option value="break">Break</option>
+                    <option value="free">Free Time</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="eventStart">Start Time</label>
+                <input type="time" id="eventStart" name="eventStart">
+            </div>
+            <div class="form-group">
+                <label for="eventEnd">End Time</label>
+                <input type="time" id="eventEnd" name="eventEnd">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-delete" id="deleteEvent">Delete</button>
+            <button class="btn-cancel" id="cancelEdit">Cancel</button>
+            <button class="btn-save" id="saveEvent">Save</button>
+        </div>
+    </div>
+
+    <div class="event-create-modal">
+        <div class="modal-header">
+            <h3 class="modal-title">New Event</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="newEventTitle">Event Title</label>
+                <input type="text" id="newEventTitle" name="newEventTitle" class="form-control" placeholder="Enter event title">
+            </div>
+            <div class="form-group">
+                <label for="newEventType">Event Type</label>
+                <select id="newEventType" name="newEventType" class="form-control">
+                    <option value="study">Study</option>
+                    <option value="class">Class</option>
+                    <option value="break">Break</option>
+                    <option value="meeting">Meeting</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="newEventStart">Start Time</label>
+                <input type="time" id="newEventStart" name="newEventStart" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="newEventEnd">End Time</label>
+                <input type="time" id="newEventEnd" name="newEventEnd" class="form-control">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="createEvent" class="btn btn-primary">Create Event</button>
+            <button id="cancelCreate" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+
+    <!-- DOMPurify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+
+    <!-- Core Services -->
+    <script type="module" src="js/services/StorageService.js"></script>
+    <script type="module" src="js/services/SecureStorage.js"></script>
+    <script type="module" src="js/utils/Sanitizer.js"></script>
+    <script type="module" src="js/utils/Logger.js"></script>
+
+    <!-- Existing managers (drive the underlying data + grid renderer) -->
+    <script type="module" src="js/sideDrawer.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/sleepScheduleManager.js"></script>
+    <script type="module">
+        import { initializeCalendarUI } from './js/calendar-views.js';
+        initializeCalendarUI();
+    </script>
+    <script type="module" src="js/calendarManager.js"></script>
+    <script src="js/timetableIntegration.js"></script>
+    <script type="module" src="js/currentTaskManager.js"></script>
+    <script type="module" src="js/cross-tab-sync.js"></script>
+
+    <!-- ============================================================
+         Page-specific UI orchestration: bind real data to new layout.
+         Nothing in this script invents values — every visible string
+         is sourced from CalendarService / dailySchedule / currentDate.
+         ============================================================ -->
+    <script defer>
+    (() => {
+        'use strict';
+        const $ = (id) => document.getElementById(id);
+
+        const fmtMins = (m) => {
+            if (m == null || isNaN(m)) return '';
+            const h = Math.floor(m / 60), mn = m % 60;
+            return `${h}h ${String(mn).padStart(2, '0')}m`;
+        };
+        const timeToMin = (s) => {
+            if (!s || typeof s !== 'string' || !s.includes(':')) return null;
+            const [h, m] = s.split(':').map(Number);
+            if (isNaN(h) || isNaN(m)) return null;
+            return h * 60 + m;
+        };
+        const fmt12 = (m) => {
+            if (m == null) return '';
+            const h = Math.floor(m / 60), mn = m % 60;
+            const h12 = ((h + 11) % 12) + 1;
+            return `${h12}:${String(mn).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
+        };
+
+        const readSchedule = () => {
+            try {
+                if (window.storageService) {
+                    const v = window.storageService.get('dailySchedule', null);
+                    if (v) return v;
+                }
+                const raw = localStorage.getItem('gpace_dailySchedule')
+                          ?? localStorage.getItem('dailySchedule');
+                if (!raw) return null;
+                return JSON.parse(raw);
+            } catch { return null; }
+        };
+
+        const resolveUserId = () => {
+            try {
+                if (typeof firebase !== 'undefined' && firebase.auth?.()?.currentUser?.uid) {
+                    return firebase.auth().currentUser.uid;
+                }
+                if (window.auth?.currentUser?.uid) return window.auth.currentUser.uid;
+            } catch {}
+            return 'default';
+        };
+
+        const fetchServerScheduleIfMissing = async () => {
+            if (readSchedule()) return;
+            try {
+                const uid = resolveUserId();
+                const res = await fetch(`/settings/${uid}`);
+                if (!res.ok) return;
+                const settings = await res.json();
+                const sched = settings?.schedule;
+                if (!sched || !sched.wakeTime) return;
+                const normalised = {
+                    wakeTime: sched.wakeTime,
+                    sleepTime: sched.sleepTime,
+                    wakeBuffer: Number(sched.wakeBuffer ?? 0) || 0,
+                    sleepBuffer: Number(sched.sleepBuffer ?? 0) || 0
+                };
+                if (window.storageService) {
+                    window.storageService.set('dailySchedule', normalised);
+                } else {
+                    localStorage.setItem('gpace_dailySchedule', JSON.stringify(normalised));
+                }
+                window.dispatchEvent(new StorageEvent('storage', { key: 'gpace_dailySchedule' }));
+            } catch {}
+        };
+
+        const seedLegacyInputs = () => {
+            const s = readSchedule();
+            if (!s) return;
+            if (s.wakeTime && $('wakeTime') && !$('wakeTime').value) $('wakeTime').value = s.wakeTime;
+            if (s.sleepTime && $('sleepTime') && !$('sleepTime').value) $('sleepTime').value = s.sleepTime;
+        };
+
+        const renderStrip = () => {
+            const s = readSchedule();
+            const wake = s?.wakeTime || '';
+            const sleep = s?.sleepTime || '';
+            const wb = Number(s?.wakeBuffer ?? 0) || 0;
+            const sb = Number(s?.sleepBuffer ?? 0) || 0;
+
+            if ($('ddWakeVal')) $('ddWakeVal').textContent = wake;
+            if ($('ddSleepVal')) $('ddSleepVal').textContent = sleep;
+            if ($('ddWakeBuffer')) $('ddWakeBuffer').textContent = wake ? `${wb} min` : '';
+            if ($('ddSleepBuffer')) $('ddSleepBuffer').textContent = sleep ? `${sb} min` : '';
+
+            const wMin = timeToMin(wake);
+            const sMin = timeToMin(sleep);
+            const big = $('ddActiveBig');
+            if (big) {
+                if (wMin != null && sMin != null) {
+                    let total = sMin - wMin;
+                    if (total < 0) total += 24 * 60;
+                    total = Math.max(0, total - wb - sb);
+                    const h = Math.floor(total / 60), mn = total % 60;
+                    big.innerHTML = `<strong>${h}</strong> hours <strong>${String(mn).padStart(2, '0')}</strong> minutes`;
+                } else {
+                    big.innerHTML = '';
+                }
+            }
+        };
+
+        const renderStats = () => {
+            const sched = readSchedule();
+            let totalAvailable = null;
+            if (sched?.wakeTime && sched?.sleepTime) {
+                const w = timeToMin(sched.wakeTime), s = timeToMin(sched.sleepTime);
+                if (w != null && s != null) {
+                    let diff = s - w;
+                    if (diff < 0) diff += 24 * 60;
+                    const wb = Number(sched.wakeBuffer ?? 0) || 0;
+                    const sb = Number(sched.sleepBuffer ?? 0) || 0;
+                    totalAvailable = Math.max(0, diff - wb - sb);
+                }
+            }
+
+            let scheduledMinutes = null;
+            const cm = window.calendarManager;
+            if (cm?.service?.events && cm?.currentDate instanceof Date) {
+                const dateStr = cm.currentDate.toISOString().split('T')[0];
+                const todayEvents = (cm.service.events || []).filter(e => e.date === dateStr);
+                scheduledMinutes = todayEvents.reduce((sum, e) => {
+                    const a = timeToMin(e.startTime), b = timeToMin(e.endTime);
+                    if (a == null || b == null) return sum;
+                    let d = b - a;
+                    if (d < 0) d += 24 * 60;
+                    return sum + d;
+                }, 0);
+            }
+
+            if ($('ddStatTotal')) $('ddStatTotal').textContent = totalAvailable != null ? fmtMins(totalAvailable) : '';
+            if ($('ddStatScheduled')) $('ddStatScheduled').textContent = scheduledMinutes != null ? fmtMins(scheduledMinutes) : '';
+            if ($('ddStatStudy')) {
+                if (totalAvailable != null && scheduledMinutes != null) {
+                    $('ddStatStudy').textContent = fmtMins(Math.max(0, totalAvailable - scheduledMinutes));
+                } else if (totalAvailable != null) {
+                    $('ddStatStudy').textContent = fmtMins(totalAvailable);
+                } else {
+                    $('ddStatStudy').textContent = '';
+                }
+            }
+        };
+
+        const renderDate = () => {
+            const cm = window.calendarManager;
+            const d = cm?.currentDate;
+            if (!(d instanceof Date) || isNaN(d.getTime())) return;
+            if ($('currentDate')) $('currentDate').textContent = d.toLocaleDateString('en-US', {
+                weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+            });
+        };
+
+        const formatAxisLabels = () => {
+            document.querySelectorAll('.calendar-grid .minute-line').forEach((line) => {
+                const top = parseFloat(line.style.top || 0);
+                if (!isNaN(top) && (top % 30) === 0 && (top % 60) !== 0) {
+                    line.classList.add('is-half');
+                }
+            });
+        };
+
+        const TYPE_MARK = { class: 'C', lecture: 'C', study: 'S', break: 'B', free: 'F', meeting: 'M', other: 'M' };
+        const skinBlocks = () => {
+            document.querySelectorAll('.task-block').forEach((b) => {
+                const types = Array.from(b.classList).find(c => TYPE_MARK[c]);
+                b.dataset.mark = TYPE_MARK[types] || 'F';
+            });
+        };
+
+        const findEvent = (id) => {
+            try {
+                const svc = window.calendarManager?.service;
+                if (!svc) return null;
+                return (svc.events || []).find(e => String(e.id) === String(id));
+            } catch { return null; }
+        };
+
+        const renderLegendTotals = () => {
+            const svc = window.calendarManager?.service;
+            if (!svc) return;
+            const today = window.calendarManager?.currentDate || new Date();
+            const events = svc.getEventsForDate(today);
+            const sum = (type) => events
+                .filter(e => (e.type || '').toLowerCase() === type)
+                .reduce((s, e) => {
+                    const a = timeToMin(e.startTime), b = timeToMin(e.endTime);
+                    return s + ((a != null && b != null) ? Math.max(0, b - a) : 0);
+                }, 0);
+            const cls = sum('class') + sum('lecture');
+            const stu = sum('study');
+            const brk = sum('break');
+            const fre = sum('free');
+            if ($('ddLegendSummary')) {
+                $('ddLegendSummary').innerHTML = `
+                    <span>Class ${fmtMins(cls)}</span><span class="dot-sep">·</span>
+                    <span>Study ${fmtMins(stu)}</span><span class="dot-sep">·</span>
+                    <span>Break ${fmtMins(brk)}</span><span class="dot-sep">·</span>
+                    <span>Free ${fmtMins(fre)}</span>
+                `;
+            }
+        };
+
+        const TYPE_LABEL = { class: 'Class', lecture: 'Class', study: 'Study Time', break: 'Break', free: 'Free Time', meeting: 'Meeting', other: 'Other' };
+        const escapeHtml = (s) => String(s ?? '').replace(/[<>&"']/g, c => ({
+            '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+
+        const renderSelected = (ev) => {
+            const card = $('ddSelectedCard');
+            const k = $('ddSelKicker'), t = $('ddSelTitle'), m = $('ddSelMeta'), a = $('ddSelActions');
+            if (!card || !k || !t || !m || !a) return;
+            if (!ev) {
+                card.classList.remove('filled');
+                k.textContent = 'No task selected';
+                k.classList.add('muted');
+                t.textContent = '';
+                m.innerHTML = '';
+                a.hidden = true;
+                return;
+            }
+            card.classList.add('filled');
+            const type = (ev.type || '').toLowerCase();
+            k.textContent = `Selected · ${TYPE_LABEL[type] || 'Event'}`;
+            k.classList.remove('muted');
+            t.textContent = ev.subject || ev.title || ev.name || '';
+            const sm = timeToMin(ev.startTime), em = timeToMin(ev.endTime);
+            const dur = (sm != null && em != null) ? Math.max(0, em - sm) : null;
+            const parts = [];
+            const courseTag = ev.course || ev.projectId;
+            if (courseTag) parts.push(`<span class="course-pill">${escapeHtml(courseTag)}</span>`);
+            if (sm != null && em != null) parts.push(`<span>${fmt12(sm)} – ${fmt12(em)}</span>`);
+            if (dur != null && dur > 0) parts.push(`<span>${fmtMins(dur)}</span>`);
+            if (ev.room) parts.push(`<span>· ${escapeHtml(ev.room)}</span>`);
+            m.innerHTML = parts.join('');
+            a.hidden = false;
+        };
+
+        const pickCurrent = () => {
+            const cur = document.querySelector('.task-block.current-active-task');
+            if (!cur) return;
+            const ev = findEvent(cur.dataset.eventId);
+            if (ev) renderSelected(ev);
+        };
+
+        const onCalendarRendered = () => {
+            formatAxisLabels();
+            skinBlocks();
+            pickCurrent();
+            renderStats();
+            renderLegendTotals();
+            renderDate();
+        };
+
+        const bootstrap = async () => {
+            await fetchServerScheduleIfMissing();
+            seedLegacyInputs();
+            renderStrip();
+            renderStats();
+
+            const start = Date.now();
+            while (!window.calendarManager?.service && Date.now() - start < 5000) {
+                await new Promise(r => setTimeout(r, 100));
+            }
+            const cm = window.calendarManager;
+            if (!cm) return;
+            try { await cm.loadSavedData?.(); } catch {}
+            try { cm.render?.(); } catch {}
+            renderDate();
+            renderStrip();
+            onCalendarRendered();
+        };
+
+        // ── Event Listeners ──────────────────────────────────────────
+        let selectedEventId = null;
+        document.addEventListener('click', (e) => {
+            const block = e.target.closest('.task-block');
+            if (!block) return;
+            document.querySelectorAll('.task-block.is-selected').forEach(b => b.classList.remove('is-selected'));
+            block.classList.add('is-selected');
+            selectedEventId = block.dataset.eventId;
+            const ev = findEvent(selectedEventId);
+            if (ev) renderSelected(ev);
+        });
+
+        $('prevDay')?.addEventListener('click', () => setTimeout(onCalendarRendered, 120));
+        $('nextDay')?.addEventListener('click', () => setTimeout(onCalendarRendered, 120));
+
+        $('ddStartBtn')?.addEventListener('click', () => {
+            const ev = findEvent(selectedEventId);
+            if (ev && window.currentTaskManager?.setCurrentTask) {
+                window.currentTaskManager.setCurrentTask(ev);
+            }
+            window.location.href = 'grind.html';
+        });
+
+        $('ddReplanBtn')?.addEventListener('click', async () => {
+            try { await window.calendarManager?.loadSavedData?.(); } catch {}
+            onCalendarRendered();
+        });
+
+        window.addEventListener('storage', (e) => {
+            if (e.key && e.key.includes('dailySchedule')) {
+                seedLegacyInputs();
+                renderStrip();
+                renderStats();
+            }
+        });
+
+        const grid = document.querySelector('.calendar-grid');
+        if (grid) {
+            let isSkinning = false;
+            new MutationObserver((mutations) => {
+                if (isSkinning) return;
+                const hasChildChanges = mutations.some(m => m.type === 'childList');
+                if (!hasChildChanges) return;
+                clearTimeout(window.__ddSkinT);
+                window.__ddSkinT = setTimeout(() => {
+                    isSkinning = true;
+                    onCalendarRendered();
+                    isSkinning = false;
+                }, 50);
+            }).observe(grid, { childList: true, subtree: true });
+        }
+
+        // Start!
+        bootstrap();
+    })();
+    </script>
+
+    <script type="module" src="/js/inject-header.js"></script>
+</body>
+
+</html>

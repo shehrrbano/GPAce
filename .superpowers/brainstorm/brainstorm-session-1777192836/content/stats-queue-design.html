@@ -1,0 +1,96 @@
+<h2>Design Section 3: Task Queue & Stats Grid</h2>
+<p class="subtitle">The right sidebar and bottom dashboard components for complete performance tracking.</p>
+
+<div class="mockup">
+  <div class="mockup-header">Queue & Stats Wireframe</div>
+  <div class="mockup-body" style="background: #0b141d; padding: 20px; border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    
+    <!-- Left Column (Representation of Task/Timer space) -->
+    <div style="opacity: 0.3;">
+       <div style="background: #121e29; height: 100px; border-radius: 8px; margin-bottom: 20px;"></div>
+       <div style="background: #121e29; height: 300px; border-radius: 8px;"></div>
+    </div>
+
+    <!-- Right Column (Task Queue) -->
+    <div style="background: #121e29; padding: 20px; border-radius: 12px; border: 1px solid #1e293b;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="color: white; margin: 0; font-size: 16px;">Up next</h3>
+        <button style="background: #1e293b; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px;">+ Add</button>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Task Item -->
+        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border-left: 3px solid #ef4444; display: flex; gap: 10px;">
+          <div style="width: 18px; height: 18px; border: 2px solid #334155; border-radius: 4px;"></div>
+          <div style="flex: 1;">
+            <div style="color: white; font-size: 13px; font-weight: 600;">Linear Algebra — Eigenvectors</div>
+            <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">MATH 240 · 11:59pm</div>
+          </div>
+        </div>
+        <!-- Task Item -->
+        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border-left: 3px solid #f09b3b; display: flex; gap: 10px;">
+          <div style="width: 18px; height: 18px; border: 2px solid #334155; border-radius: 4px;"></div>
+          <div style="flex: 1;">
+            <div style="color: white; font-size: 13px;">Read Ch. 7 — Synaptic plasticity</div>
+            <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">NEUR 310 · Tomorrow</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Stats Grid (Full Width Span) -->
+    <div style="grid-column: span 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+       <div style="background: #121e29; padding: 15px; border-radius: 12px; border: 1px solid #1e293b;">
+         <div style="color: #94a3b8; font-size: 10px; font-weight: 700;">FATIGUE</div>
+         <div style="color: white; font-size: 24px; font-weight: 700; margin: 5px 0;">0<span style="font-size: 14px;">%</span></div>
+         <div style="color: #22c55e; font-size: 10px; font-weight: 700;">SHARP</div>
+       </div>
+       <div style="background: #121e29; padding: 15px; border-radius: 12px; border: 1px solid #1e293b;">
+         <div style="color: #94a3b8; font-size: 10px; font-weight: 700;">LAST SLEEP</div>
+         <div style="color: white; font-size: 24px; font-weight: 700; margin: 5px 0;">7<span style="font-size: 14px;">h</span></div>
+         <div style="color: #22c55e; font-size: 10px; font-weight: 700;">QUALITY 78%</div>
+       </div>
+       <div style="background: #121e29; padding: 15px; border-radius: 12px; border: 1px solid #1e293b;">
+         <div style="color: #94a3b8; font-size: 10px; font-weight: 700;">COGNITIVE LOAD</div>
+         <div style="color: white; font-size: 24px; font-weight: 700; margin: 5px 0;">60<span style="font-size: 14px;">pts</span></div>
+         <div style="height: 4px; background: #1e293b; border-radius: 2px; margin-top: 5px;">
+           <div style="width: 60%; height: 100%; background: #00a3c4; border-radius: 2px;"></div>
+         </div>
+       </div>
+       <div style="background: #121e29; padding: 15px; border-radius: 12px; border: 1px solid #1e293b;">
+         <div style="color: #94a3b8; font-size: 10px; font-weight: 700;">STREAK</div>
+         <div style="color: white; font-size: 24px; font-weight: 700; margin: 5px 0;">12<span style="font-size: 14px;">d</span></div>
+         <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-top: 5px;">
+           <div style="width: 8px; height: 8px; background: #00a3c4;"></div>
+           <div style="width: 8px; height: 8px; background: #00a3c4;"></div>
+           <div style="width: 8px; height: 8px; background: #1e293b;"></div>
+           <div style="width: 8px; height: 8px; background: #00a3c4;"></div>
+           <div style="width: 8px; height: 8px; background: #00a3c4;"></div>
+           <div style="width: 8px; height: 8px; background: #1e293b;"></div>
+           <div style="width: 8px; height: 8px; background: #00a3c4;"></div>
+         </div>
+       </div>
+       
+       <!-- Energy Curve Footer -->
+       <div style="grid-column: span 4; background: #121e29; padding: 20px; border-radius: 12px; border: 1px solid #1e293b; position: relative;">
+          <div style="color: #94a3b8; font-size: 10px; font-weight: 700; margin-bottom: 10px;">ENERGY CURVE</div>
+          <div style="height: 60px; border-bottom: 1px solid #1e293b; position: relative; overflow: hidden;">
+            <svg viewBox="0 0 400 60" style="width: 100%; height: 100%; stroke: #00a3c4; stroke-width: 2; fill: none;">
+              <path d="M0,40 Q50,10 100,30 T200,20 T300,50 T400,30" />
+            </svg>
+          </div>
+          <div style="display: flex; justify-content: space-between; color: #475569; font-size: 9px; margin-top: 5px;">
+            <span>6a</span><span>8a</span><span>10a</span><span>12p</span><span>2p</span><span>4p</span><span>6p</span><span>8p</span>
+          </div>
+       </div>
+    </div>
+  </div>
+</div>
+
+<p>Does the Stats and Queue layout meet your approval? (Click "A" to approve or let me know in the terminal)</p>
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>Approve Section</h3></div>
+  </div>
+</div>

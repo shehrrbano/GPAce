@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPAce - MD Converter</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="GPAce Markdown Converter - Convert Markdown to professional DOCX documents with LaTeX math support using Pandoc.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/gpace-logo-white.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" rel="stylesheet">
+    
+    <!-- App Components -->
+    <link href="css/design-tokens.css" rel="stylesheet">
+    <link href="css/components/navigation.css" rel="stylesheet">
+    <link href="css/sideDrawer.css" rel="stylesheet">
+    <link href="css/pages/markdown-converter.css" rel="stylesheet">
+</head>
+
+<body data-bg="deep">
+    <!-- Navigation Bar (Injected by inject-header.js) -->
+    
+    <div class="flash-container" id="flashContainer"></div>
+
+    <main class="container">
+        <div class="page-header">
+            <h1><i class="bi bi-markdown"></i> MD to DOCX Converter</h1>
+            <p>Convert your technical notes and study materials into professional Word documents with full LaTeX math support.</p>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-indicator">
+                <span class="status-dot checking" id="statusDot"></span>
+                <span id="statusText">Checking Pandoc Engine...</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="templates-section">
+                <span class="templates-label">Quick Templates:</span>
+                <button class="template-btn" onclick="loadTemplate('basic')">📝 Basic</button>
+                <button class="template-btn" onclick="loadTemplate('math')">🔢 Math</button>
+                <button class="template-btn" onclick="loadTemplate('table')">📊 Table</button>
+                <button class="template-btn" onclick="loadTemplate('full')">📄 Full Demo</button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-section">
+                    <h3><i class="bi bi-code-slash"></i> Markdown Input</h3>
+                    <textarea id="markdownInput" spellcheck="false" placeholder="# Your Markdown Here..."></textarea>
+                </div>
+                <div class="editor-section">
+                    <h3><i class="bi bi-eye"></i> Live Preview</h3>
+                    <div id="preview">
+                        <div style="height: 100%; display: grid; place-items: center; color: var(--dd-text-muted); opacity: 0.5;">
+                            <div style="text-align: center;">
+                                <i class="bi bi-pencil-square" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>
+                                <span>Start typing to see live preview</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-convert" id="convertBtn" onclick="convertToDocx()" disabled>
+                    <i class="bi bi-file-earmark-word"></i>
+                    Convert to DOCX
+                </button>
+                <button class="btn-secondary-custom" onclick="copyMarkdown()">
+                    <i class="bi bi-clipboard"></i>
+                    Copy Markdown
+                </button>
+                <button class="btn-secondary-custom" onclick="clearEditor()">
+                    <i class="bi bi-trash"></i>
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 10px;">
+                <i class="bi bi-stars" style="color: var(--accent);"></i> Supported Features
+            </h3>
+            <div class="features-grid">
+                <div class="feature-item"><i class="bi bi-type-bold"></i><span>Rich Text Formatting</span></div>
+                <div class="feature-item"><i class="bi bi-calculator"></i><span>LaTeX Math ($, $$, \[)</span></div>
+                <div class="feature-item"><i class="bi bi-table"></i><span>Tables & Pipe Tables</span></div>
+                <div class="feature-item"><i class="bi bi-code-square"></i><span>Code Blocks</span></div>
+                <div class="feature-item"><i class="bi bi-list-task"></i><span>Task Lists</span></div>
+                <div class="feature-item"><i class="bi bi-link-45deg"></i><span>Links & Images</span></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script type="module" src="js/sideDrawer.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/inject-header.js"></script>
+
+    <script>
+        const TEMPLATES = {
+            basic: `# Academic Document\n\n## Introduction\nThis template provides a clean starting point for your academic reports.\n\n## Methodology\n1. First step\n2. Second step\n\n> "Education is the most powerful weapon which you can use to change the world."`,
+            math: `# Science & Math Notes\n\n## Einstein's Relativity\nThe most famous equation in physics: $E = mc^2$\n\n## Calculus\nThe fundamental theorem of calculus:\n$$\\int_a^b f(x)dx = F(b) - F(a)$$`,
+            table: `# Data Organization\n\n## Course Summary\n\n| Course | Grade | Credits |\n|--------|-------|---------|\n| CS101  | A     | 4       |\n| MA202  | B+    | 3       |\n\n- [x] Submit assignments\n- [ ] Study for finals`,
+            full: `# Complete Document Demo\n\n**GPAce Markdown Converter** supports:\n- **Bold** & *Italic*\n- LaTeX Math: $\\sqrt{a^2 + b^2}$\n- Code: \`console.log("Hello")\`\n- Blockquotes & Lists\n\nEnjoy professional exports!`
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkBackend();
+            setupLivePreview();
+        });
+
+        async function checkBackend() {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const convertBtn = document.getElementById('convertBtn');
+
+            try {
+                const response = await fetch('/api/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.pandoc_available) {
+                        statusDot.className = 'status-dot connected';
+                        statusText.textContent = `Pandoc Engine Ready (v${data.pandoc_version})`;
+                        convertBtn.disabled = false;
+                    } else {
+                        statusDot.className = 'status-dot disconnected';
+                        statusText.textContent = 'Pandoc Engine Missing';
+                        showFlash('Pandoc must be installed on the server for conversion.', 'error');
+                    }
+                }
+            } catch (e) {
+                statusDot.className = 'status-dot disconnected';
+                statusText.textContent = 'Pandoc Offline';
+            }
+        }
+
+        function setupLivePreview() {
+            const input = document.getElementById('markdownInput');
+            const preview = document.getElementById('preview');
+
+            input.addEventListener('input', () => {
+                const markdown = input.value;
+                if (markdown.trim()) {
+                    let html = marked.parse(markdown);
+                    html = renderMath(html);
+                    preview.innerHTML = html;
+                } else {
+                    preview.innerHTML = '<div style="height: 100%; display: grid; place-items: center; color: var(--dd-text-muted); opacity: 0.5;"><div style="text-align: center;"><i class="bi bi-pencil-square" style="font-size: 32px; display: block; margin-bottom: 12px;"></i><span>Start typing to see live preview</span></div></div>';
+                }
+            });
+        }
+
+        function renderMath(html) {
+            // Blocks
+            html = html.replace(/\$\$([^$]+)\$\$/g, (match, math) => {
+                try { return katex.renderToString(math.trim(), { displayMode: true, throwOnError: false }); } 
+                catch (e) { return `<span class="math-error">${match}</span>`; }
+            });
+            // Inline
+            html = html.replace(/(?<!\$)\$(?!\$)([^$\n]+)\$(?!\$)/g, (match, math) => {
+                try { return katex.renderToString(math.trim(), { displayMode: false, throwOnError: false }); } 
+                catch (e) { return `<span class="math-error">${match}</span>`; }
+            });
+            return html;
+        }
+
+        function loadTemplate(name) {
+            const input = document.getElementById('markdownInput');
+            input.value = TEMPLATES[name] || '';
+            input.dispatchEvent(new Event('input'));
+            showFlash(`Template "${name}" loaded`, 'info');
+        }
+
+        async function convertToDocx() {
+            const markdown = document.getElementById('markdownInput').value.trim();
+            const btn = document.getElementById('convertBtn');
+            if (!markdown) return showFlash('Enter content first', 'info');
+
+            const original = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Converting...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/convert', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ markdown })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'GPAce_Export.docx';
+                    a.click();
+                    showFlash('Conversion successful!', 'success');
+                } else {
+                    throw new Error('Failed to convert');
+                }
+            } catch (e) {
+                showFlash('Server conversion failed. Check server logs.', 'error');
+            } finally {
+                btn.innerHTML = original;
+                btn.disabled = false;
+            }
+        }
+
+        function copyMarkdown() {
+            const markdown = document.getElementById('markdownInput').value;
+            if (markdown) {
+                navigator.clipboard.writeText(markdown).then(() => showFlash('Markdown copied!', 'success'));
+            }
+        }
+
+        function clearEditor() {
+            document.getElementById('markdownInput').value = '';
+            document.getElementById('markdownInput').dispatchEvent(new Event('input'));
+        }
+
+        function showFlash(msg, type) {
+            const container = document.getElementById('flashContainer');
+            const flash = document.createElement('div');
+            flash.className = `flash flash-${type}`;
+            flash.innerHTML = `<i class="bi bi-info-circle-fill"></i><span style="flex:1">${msg}</span>`;
+            container.appendChild(flash);
+            setTimeout(() => flash.remove(), 4000);
+        }
+    </script>
+</body>
+
+</html>

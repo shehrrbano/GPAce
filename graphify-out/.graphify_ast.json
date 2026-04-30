@@ -1,0 +1,2157 @@
+{
+  "nodes": [
+    {
+      "id": "js_controllers_grindcontroller_js",
+      "label": "GrindController.js",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "grindcontroller_grindcontroller",
+      "label": "GrindController",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L9"
+    },
+    {
+      "id": "grindcontroller_grindcontroller_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L10"
+    },
+    {
+      "id": "grindcontroller_grindcontroller_init",
+      "label": ".init()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L15"
+    },
+    {
+      "id": "grindcontroller_grindcontroller_setupeventlisteners",
+      "label": ".setupEventListeners()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L22"
+    },
+    {
+      "id": "grindcontroller_grindcontroller_toggleaicontainer",
+      "label": ".toggleAIContainer()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L77"
+    },
+    {
+      "id": "grindcontroller_grindcontroller_ccscannotes",
+      "label": ".ccScanNotes()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L91"
+    },
+    {
+      "id": "grindcontroller_grindcontroller_toggleworkspace",
+      "label": ".toggleWorkspace()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L96"
+    },
+    {
+      "id": "grindcontroller_grindcontroller_addsafelistener",
+      "label": ".addSafeListener()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L108"
+    },
+    {
+      "id": "js_controllers_timercontroller_js",
+      "label": "TimerController.js",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "timercontroller_timercontroller",
+      "label": "TimerController",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L30"
+    },
+    {
+      "id": "timercontroller_timercontroller_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L31"
+    },
+    {
+      "id": "timercontroller_timercontroller_init",
+      "label": ".init()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L85"
+    },
+    {
+      "id": "timercontroller_timercontroller_starttimer",
+      "label": ".startTimer()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L96"
+    },
+    {
+      "id": "timercontroller_timercontroller_pausetimer",
+      "label": ".pauseTimer()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L155"
+    },
+    {
+      "id": "timercontroller_timercontroller_resettimer",
+      "label": ".resetTimer()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L179"
+    },
+    {
+      "id": "timercontroller_timercontroller_setcustomtime",
+      "label": ".setCustomTime()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L214"
+    },
+    {
+      "id": "timercontroller_timercontroller_startfocus",
+      "label": ".startFocus()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L227"
+    },
+    {
+      "id": "timercontroller_timercontroller_startbreak",
+      "label": ".startBreak()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L239"
+    },
+    {
+      "id": "timercontroller_timercontroller_handletimercomplete",
+      "label": ".handleTimerComplete()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L252"
+    },
+    {
+      "id": "timercontroller_timercontroller_logsessionenergy",
+      "label": "._logSessionEnergy()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L288"
+    },
+    {
+      "id": "timercontroller_timercontroller_promptforenergylevel",
+      "label": "._promptForEnergyLevel()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L306"
+    },
+    {
+      "id": "timercontroller_timercontroller_updatedisplay",
+      "label": ".updateDisplay()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L319"
+    },
+    {
+      "id": "timercontroller_timercontroller_toggle",
+      "label": ".toggle()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L359"
+    },
+    {
+      "id": "timercontroller_timercontroller_starttitleupdates",
+      "label": "._startTitleUpdates()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L372"
+    },
+    {
+      "id": "timercontroller_timercontroller_stoptitleupdates",
+      "label": "._stopTitleUpdates()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L390"
+    },
+    {
+      "id": "timercontroller_timercontroller_updatetitlewithcurrenttime",
+      "label": "._updateTitleWithCurrentTime()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L400"
+    },
+    {
+      "id": "timercontroller_timercontroller_updatebuttonstate",
+      "label": "._updateButtonState()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L411"
+    },
+    {
+      "id": "timercontroller_timercontroller_setupeventlisteners",
+      "label": "._setupEventListeners()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L427"
+    },
+    {
+      "id": "timercontroller_timercontroller_setupvisibilityhandler",
+      "label": "._setupVisibilityHandler()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L505"
+    },
+    {
+      "id": "timercontroller_timercontroller_playnotificationsound",
+      "label": "._playNotificationSound()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L520"
+    },
+    {
+      "id": "timercontroller_timercontroller_showbrowsernotification",
+      "label": "._showBrowserNotification()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L534"
+    },
+    {
+      "id": "timercontroller_timercontroller_shownotification",
+      "label": "._showNotification()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L550"
+    },
+    {
+      "id": "timercontroller_timercontroller_loadstate",
+      "label": "._loadState()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L558"
+    },
+    {
+      "id": "timercontroller_timercontroller_savestate",
+      "label": "._saveState()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L576"
+    },
+    {
+      "id": "timercontroller_timercontroller_loadstats",
+      "label": "._loadStats()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L592"
+    },
+    {
+      "id": "timercontroller_timercontroller_updatestatsdisplay",
+      "label": "._updateStatsDisplay()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L599"
+    },
+    {
+      "id": "timercontroller_timercontroller_savestats",
+      "label": "._saveStats()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L605"
+    },
+    {
+      "id": "timercontroller_timercontroller_loadpreferences",
+      "label": "._loadPreferences()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L612"
+    },
+    {
+      "id": "js_controllers_taskdisplaycontroller_js",
+      "label": "TaskDisplayController.js",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller",
+      "label": "TaskDisplayController",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L14"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L15"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_init",
+      "label": ".init()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L28"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytask",
+      "label": ".displayPriorityTask()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L39"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_navigatetask",
+      "label": ".navigateTask()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L56"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_grouptasksbyinterleavedate",
+      "label": ".groupTasksByInterleaveDate()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L103"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_hashstring",
+      "label": ".hashString()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L139"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytaskimpl",
+      "label": "._displayPriorityTaskImpl()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L157"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_rendertask",
+      "label": "._renderTask()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L228"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_generatetasktemplate",
+      "label": "._generateTaskTemplate()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L262"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_initializetaskextras",
+      "label": "._initializeTaskExtras()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L351"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_flattengroupedtasks",
+      "label": "._flattenGroupedTasks()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L369"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_findcurrenttaskindex",
+      "label": "._findCurrentTaskIndex()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L380"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_setupstoragelistener",
+      "label": "._setupStorageListener()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L404"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_loadprioritylistsorter",
+      "label": "._loadPriorityListSorter()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L418"
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller_escapehtml",
+      "label": "._escapeHtml()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L449"
+    },
+    {
+      "id": "js_controllers_energycontroller_js",
+      "label": "EnergyController.js",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "energycontroller_energycontroller",
+      "label": "EnergyController",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L14"
+    },
+    {
+      "id": "energycontroller_energycontroller_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L15"
+    },
+    {
+      "id": "energycontroller_energycontroller_init",
+      "label": ".init()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L38"
+    },
+    {
+      "id": "energycontroller_energycontroller_updateenergychart",
+      "label": ".updateEnergyChart()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L103"
+    },
+    {
+      "id": "energycontroller_energycontroller_updateenergyvisualization",
+      "label": ".updateEnergyVisualization()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L145"
+    },
+    {
+      "id": "energycontroller_energycontroller_handlefatigueselection",
+      "label": ".handleFatigueSelection()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L179"
+    },
+    {
+      "id": "energycontroller_energycontroller_showfatiguemodal",
+      "label": ".showFatigueModal()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L211"
+    },
+    {
+      "id": "energycontroller_energycontroller_hidefatiguemodal",
+      "label": ".hideFatigueModal()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L236"
+    },
+    {
+      "id": "energycontroller_energycontroller_initenergygraph",
+      "label": "._initEnergyGraph()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L248"
+    },
+    {
+      "id": "energycontroller_energycontroller_loadstoredenergylevel",
+      "label": "._loadStoredEnergyLevel()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L383"
+    },
+    {
+      "id": "energycontroller_energycontroller_updatefatiguelevelui",
+      "label": "._updateFatigueLevelUI()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L406"
+    },
+    {
+      "id": "energycontroller_energycontroller_setupeventlisteners",
+      "label": "._setupEventListeners()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L411"
+    },
+    {
+      "id": "js_controllers_taskcreationcontroller_js",
+      "label": "TaskCreationController.js",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller",
+      "label": "TaskCreationController",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L7"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L8"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_init",
+      "label": ".init()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L35"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_setupeventlisteners",
+      "label": "._setupEventListeners()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L41"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_setupfileuploadlisteners",
+      "label": "._setupFileUploadListeners()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L76"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_handleuploadprogress",
+      "label": ".handleUploadProgress()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L106"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_updatespeed",
+      "label": ".updateSpeed()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L161"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_handlefileselect",
+      "label": ".handleFileSelect()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L204"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_addfilestouploadpreview",
+      "label": ".addFilesToUploadPreview()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L208"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_showtaskmodal",
+      "label": ".showTaskModal()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L247"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_hidetaskmodal",
+      "label": ".hideTaskModal()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L256"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_loadprojects",
+      "label": ".loadProjects()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L288"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_loadsubcategories",
+      "label": ".loadSubcategories()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L316"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_createtask",
+      "label": ".createTask()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L336"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_uploadfilesfortask",
+      "label": ".uploadFilesForTask()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L459"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_updateprioritytasks",
+      "label": ".updatePriorityTasks()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L479"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_addrelevantlinktotask",
+      "label": ".addRelevantLinkToTask()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L536"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_removerelevantlink",
+      "label": ".removeRelevantLink()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L556"
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller_renderrelevantlinks",
+      "label": ".renderRelevantLinks()",
+      "file_type": "code",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L561"
+    }
+  ],
+  "edges": [
+    {
+      "source": "js_controllers_grindcontroller_js",
+      "target": "js_core_globals_ts",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controllers_grindcontroller_js",
+      "target": "js_core_tasksystem_ts",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controllers_grindcontroller_js",
+      "target": "grindcontroller_grindcontroller",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller",
+      "target": "grindcontroller_grindcontroller_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller",
+      "target": "grindcontroller_grindcontroller_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller",
+      "target": "grindcontroller_grindcontroller_setupeventlisteners",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller",
+      "target": "grindcontroller_grindcontroller_toggleaicontainer",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller",
+      "target": "grindcontroller_grindcontroller_ccscannotes",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller",
+      "target": "grindcontroller_grindcontroller_toggleworkspace",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller",
+      "target": "grindcontroller_grindcontroller_addsafelistener",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller_init",
+      "target": "grindcontroller_grindcontroller_setupeventlisteners",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller_setupeventlisteners",
+      "target": "grindcontroller_grindcontroller_addsafelistener",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controllers_timercontroller_js",
+      "target": "timercontroller_timercontroller",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_starttimer",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_pausetimer",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_resettimer",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L179",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_setcustomtime",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L214",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_startfocus",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L227",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_startbreak",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L239",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_handletimercomplete",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L252",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_logsessionenergy",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L288",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_promptforenergylevel",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L306",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_updatedisplay",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L319",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_toggle",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L359",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_starttitleupdates",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L372",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_stoptitleupdates",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L390",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_updatetitlewithcurrenttime",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L400",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_updatebuttonstate",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L411",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_setupeventlisteners",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L427",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_setupvisibilityhandler",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L505",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_playnotificationsound",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L520",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_showbrowsernotification",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L534",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_shownotification",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L550",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_loadstate",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L558",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_savestate",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L576",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_loadstats",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L592",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_updatestatsdisplay",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L599",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_savestats",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L605",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller",
+      "target": "timercontroller_timercontroller_loadpreferences",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L612",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_constructor",
+      "target": "timercontroller_timercontroller_loadstate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_constructor",
+      "target": "timercontroller_timercontroller_loadstats",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_constructor",
+      "target": "timercontroller_timercontroller_loadpreferences",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_constructor",
+      "target": "timercontroller_timercontroller_setupvisibilityhandler",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L79",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_init",
+      "target": "timercontroller_timercontroller_setupeventlisteners",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_init",
+      "target": "timercontroller_timercontroller_updatedisplay",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_init",
+      "target": "timercontroller_timercontroller_updatetitlewithcurrenttime",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_starttimer",
+      "target": "timercontroller_timercontroller_starttitleupdates",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L137",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_starttimer",
+      "target": "timercontroller_timercontroller_updatebuttonstate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_starttimer",
+      "target": "timercontroller_timercontroller_savestate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L146",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_starttimer",
+      "target": "timercontroller_timercontroller_shownotification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L149",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_pausetimer",
+      "target": "timercontroller_timercontroller_savestate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L169",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_pausetimer",
+      "target": "timercontroller_timercontroller_updatebuttonstate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L170",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_pausetimer",
+      "target": "timercontroller_timercontroller_stoptitleupdates",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L171",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_pausetimer",
+      "target": "timercontroller_timercontroller_updatetitlewithcurrenttime",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L172",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_pausetimer",
+      "target": "timercontroller_timercontroller_shownotification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L173",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_resettimer",
+      "target": "timercontroller_timercontroller_savestats",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L190",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_resettimer",
+      "target": "timercontroller_timercontroller_updatedisplay",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L202",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_resettimer",
+      "target": "timercontroller_timercontroller_updatebuttonstate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L203",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_resettimer",
+      "target": "timercontroller_timercontroller_savestate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L205",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_resettimer",
+      "target": "timercontroller_timercontroller_stoptitleupdates",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L206",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_resettimer",
+      "target": "timercontroller_timercontroller_updatetitlewithcurrenttime",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L207",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_resettimer",
+      "target": "timercontroller_timercontroller_shownotification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L208",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_setcustomtime",
+      "target": "timercontroller_timercontroller_updatedisplay",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L218",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_setcustomtime",
+      "target": "timercontroller_timercontroller_savestate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L220",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_startfocus",
+      "target": "timercontroller_timercontroller_updatedisplay",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L231",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_startfocus",
+      "target": "timercontroller_timercontroller_stoptitleupdates",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L232",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_startfocus",
+      "target": "timercontroller_timercontroller_starttimer",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L233",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_startbreak",
+      "target": "timercontroller_timercontroller_updatedisplay",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L244",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_startbreak",
+      "target": "timercontroller_timercontroller_stoptitleupdates",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L245",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_startbreak",
+      "target": "timercontroller_timercontroller_starttimer",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L246",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_playnotificationsound",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L257",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_showbrowsernotification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L260",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_updatestatsdisplay",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L266",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_savestats",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L267",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_logsessionenergy",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L272",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_startbreak",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L274",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_promptforenergylevel",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L278",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_startfocus",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L279",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_handletimercomplete",
+      "target": "timercontroller_timercontroller_savestate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L282",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_toggle",
+      "target": "timercontroller_timercontroller_pausetimer",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L361",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_toggle",
+      "target": "timercontroller_timercontroller_starttimer",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L363",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_starttitleupdates",
+      "target": "timercontroller_timercontroller_stoptitleupdates",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L373",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controllers_taskdisplaycontroller_js",
+      "target": "taskdisplaycontroller_taskdisplaycontroller",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytask",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_navigatetask",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_grouptasksbyinterleavedate",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L103",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_hashstring",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L139",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytaskimpl",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L157",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_rendertask",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L228",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_generatetasktemplate",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L262",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_initializetaskextras",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L351",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_flattengroupedtasks",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L369",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_findcurrenttaskindex",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L380",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_setupstoragelistener",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L404",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_loadprioritylistsorter",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L418",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_escapehtml",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L449",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_init",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_setupstoragelistener",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_init",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_loadprioritylistsorter",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_navigatetask",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_grouptasksbyinterleavedate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_navigatetask",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_flattengroupedtasks",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_navigatetask",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_findcurrenttaskindex",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_navigatetask",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_rendertask",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytaskimpl",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_hashstring",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L165",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytaskimpl",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_grouptasksbyinterleavedate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L202",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytaskimpl",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_rendertask",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L211",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_rendertask",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_generatetasktemplate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L237",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_rendertask",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_initializetaskextras",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L255",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_generatetasktemplate",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_escapehtml",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L271",
+      "weight": 1.0
+    },
+    {
+      "source": "taskdisplaycontroller_taskdisplaycontroller_loadprioritylistsorter",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytask",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskDisplayController.js",
+      "source_location": "L424",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controllers_energycontroller_js",
+      "target": "energycontroller_energycontroller",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_updateenergychart",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L103",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_updateenergyvisualization",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L145",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_handlefatigueselection",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L179",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_showfatiguemodal",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L211",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_hidefatiguemodal",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L236",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_initenergygraph",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L248",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_loadstoredenergylevel",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L383",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_updatefatiguelevelui",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L406",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller",
+      "target": "energycontroller_energycontroller_setupeventlisteners",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L411",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_init",
+      "target": "energycontroller_energycontroller_setupeventlisteners",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_init",
+      "target": "energycontroller_energycontroller_initenergygraph",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L81",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_init",
+      "target": "energycontroller_energycontroller_loadstoredenergylevel",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_updateenergychart",
+      "target": "energycontroller_energycontroller_initenergygraph",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_updateenergyvisualization",
+      "target": "energycontroller_energycontroller_updateenergychart",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L171",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_handlefatigueselection",
+      "target": "energycontroller_energycontroller_updateenergyvisualization",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L186",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_handlefatigueselection",
+      "target": "energycontroller_energycontroller_hidefatiguemodal",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L189",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_handlefatigueselection",
+      "target": "energycontroller_energycontroller_updatefatiguelevelui",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L192",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_loadstoredenergylevel",
+      "target": "energycontroller_energycontroller_updatefatiguelevelui",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L389",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controllers_taskcreationcontroller_js",
+      "target": "js_services_datarepository_ts",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controllers_taskcreationcontroller_js",
+      "target": "js_services_storageservice_ts",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "js_controllers_taskcreationcontroller_js",
+      "target": "taskcreationcontroller_taskcreationcontroller",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_setupeventlisteners",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_setupfileuploadlisteners",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_handleuploadprogress",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_updatespeed",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L161",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_handlefileselect",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L204",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_addfilestouploadpreview",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L208",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_showtaskmodal",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L247",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_hidetaskmodal",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L256",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_loadprojects",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L288",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_loadsubcategories",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L316",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_createtask",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L336",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_uploadfilesfortask",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L459",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_updateprioritytasks",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L479",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_addrelevantlinktotask",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L536",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_removerelevantlink",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L556",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller",
+      "target": "taskcreationcontroller_taskcreationcontroller_renderrelevantlinks",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L561",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_init",
+      "target": "taskcreationcontroller_taskcreationcontroller_setupeventlisteners",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_setupeventlisteners",
+      "target": "taskcreationcontroller_taskcreationcontroller_setupfileuploadlisteners",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_handlefileselect",
+      "target": "taskcreationcontroller_taskcreationcontroller_addfilestouploadpreview",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L205",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_showtaskmodal",
+      "target": "taskcreationcontroller_taskcreationcontroller_loadprojects",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L252",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_hidetaskmodal",
+      "target": "taskcreationcontroller_taskcreationcontroller_renderrelevantlinks",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L283",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_createtask",
+      "target": "taskcreationcontroller_taskcreationcontroller_hidetaskmodal",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L411",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_createtask",
+      "target": "taskcreationcontroller_taskcreationcontroller_updateprioritytasks",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L414",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_addrelevantlinktotask",
+      "target": "taskcreationcontroller_taskcreationcontroller_renderrelevantlinks",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L549",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_removerelevantlink",
+      "target": "taskcreationcontroller_taskcreationcontroller_renderrelevantlinks",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L558",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller_toggleaicontainer",
+      "target": "timercontroller_timercontroller_toggle",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "grindcontroller_grindcontroller_toggleworkspace",
+      "target": "timercontroller_timercontroller_toggle",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "js\\controllers\\GrindController.js",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "timercontroller_timercontroller_logsessionenergy",
+      "target": "energycontroller_energycontroller_updateenergychart",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "js\\controllers\\TimerController.js",
+      "source_location": "L297",
+      "weight": 1.0
+    },
+    {
+      "source": "energycontroller_energycontroller_handlefatigueselection",
+      "target": "timercontroller_timercontroller_starttimer",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "js\\controllers\\EnergyController.js",
+      "source_location": "L200",
+      "weight": 1.0
+    },
+    {
+      "source": "taskcreationcontroller_taskcreationcontroller_createtask",
+      "target": "taskdisplaycontroller_taskdisplaycontroller_displayprioritytask",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "js\\controllers\\TaskCreationController.js",
+      "source_location": "L418",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

@@ -1,0 +1,10 @@
+﻿grind.html
+js/controllers/GrindController.js
+js/controllers/TimerController.js
+js/controllers/TaskDisplayController.js
+js/controllers/EnergyController.js
+js/controllers/TaskCreationController.js
+css/grind.css
+css/components/command-center.css
+css/task-display.css
+css/sideDrawer.css

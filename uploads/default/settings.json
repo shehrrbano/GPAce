@@ -1,0 +1,10 @@
+{
+  "schedule": {
+    "wakeTime": "06:30",
+    "wakeBuffer": 15,
+    "sleepTime": "23:00",
+    "sleepBuffer": 60,
+    "timetableImage": null
+  },
+  "lastSaved": "2026-04-30T06:24:02.565Z"
+}

@@ -1,0 +1,58 @@
+<h2>Choose Your Bento Layout</h2>
+<p class="subtitle">Both options use the Target 2 dark theme and bento grid style.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Sidebar Focus</h3>
+      <p>Large vertical "Up Next" queue on the right (like Target 2). Best for heavy task management.</p>
+      <ul>
+        <li>Current Task Card (Top Left)</li>
+        <li>Compact Circular Timer (Bottom Left)</li>
+        <li>Large Task Queue (Right Sidebar)</li>
+        <li>Stats Bento Grid (Bottom)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Dashboard Focus</h3>
+      <p>Task queue integrated into the grid. More room for larger, more detailed stat widgets.</p>
+      <ul>
+        <li>Wide Current Task Header</li>
+        <li>Timer & Task Queue as adjacent Bento cards</li>
+        <li>Stat widgets prioritized in the center</li>
+        <li>Energy Curve as a full-width footer card</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="mockup">
+  <div class="mockup-header">Visual Structure Comparison</div>
+  <div class="mockup-body" style="background: #0b141d; padding: 20px; border-radius: 8px;">
+    <div class="split">
+      <div style="flex: 1; border: 1px dashed #444; padding: 10px; margin-right: 5px;">
+        <div style="font-size: 10px; color: #888; margin-bottom: 5px;">Option A: Sidebar</div>
+        <div style="display: grid; grid-template-columns: 2fr 1.5fr; grid-template-rows: 100px 100px 100px; gap: 5px;">
+          <div style="background: #121e29; border: 1px solid #222;">Task</div>
+          <div style="background: #121e29; border: 1px solid #222; grid-row: span 3;">Queue</div>
+          <div style="background: #121e29; border: 1px solid #222;">Timer</div>
+          <div style="background: #121e29; border: 1px solid #222; grid-column: span 1;">Stats</div>
+        </div>
+      </div>
+      <div style="flex: 1; border: 1px dashed #444; padding: 10px; margin-left: 5px;">
+        <div style="font-size: 10px; color: #888; margin-bottom: 5px;">Option B: Grid-Heavy</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 60px 120px 120px; gap: 5px;">
+          <div style="background: #121e29; border: 1px solid #222; grid-column: span 3;">Task Header</div>
+          <div style="background: #121e29; border: 1px solid #222;">Timer</div>
+          <div style="background: #121e29; border: 1px solid #222;">Queue</div>
+          <div style="background: #121e29; border: 1px solid #222;">Stats</div>
+          <div style="background: #121e29; border: 1px solid #222; grid-column: span 3;">Energy Curve</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

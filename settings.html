@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - GPAce</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Configure GPAce settings, manage quotes, role models, and Todoist integration for your academic journey.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/gpace-logo-white.png">
+    <link rel="shortcut icon" type="image/png" href="assets/images/gpace-logo-white.png">
+
+    <!-- CSS Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/design-tokens.css" rel="stylesheet">
+    <link href="css/sideDrawer.css" rel="stylesheet">
+    <link href="css/settings.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation Bar (will be replaced by inject-header.js) -->
+    <!-- Sound Controls -->
+    <div class="sound-controls">
+        <button id="toggleSound" class="sound-toggle" aria-label="Toggle Sound Effects">
+            <span class="sound-icon">🔊</span>
+        </button>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="container" id="main-content">
+        <!-- Todoist Integration Section -->
+        <section class="settings-section tasks-management" aria-labelledby="todoist-heading">
+            <h2 id="todoist-heading">🔗 Todoist Integration Hub</h2>
+            <div class="task-navigation-card">
+                <div class="task-portal-intro">
+                    <h3>Sync Your Productivity</h3>
+                    <p>Seamlessly connect and manage your Todoist tasks within GPAce</p>
+                </div>
+                <div class="task-portal-actions">
+                    <a href="tasks.html" class="btn btn-primary task-portal-btn" aria-label="Connect to Todoist">
+                        <i class="bi bi-link-45deg"></i> Connect Todoist Account
+                        <span class="btn-subtext">Unlock Unified Task Management</span>
+                    </a>
+                </div>
+                <div class="task-portal-features">
+                    <div class="feature-item">
+                        <i class="bi bi-cloud-sync" aria-hidden="true"></i>
+                        <span>Real-time Synchronization</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-list-task" aria-hidden="true"></i>
+                        <span>Task Prioritization</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-calendar-check" aria-hidden="true"></i>
+                        <span>Academic Task Tracking</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quotes Management Section -->
+        <section class="quotes-section" aria-labelledby="quotes-heading">
+            <h2 id="quotes-heading">💬 Quotes Management</h2>
+            <div class="quote-input-container">
+                <div class="input-group">
+                    <label for="quoteText" class="visually-hidden">Quote Text</label>
+                    <input type="text" id="quoteText" placeholder="Enter quote text" aria-label="Quote text">
+                </div>
+                <div class="input-group">
+                    <label for="quoteAuthor" class="visually-hidden">Quote Author</label>
+                    <input type="text" id="quoteAuthor" placeholder="Quote author" aria-label="Quote author">
+                </div>
+                <div class="input-group">
+                    <label for="quoteImage" class="visually-hidden">Quote Image URL</label>
+                    <input type="text" id="quoteImage" placeholder="Optional image URL" aria-label="Optional image URL">
+                </div>
+                <button class="interactive-button" id="addQuoteBtn" aria-label="Add new quote">
+                    <i class="bi bi-plus-lg"></i> Add Quote
+                </button>
+            </div>
+            <div id="quoteList" class="quote-list" role="list" aria-label="Saved quotes"></div>
+        </section>
+
+        <!-- Role Models Section -->
+        <section class="role-models-section" aria-labelledby="rolemodels-heading">
+            <h2 id="rolemodels-heading">⭐ Role Models</h2>
+            <div class="role-model-input-container">
+                <div class="input-group">
+                    <label for="roleModelName" class="visually-hidden">Role Model Name</label>
+                    <input type="text" id="roleModelName" placeholder="Role model name" aria-label="Role model name">
+                </div>
+                <div class="input-group">
+                    <label for="roleModelImage" class="visually-hidden">Role Model Image URL</label>
+                    <input type="text" id="roleModelImage" placeholder="Role model image URL"
+                        aria-label="Role model image URL">
+                </div>
+                <button class="interactive-button" id="addRoleModelBtn" aria-label="Add new role model">
+                    <i class="bi bi-plus-lg"></i> Add Role Model
+                </button>
+            </div>
+            <div id="roleModelList" class="role-model-list" role="list" aria-label="Saved role models"></div>
+            <div id="roleModelResearch" class="role-model-research" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <!-- Scripts - Loaded in correct dependency order -->
+    <!-- Bootstrap JS (load first - other scripts may depend on it) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core Services (loaded first) -->
+    <script type="module" src="js/services/StorageService.js"></script>
+    <script type="module" src="js/services/SecureStorage.js"></script>
+    <script type="module" src="js/utils/Sanitizer.js"></script>
+    <script type="module" src="js/utils/Logger.js"></script>
+    <script type="module" src="js/services/StorageService.js"></script>
+
+    <!-- Authentication (must load before sideDrawer) -->
+    <script type="module" src="js/auth.js"></script>
+
+    <!-- Sound & Transition Managers -->
+    <script src="js/soundManager.js"></script>
+    <script src="js/transitionManager.js"></script>
+
+    <!-- Feature Managers -->
+    <script src="js/themeManager.js"></script>
+    <script src="js/quoteManager.js"></script>
+    <script src="js/roleModelManager.js"></script>
+
+    <!-- Todoist Integration -->
+    <script src="js/todoistIntegration.js"></script>
+
+    <!-- Gemini API for Role Model Research -->
+    <script src="js/gemini-api.js"></script>
+
+    <!-- Main App Logic -->
+    <script src="js/app.js"></script>
+
+    <!-- Cross-tab Sync -->
+    <script type="module" src="js/cross-tab-sync.js"></script>
+
+    <!-- Side Drawer & Navigation (load last) -->
+    <script type="module" src="js/sideDrawer.js"></script>
+    <script type="module" src="js/inject-header.js"></script>
+</body>
+
+</html>
+

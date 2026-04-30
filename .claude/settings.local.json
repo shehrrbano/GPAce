@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sI http://localhost:3000/study-spaces.html)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/study-spaces.html)",
+      "Bash(node *)",
+      "Bash(npm start *)",
+      "Bash(curl *)",
+      "Bash(powershell.exe -Command 'Get-Process -Name node -ErrorAction SilentlyContinue | Where-Object { \\(Get-WmiObject Win32_Process -Filter \"ProcessId=$\\($_.Id\\)\"\\).CommandLine -like '\\\\''*server.js*'\\\\'' } | Stop-Process -Force')"
+    ]
+  }
+}

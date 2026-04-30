@@ -1,0 +1,102 @@
+/**
+ * Critical CSS for Above-the-Fold Content
+ * 
+ * This file contains minimal CSS needed to render the header/navigation
+ * area without layout shift. It should be inlined in the <head> for
+ * optimal FCP (First Contentful Paint) and LCP (Largest Contentful Paint).
+ * 
+ * Performance Impact: Prevents FOUC (Flash of Unstyled Content) and
+ * reduces render-blocking time from external stylesheets.
+ */
+
+/* Base reset - minimal */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-primary);
+    line-height: 1.5;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    padding-top: var(--nav-height);
+    /* Space for fixed nav */
+}
+
+/* Light theme variant */
+body.light-theme {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+/* Hide legacy navigation immediately to prevent flicker before JS injection */
+.top-nav {
+    display: none !important;
+}
+
+/* Critical navigation styles (ProMax) */
+.pm-nav {
+    background-color: var(--nav-bg);
+    backdrop-filter: var(--glass-blur);
+    padding: 10px 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--nav-height);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    /* Scroll-hide transition */
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+}
+
+/* Navigation hidden state (scroll down) */
+.top-nav.nav-hidden {
+    transform: translateY(-100%);
+}
+
+body.light-theme .top-nav {
+    background-color: var(--nav-bg);
+}
+
+.nav-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+.nav-brand img {
+    height: 80px;
+    width: auto;
+    aspect-ratio: 1;
+}
+
+/* Prevent layout shift during font load */
+@font-face {
+    font-family: 'bootstrap-icons';
+    font-display: swap !important;
+    src: local('bootstrap-icons');
+}
+
+/* Container placeholder */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 40px auto;
+    padding: 0 20px;
+}

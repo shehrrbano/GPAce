@@ -1,0 +1,427 @@
+/* ==========================================================================
+   GPA Predictor Module — Modern Deep Blue Redesign
+   Matching Daily Drip / Study Spaces / Performance Tracker
+   ========================================================================== */
+
+:root {
+    --gpa-excellent: #10b981;
+    --gpa-good: #3b82f6;
+    --gpa-average: #f59e0b;
+    --gpa-poor: #ef4444;
+}
+
+.gpa-predictor-section {
+    background: var(--dd-card);
+    border: 1px solid var(--dd-line);
+    border-radius: var(--r-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.gpa-predictor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.gpa-predictor-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gpa-predictor-title h3 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+}
+
+.gpa-predictor-title .icon {
+    font-size: 24px;
+}
+
+.gpa-predictor-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* --- Scale Selector --- */
+.scale-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.22);
+    padding: 4px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--dd-line);
+}
+
+.scale-selector label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--dd-text-muted);
+    letter-spacing: 0.05em;
+}
+
+.scale-selector select {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+    padding: 4px 0;
+}
+
+/* --- Input Mode Toggle --- */
+.input-mode-toggle {
+    display: flex;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid var(--dd-line);
+}
+
+.input-mode-toggle button {
+    padding: 6px 16px;
+    background: transparent;
+    border: none;
+    color: var(--dd-text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 9px;
+    transition: all 0.2s ease;
+}
+
+.input-mode-toggle button.active {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 12px var(--accent-blue-glow);
+}
+
+/* --- GPA Display Card --- */
+.gpa-display-card {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--dd-line);
+    border-radius: var(--r-md);
+    padding: 48px 24px;
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
+}
+
+.gpa-main-value {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: var(--dd-text-muted);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gpa-main-value.excellent { color: var(--gpa-excellent); text-shadow: 0 0 40px rgba(16, 185, 129, 0.25); }
+.gpa-main-value.good { color: var(--accent); text-shadow: 0 0 40px var(--accent-blue-glow); }
+.gpa-main-value.average { color: var(--gpa-average); }
+.gpa-main-value.poor { color: var(--gpa-poor); }
+
+.gpa-scale-indicator {
+    font-size: 14px;
+    color: var(--dd-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.gpa-classification {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 6px 20px;
+    border-radius: 100px;
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid transparent;
+}
+
+.gpa-classification.excellent { background: rgba(16, 185, 129, 0.1); color: var(--gpa-excellent); border-color: rgba(16, 185, 129, 0.2); }
+.gpa-classification.good { background: var(--accent-soft); color: var(--accent-light); border-color: var(--accent-border); }
+.gpa-classification.average { background: rgba(245, 158, 11, 0.1); color: var(--gpa-average); border-color: rgba(245, 158, 11, 0.2); }
+.gpa-classification.poor { background: rgba(239, 68, 68, 0.1); color: var(--gpa-poor); border-color: rgba(239, 68, 68, 0.2); }
+
+/* --- Stats Grid --- */
+.gpa-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.gpa-stat-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--dd-line);
+    border-radius: var(--r-md);
+    padding: 24px 16px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.gpa-stat-card:hover { background: rgba(255, 255, 255, 0.03); transform: translateY(-2px); }
+
+.gpa-stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+}
+
+.gpa-stat-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--dd-text-muted);
+    letter-spacing: 0.1em;
+}
+
+/* --- Subject List Container --- */
+.gpa-subjects-container {
+    border: 1px solid var(--dd-line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    margin-bottom: 24px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.gpa-subjects-header {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1.5fr 1.2fr 1fr 44px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 14px 24px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--dd-text-muted);
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid var(--dd-line);
+}
+
+.gpa-subjects-list {
+    min-height: 100px;
+}
+
+.gpa-subject-row {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1.5fr 1.2fr 1fr 44px;
+    padding: 12px 24px;
+    align-items: center;
+    border-bottom: 1px solid var(--dd-line);
+    transition: background 0.2s;
+}
+
+.gpa-subject-row:last-child { border-bottom: none; }
+.gpa-subject-row:hover { background: rgba(255, 255, 255, 0.03); }
+
+.gpa-subject-row input, .gpa-subject-row select {
+    background: rgba(0, 0, 0, 0.25) !important;
+    border: 1px solid var(--dd-line) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    font-weight: 500;
+    outline: none !important;
+    transition: all 0.2s;
+}
+
+.gpa-subject-row input:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px var(--accent-blue-glow) !important; }
+
+.grade-badge {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent-light);
+    text-align: center;
+    background: var(--accent-soft);
+    padding: 4px 8px;
+    border-radius: 6px;
+    min-width: 40px;
+    margin: 0 auto;
+}
+
+.grade-point-display {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+}
+
+.btn-remove-row {
+    background: transparent;
+    border: none;
+    color: var(--dd-text-muted);
+    cursor: pointer;
+    font-size: 18px;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+}
+
+.btn-remove-row:hover { color: var(--gpa-poor); transform: scale(1.1); }
+
+/* --- Add Subject Action --- */
+.btn-add-subject {
+    width: 100%;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--dd-line-strong);
+    border-radius: var(--r-md);
+    color: var(--dd-text-muted);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-add-subject:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent-light);
+    border-style: solid;
+}
+
+/* --- What-If Scenario --- */
+.what-if-section {
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, transparent 100%);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    border-radius: var(--r-md);
+    padding: 32px;
+    margin-bottom: 40px;
+}
+
+.what-if-section h4 {
+    margin: 0 0 24px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.what-if-slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dd-text-2);
+    margin-bottom: 16px;
+}
+
+#whatIfValue { color: var(--accent-light); font-size: 18px; }
+
+.what-if-slider {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 100px;
+    appearance: none;
+    outline: none;
+    margin-bottom: 24px;
+}
+
+.what-if-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--accent-blue-glow);
+    border: 2px solid #fff;
+}
+
+.what-if-result {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dd-text-muted);
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+#whatIfGPA {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+}
+
+/* --- Final Actions --- */
+.gpa-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.btn-gpa-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--dd-line);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn-gpa-action.secondary { background: rgba(255, 255, 255, 0.05); color: #fff; }
+.btn-gpa-action.danger { background: rgba(239, 68, 68, 0.1); color: var(--gpa-poor); border-color: rgba(239, 68, 68, 0.2); }
+
+.btn-gpa-action:hover { transform: translateY(-3px); border-color: var(--dd-line-strong); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
+
+/* --- Empty State --- */
+.gpa-empty-state {
+    text-align: center;
+    padding: 48px;
+    color: var(--dd-text-muted);
+}
+.gpa-empty-state h4 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+
+@media (max-width: 992px) {
+    .gpa-stats-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+    .gpa-main-value { font-size: 56px; }
+    .gpa-subjects-header { display: none; }
+    .gpa-subject-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .gpa-subject-row input:first-child { grid-column: 1 / -1; }
+}

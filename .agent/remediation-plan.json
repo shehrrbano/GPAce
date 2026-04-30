@@ -1,0 +1,983 @@
+{
+    "generated_at": "2025-12-06T16:06:12+05:00",
+    "codebase": "GPAce",
+    "total_issues_addressed": 47,
+    "batches": [
+        {
+            "batch_name": "Batch 1: Firebase Consolidation",
+            "focus": "Eliminate duplicate Firebase initialization to prevent app/duplicate-app errors and establish single source of truth for authentication",
+            "priority": "Critical",
+            "estimated_effort": "1-2 days",
+            "risk_level": "High",
+            "rollback_strategy": "Restore archived files from _archived/ directory",
+            "tasks": [
+                {
+                    "task_id": "B1-T1",
+                    "task_description": "Create _archived directory and move redundant Firebase modules",
+                    "affected_files": [
+                        "js/firebase-init.js",
+                        "js/firebaseAuth.js",
+                        "js/firebase-config.js"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "Create directory: _archived/",
+                        "Move js/firebase-init.js → _archived/firebase-init.js.bak",
+                        "Move js/firebaseAuth.js → _archived/firebaseAuth.js.bak",
+                        "Move js/firebase-config.js → _archived/firebase-config.js.bak"
+                    ],
+                    "expected_outcome": "Three redundant Firebase modules archived, only auth.js and firebaseConfig.js remain active",
+                    "sequence_order": 1,
+                    "estimated_effort": "15 minutes"
+                },
+                {
+                    "task_id": "B1-T2",
+                    "task_description": "Audit all HTML files for script tags importing archived modules",
+                    "affected_files": [
+                        "grind.html",
+                        "index.html",
+                        "subject-marks.html",
+                        "study-spaces.html",
+                        "flashcards/index.html",
+                        "instant-test-feedback.html",
+                        "priority-list.html",
+                        "workspace.html"
+                    ],
+                    "dependencies": [
+                        "B1-T1"
+                    ],
+                    "actions": [
+                        "Search for: <script src=\".*firebase-init\\.js\"",
+                        "Search for: <script src=\".*firebaseAuth\\.js\"",
+                        "Search for: <script src=\".*firebase-config\\.js\"",
+                        "Document all occurrences with line numbers"
+                    ],
+                    "expected_outcome": "Complete list of HTML files requiring import updates",
+                    "sequence_order": 2,
+                    "estimated_effort": "30 minutes"
+                },
+                {
+                    "task_id": "B1-T3",
+                    "task_description": "Update HTML files to import only from auth.js",
+                    "affected_files": [
+                        "All HTML files identified in B1-T2"
+                    ],
+                    "dependencies": [
+                        "B1-T2"
+                    ],
+                    "actions": [
+                        "Replace imports of firebase-init.js with auth.js",
+                        "Replace imports of firebaseAuth.js with auth.js",
+                        "Remove duplicate script tags if auth.js already imported",
+                        "Ensure type=\"module\" is set on auth.js script tag"
+                    ],
+                    "expected_outcome": "All HTML files use auth.js as single authentication entry point",
+                    "sequence_order": 3,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B1-T4",
+                    "task_description": "Audit JavaScript modules for imports from archived files",
+                    "affected_files": [
+                        "js/*.js (all modules)",
+                        "workers/*.js"
+                    ],
+                    "dependencies": [
+                        "B1-T1"
+                    ],
+                    "actions": [
+                        "grep -r \"from.*firebase-init\" js/",
+                        "grep -r \"from.*firebaseAuth\" js/",
+                        "grep -r \"import.*firebase-config\" js/",
+                        "Document all JS module dependencies"
+                    ],
+                    "expected_outcome": "Complete dependency map of archived module usage in JS files",
+                    "sequence_order": 4,
+                    "estimated_effort": "30 minutes"
+                },
+                {
+                    "task_id": "B1-T5",
+                    "task_description": "Update JavaScript module imports to use auth.js or firebaseConfig.js",
+                    "affected_files": [
+                        "Files identified in B1-T4"
+                    ],
+                    "dependencies": [
+                        "B1-T4"
+                    ],
+                    "actions": [
+                        "For auth-related imports: change to import from './auth.js'",
+                        "For config-only imports: change to import from './firebaseConfig.js'",
+                        "Verify exported symbols match between old and new modules",
+                        "Add missing exports to auth.js if needed"
+                    ],
+                    "expected_outcome": "All JS modules correctly import from consolidated auth.js or firebaseConfig.js",
+                    "sequence_order": 5,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B1-T6",
+                    "task_description": "Verify global window.auth availability across all pages",
+                    "affected_files": [
+                        "js/auth.js",
+                        "js/firestore.js",
+                        "js/googleDriveApi.js"
+                    ],
+                    "dependencies": [
+                        "B1-T5"
+                    ],
+                    "actions": [
+                        "Confirm auth.js exports and sets window.auth",
+                        "Confirm auth.js exports and sets window.signInWithGoogle",
+                        "Confirm auth.js exports and sets window.signOutUser",
+                        "Test auth flow in browser DevTools console"
+                    ],
+                    "expected_outcome": "window.auth, window.signInWithGoogle, window.signOutUser globally accessible",
+                    "sequence_order": 6,
+                    "estimated_effort": "30 minutes"
+                },
+                {
+                    "task_id": "B1-T7",
+                    "task_description": "Integration testing of authentication flow",
+                    "affected_files": [
+                        "grind.html",
+                        "index.html"
+                    ],
+                    "dependencies": [
+                        "B1-T6"
+                    ],
+                    "actions": [
+                        "Test Google Sign-In popup on grind.html",
+                        "Verify onAuthStateChanged fires correctly",
+                        "Confirm Drive API integration triggers (if googleDriveAPI present)",
+                        "Test sign-out flow clears state",
+                        "Check for app/duplicate-app errors in console"
+                    ],
+                    "expected_outcome": "Zero Firebase initialization errors, successful sign-in/sign-out cycle",
+                    "sequence_order": 7,
+                    "estimated_effort": "1 hour"
+                }
+            ]
+        },
+        {
+            "batch_name": "Batch 2: Global State Encapsulation",
+            "focus": "Reduce 240+ window.* assignments by creating controlled module exports and a globals registry",
+            "priority": "Critical",
+            "estimated_effort": "2-3 days",
+            "risk_level": "Medium",
+            "rollback_strategy": "Revert to pre-batch git commit or restore from backup",
+            "tasks": [
+                {
+                    "task_id": "B2-T1",
+                    "task_description": "Create centralized globals registry module",
+                    "affected_files": [
+                        "js/core/globals.js (new file)"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "Create js/core/ directory",
+                        "Create globals.js with register(), get(), getAll() methods",
+                        "Add debug mode for tracking global registrations",
+                        "Export as default and named exports"
+                    ],
+                    "expected_outcome": "Single registry for controlled global exposure with tracking capability",
+                    "sequence_order": 1,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B2-T2",
+                    "task_description": "Catalog all current window.* assignments by category",
+                    "affected_files": [
+                        "All js/*.js files"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "grep -rn 'window\\.' js/ > globals-audit.txt",
+                        "Categorize into: UI functions, Auth, Data, Utilities",
+                        "Identify truly necessary globals vs. module-only exports",
+                        "Create migration priority list"
+                    ],
+                    "expected_outcome": "Complete categorized inventory of 240+ global assignments",
+                    "sequence_order": 2,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B2-T3",
+                    "task_description": "Refactor workspace-core.js to use module exports",
+                    "affected_files": [
+                        "js/workspace-core.js"
+                    ],
+                    "dependencies": [
+                        "B2-T1"
+                    ],
+                    "actions": [
+                        "Convert window.editorState to exported const",
+                        "Convert window.updateCounts to exported function",
+                        "Convert window.updateLastSaved to exported function",
+                        "Convert window.toggleDropdown to exported function",
+                        "Convert window.closeAllDropdowns to exported function",
+                        "Convert window.performEdit to exported function",
+                        "Keep minimal window.* for HTML onclick compatibility (temporary)"
+                    ],
+                    "expected_outcome": "workspace-core.js exports 6 items via ES modules, reduced window pollution",
+                    "sequence_order": 3,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B2-T4",
+                    "task_description": "Refactor workspace-ui.js to use module exports",
+                    "affected_files": [
+                        "js/workspace-ui.js"
+                    ],
+                    "dependencies": [
+                        "B2-T1"
+                    ],
+                    "actions": [
+                        "Convert window.showToast to exported function",
+                        "Convert window.hideToast to exported function",
+                        "Convert window.toggleTheme to exported function",
+                        "Register necessary globals via globals.js"
+                    ],
+                    "expected_outcome": "workspace-ui.js exports 3 functions, uses globals registry",
+                    "sequence_order": 4,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B2-T5",
+                    "task_description": "Refactor workspace-tables-links.js to use module exports",
+                    "affected_files": [
+                        "js/workspace-tables-links.js"
+                    ],
+                    "dependencies": [
+                        "B2-T1"
+                    ],
+                    "actions": [
+                        "Export insertTable, closeTableDialog, insertTableFromDialog",
+                        "Export insertLink, closeLinkDialog, insertLinkFromDialog",
+                        "Export copyToClipboard, editLinkAtIndex, createLinkTooltip",
+                        "Register only HTML-invoked functions via globals.js"
+                    ],
+                    "expected_outcome": "9 functions exported via module, selective global registration",
+                    "sequence_order": 5,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B2-T6",
+                    "task_description": "Refactor workspace-media.js to use module exports",
+                    "affected_files": [
+                        "js/workspace-media.js"
+                    ],
+                    "dependencies": [
+                        "B2-T1"
+                    ],
+                    "actions": [
+                        "Export showImageOptions, uploadImage, handleImageUpload",
+                        "Export openGooglePicker, insertImageUrl, closeImageUrlDialog",
+                        "Export insertImageFromUrl, insertImage",
+                        "Export handleDragOver, handleDragLeave, handleDrop",
+                        "Register drag handlers as globals (event listeners need window access)"
+                    ],
+                    "expected_outcome": "11 functions properly exported, minimal window pollution",
+                    "sequence_order": 6,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B2-T7",
+                    "task_description": "Refactor workspace-document.js and workspace-formatting.js",
+                    "affected_files": [
+                        "js/workspace-document.js",
+                        "js/workspace-formatting.js"
+                    ],
+                    "dependencies": [
+                        "B2-T1"
+                    ],
+                    "actions": [
+                        "workspace-document: Export saveContent, newDocument, saveDocument, openDocument, exportAs* functions",
+                        "workspace-formatting: Export toggleFormat, updateFormat, updateToolbarState, adjustZoom",
+                        "Use globals.js for HTML-invoked functions"
+                    ],
+                    "expected_outcome": "11 additional functions properly modularized",
+                    "sequence_order": 7,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B2-T8",
+                    "task_description": "Create workspace facade module for controlled exposure",
+                    "affected_files": [
+                        "js/workspace/index.js (new file)"
+                    ],
+                    "dependencies": [
+                        "B2-T3",
+                        "B2-T4",
+                        "B2-T5",
+                        "B2-T6",
+                        "B2-T7"
+                    ],
+                    "actions": [
+                        "Create js/workspace/ directory",
+                        "Create index.js that re-exports from all workspace-*.js modules",
+                        "Provide single import point for workspace functionality",
+                        "Document public API in JSDoc"
+                    ],
+                    "expected_outcome": "Single import point: import * as Workspace from './workspace/index.js'",
+                    "sequence_order": 8,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B2-T9",
+                    "task_description": "Update workspace.html to use new module structure",
+                    "affected_files": [
+                        "workspace.html"
+                    ],
+                    "dependencies": [
+                        "B2-T8"
+                    ],
+                    "actions": [
+                        "Update script imports to use workspace/index.js",
+                        "Verify all workspace functions accessible",
+                        "Test document editing, saving, formatting",
+                        "Test image upload and table insertion"
+                    ],
+                    "expected_outcome": "workspace.html works with modularized code, no regressions",
+                    "sequence_order": 9,
+                    "estimated_effort": "2 hours"
+                }
+            ]
+        },
+        {
+            "batch_name": "Batch 3: Inline Handler Extraction",
+            "focus": "Remove 95+ inline onclick/onchange handlers from HTML and implement event delegation",
+            "priority": "High",
+            "estimated_effort": "3-4 days",
+            "risk_level": "Low",
+            "rollback_strategy": "Restore HTML files from version control",
+            "tasks": [
+                {
+                    "task_id": "B3-T1",
+                    "task_description": "Create GrindController.js for grind.html event handling",
+                    "affected_files": [
+                        "js/controllers/GrindController.js (new file)"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "Create js/controllers/ directory",
+                        "Create GrindController.js with init() function",
+                        "Implement event delegation for click events",
+                        "Map data-action attributes to handler functions",
+                        "Export controller as singleton"
+                    ],
+                    "expected_outcome": "Centralized event handling for grind.html via data attributes",
+                    "sequence_order": 1,
+                    "estimated_effort": "3 hours"
+                },
+                {
+                    "task_id": "B3-T2",
+                    "task_description": "Extract inline handlers from grind.html - Task Management section",
+                    "affected_files": [
+                        "grind.html"
+                    ],
+                    "dependencies": [
+                        "B3-T1"
+                    ],
+                    "actions": [
+                        "Replace onclick=\"showTaskModal()\" with data-action=\"show-task-modal\"",
+                        "Replace onclick=\"hideTaskModal()\" with data-action=\"hide-task-modal\"",
+                        "Replace onclick=\"createTask()\" with data-action=\"create-task\"",
+                        "Replace onchange=\"loadSubcategories()\" with data-change=\"load-subcategories\"",
+                        "Add handlers to GrindController.js"
+                    ],
+                    "expected_outcome": "Task modal and creation uses data-attribute event delegation",
+                    "sequence_order": 2,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B3-T3",
+                    "task_description": "Extract inline handlers from grind.html - Navigation and Actions section",
+                    "affected_files": [
+                        "grind.html"
+                    ],
+                    "dependencies": [
+                        "B3-T1"
+                    ],
+                    "actions": [
+                        "Replace onclick=\"navigateTask('prev')\" with data-action=\"navigate-task\" data-direction=\"prev\"",
+                        "Replace onclick=\"navigateTask('next')\" with data-action=\"navigate-task\" data-direction=\"next\"",
+                        "Replace onclick=\"completeTask(...)\" with data-action=\"complete-task\" data-project-id=\"...\" data-task-id=\"...\"",
+                        "Replace onclick=\"skipTask()\" with data-action=\"skip-task\"",
+                        "Replace onclick=\"interleaveTask()\" with data-action=\"interleave-task\"",
+                        "Add handlers to GrindController.js"
+                    ],
+                    "expected_outcome": "Task navigation and actions use data-attribute event delegation",
+                    "sequence_order": 3,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B3-T4",
+                    "task_description": "Extract inline handlers from grind.html - Quote and Timer section",
+                    "affected_files": [
+                        "grind.html"
+                    ],
+                    "dependencies": [
+                        "B3-T1"
+                    ],
+                    "actions": [
+                        "Replace onclick=\"rotateQuote(-1)\" with data-action=\"rotate-quote\" data-direction=\"-1\"",
+                        "Replace onclick=\"rotateQuote(1)\" with data-action=\"rotate-quote\" data-direction=\"1\"",
+                        "Handle quote rotation in GrindController.js"
+                    ],
+                    "expected_outcome": "Quote navigation uses data-attribute event delegation",
+                    "sequence_order": 4,
+                    "estimated_effort": "30 minutes"
+                },
+                {
+                    "task_id": "B3-T5",
+                    "task_description": "Extract inline handlers from grind.html - API and Links section",
+                    "affected_files": [
+                        "grind.html"
+                    ],
+                    "dependencies": [
+                        "B3-T1"
+                    ],
+                    "actions": [
+                        "Replace onclick=\"toggleApiConfig()\" with data-action=\"toggle-api-config\"",
+                        "Replace onclick=\"toggleApiVisibility(...)\" with data-action=\"toggle-api-visibility\" data-target=\"...\"",
+                        "Replace onclick=\"saveApiKeys()\" with data-action=\"save-api-keys\"",
+                        "Replace onclick=\"addNewLink(...)\" with data-action=\"add-link\" data-task-id=\"...\"",
+                        "Replace onclick=\"toggleTaskLinks(...)\" with data-action=\"toggle-task-links\" data-task-id=\"...\""
+                    ],
+                    "expected_outcome": "API config and task links use data-attribute event delegation",
+                    "sequence_order": 5,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B3-T6",
+                    "task_description": "Create InstantFeedbackController.js",
+                    "affected_files": [
+                        "js/controllers/InstantFeedbackController.js (new file)",
+                        "instant-test-feedback.html"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "Create InstantFeedbackController.js",
+                        "Extract 6 inline handlers from instant-test-feedback.html",
+                        "Replace onclick=\"toggleApiVisibility(...)\" with data-action pattern",
+                        "Replace onclick=\"saveApiKeys()\" with data-action=\"save-api-keys\"",
+                        "Replace onclick=\"openApiSettings()\" with data-action=\"open-api-settings\""
+                    ],
+                    "expected_outcome": "instant-test-feedback.html uses event delegation",
+                    "sequence_order": 6,
+                    "estimated_effort": "1.5 hours"
+                },
+                {
+                    "task_id": "B3-T7",
+                    "task_description": "Create RelaxedModeController.js",
+                    "affected_files": [
+                        "js/controllers/RelaxedModeController.js (new file)",
+                        "relaxed-mode/index.html"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "Create RelaxedModeController.js",
+                        "Replace onclick=\"window.location.href='...'\" with data-action=\"navigate\" data-url=\"...\"",
+                        "Replace onclick=\"showAddTaskForm()\" with data-action=\"show-add-task-form\"",
+                        "Replace onclick=\"saveTask()\" with data-action=\"save-task\"",
+                        "Replace onclick=\"hideAddTaskForm()\" with data-action=\"hide-add-task-form\""
+                    ],
+                    "expected_outcome": "relaxed-mode/index.html uses event delegation",
+                    "sequence_order": 7,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B3-T8",
+                    "task_description": "Update remaining HTML files with minor inline handlers",
+                    "affected_files": [
+                        "subject-marks.html",
+                        "priority-list.html"
+                    ],
+                    "dependencies": [
+                        "B3-T1"
+                    ],
+                    "actions": [
+                        "subject-marks.html: Replace theme toggle onclick",
+                        "priority-list.html: Replace navigateTask onclick handlers",
+                        "Reuse existing controller patterns"
+                    ],
+                    "expected_outcome": "All HTML files free of inline onclick handlers",
+                    "sequence_order": 8,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B3-T9",
+                    "task_description": "Integration testing of all event delegation",
+                    "affected_files": [
+                        "All modified HTML files",
+                        "All controller JS files"
+                    ],
+                    "dependencies": [
+                        "B3-T2",
+                        "B3-T3",
+                        "B3-T4",
+                        "B3-T5",
+                        "B3-T6",
+                        "B3-T7",
+                        "B3-T8"
+                    ],
+                    "actions": [
+                        "Test task creation, completion, navigation on grind.html",
+                        "Test API settings modal on instant-test-feedback.html",
+                        "Test task form on relaxed-mode/index.html",
+                        "Verify no JavaScript errors in console",
+                        "Verify all buttons respond to clicks"
+                    ],
+                    "expected_outcome": "All interactive elements work via event delegation",
+                    "sequence_order": 9,
+                    "estimated_effort": "2 hours"
+                }
+            ]
+        },
+        {
+            "batch_name": "Batch 4: Storage Layer Abstraction",
+            "focus": "Replace 480+ direct localStorage calls with centralized StorageService providing validation, versioning, and encryption",
+            "priority": "High",
+            "estimated_effort": "2 days",
+            "risk_level": "Medium",
+            "rollback_strategy": "Restore original localStorage usage pattern, data remains intact",
+            "tasks": [
+                {
+                    "task_id": "B4-T1",
+                    "task_description": "Create StorageService.js with core functionality",
+                    "affected_files": [
+                        "js/services/StorageService.js (new file)"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "Create js/services/ directory",
+                        "Implement get(key, defaultValue, schema) method with JSON parsing",
+                        "Implement set(key, value) method with JSON stringification",
+                        "Implement remove(key) method",
+                        "Implement clear() method for namespaced keys",
+                        "Add SCHEMA_VERSION constant for migrations",
+                        "Add error handling for corrupt JSON",
+                        "Export as singleton"
+                    ],
+                    "expected_outcome": "Centralized storage layer with validation and error handling",
+                    "sequence_order": 1,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B4-T2",
+                    "task_description": "Create SecureStorage.js for sensitive data",
+                    "affected_files": [
+                        "js/services/SecureStorage.js (new file)"
+                    ],
+                    "dependencies": [
+                        "B4-T1"
+                    ],
+                    "actions": [
+                        "Implement browser-native encryption using SubtleCrypto API",
+                        "Create key derivation from user-specific seed",
+                        "Implement setSecure(key, value) with encryption",
+                        "Implement getSecure(key) with decryption",
+                        "Fall back to obfuscation if SubtleCrypto unavailable",
+                        "Mark sensitive keys: todoistAccessToken, geminiApiKey, etc."
+                    ],
+                    "expected_outcome": "Encrypted storage for API tokens and credentials",
+                    "sequence_order": 2,
+                    "estimated_effort": "3 hours"
+                },
+                {
+                    "task_id": "B4-T3",
+                    "task_description": "Define storage schemas for major data types",
+                    "affected_files": [
+                        "js/services/schemas/ (new directory)",
+                        "js/services/schemas/TaskSchema.js",
+                        "js/services/schemas/SubjectSchema.js",
+                        "js/services/schemas/FlashcardSchema.js"
+                    ],
+                    "dependencies": [
+                        "B4-T1"
+                    ],
+                    "actions": [
+                        "Create schema validation helpers",
+                        "Define TaskSchema with required fields",
+                        "Define SubjectSchema with required fields",
+                        "Define FlashcardSchema with required fields",
+                        "Add migration functions for schema changes"
+                    ],
+                    "expected_outcome": "Type-safe storage access with schema validation",
+                    "sequence_order": 3,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B4-T4",
+                    "task_description": "Migrate todoistIntegration.js to use StorageService",
+                    "affected_files": [
+                        "js/todoistIntegration.js"
+                    ],
+                    "dependencies": [
+                        "B4-T1",
+                        "B4-T2"
+                    ],
+                    "actions": [
+                        "Import SecureStorage for API token",
+                        "Replace localStorage.getItem('todoistAccessToken') with SecureStorage.getSecure('todoistAccessToken')",
+                        "Replace localStorage.setItem('todoistAccessToken', ...) with SecureStorage.setSecure('todoistAccessToken', ...)",
+                        "Replace localStorage.getItem('todoistState') with StorageService.get('todoistState')",
+                        "Replace localStorage.setItem('todoistState', ...) with StorageService.set('todoistState', ...)"
+                    ],
+                    "expected_outcome": "Todoist API token encrypted, state JSON validated",
+                    "sequence_order": 4,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B4-T5",
+                    "task_description": "Migrate theme management to use StorageService",
+                    "affected_files": [
+                        "js/themeManager.js",
+                        "js/ui-utilities.js",
+                        "js/workspace-ui.js"
+                    ],
+                    "dependencies": [
+                        "B4-T1"
+                    ],
+                    "actions": [
+                        "Replace all localStorage.getItem('theme') with StorageService.get('theme', 'dark')",
+                        "Replace all localStorage.setItem('theme', ...) with StorageService.set('theme', ...)",
+                        "Remove duplicate theme logic from multiple files",
+                        "Keep single source of truth in themeManager.js"
+                    ],
+                    "expected_outcome": "Theme preference managed through single StorageService call",
+                    "sequence_order": 5,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B4-T6",
+                    "task_description": "Migrate workspace modules to use StorageService",
+                    "affected_files": [
+                        "js/workspace-core.js",
+                        "js/workspace-document.js",
+                        "js/workspace-attachments.js",
+                        "js/workspaceFlashcardIntegration.js"
+                    ],
+                    "dependencies": [
+                        "B4-T1"
+                    ],
+                    "actions": [
+                        "Replace localStorage.getItem('workspaceContent') with StorageService.get('workspaceContent')",
+                        "Replace localStorage.getItem('calculatedPriorityTasks') with StorageService.get('calculatedPriorityTasks', [])",
+                        "Replace localStorage.getItem('flashcardDecks') with StorageService.get('flashcardDecks', [])",
+                        "Validate parsed arrays before use"
+                    ],
+                    "expected_outcome": "Workspace storage calls centralized with validation",
+                    "sequence_order": 6,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B4-T7",
+                    "task_description": "Migrate weightage and subject modules to use StorageService",
+                    "affected_files": [
+                        "js/weightage-connector.js",
+                        "js/text-expansion.js",
+                        "js/userGuidance.js",
+                        "js/semester-management.js"
+                    ],
+                    "dependencies": [
+                        "B4-T1"
+                    ],
+                    "actions": [
+                        "Replace all localStorage calls with StorageService equivalents",
+                        "Add schema validation for complex objects",
+                        "Handle migration from old data format if needed"
+                    ],
+                    "expected_outcome": "All weightage and subject storage centralized",
+                    "sequence_order": 7,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B4-T8",
+                    "task_description": "Create data migration utility for existing users",
+                    "affected_files": [
+                        "js/services/DataMigration.js (new file)"
+                    ],
+                    "dependencies": [
+                        "B4-T1",
+                        "B4-T2",
+                        "B4-T3"
+                    ],
+                    "actions": [
+                        "Detect old data format in localStorage",
+                        "Migrate sensitive data to encrypted storage",
+                        "Update schema version markers",
+                        "Log migration results for debugging"
+                    ],
+                    "expected_outcome": "Seamless migration for existing user data",
+                    "sequence_order": 8,
+                    "estimated_effort": "2 hours"
+                }
+            ]
+        },
+        {
+            "batch_name": "Batch 5: Security Hardening",
+            "focus": "Eliminate XSS vulnerabilities from 300+ innerHTML usages and implement secure logging",
+            "priority": "Medium",
+            "estimated_effort": "2-3 days",
+            "risk_level": "Low",
+            "rollback_strategy": "Revert sanitization library integration",
+            "tasks": [
+                {
+                    "task_id": "B5-T1",
+                    "task_description": "Add DOMPurify library to project",
+                    "affected_files": [
+                        "package.json",
+                        "index.html (CDN fallback)"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "npm install dompurify",
+                        "Add CDN fallback: <script src=\"https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js\"></script>",
+                        "Create js/utils/sanitize.js wrapper module"
+                    ],
+                    "expected_outcome": "DOMPurify available for HTML sanitization across codebase",
+                    "sequence_order": 1,
+                    "estimated_effort": "30 minutes"
+                },
+                {
+                    "task_id": "B5-T2",
+                    "task_description": "Create sanitization utility module",
+                    "affected_files": [
+                        "js/utils/sanitize.js (new file)"
+                    ],
+                    "dependencies": [
+                        "B5-T1"
+                    ],
+                    "actions": [
+                        "Create js/utils/ directory",
+                        "Import DOMPurify",
+                        "Export sanitizeHTML(dirty) function",
+                        "Export escapeHTML(text) function for plain text",
+                        "Configure DOMPurify allowed tags and attributes",
+                        "Add XSS test cases in comments"
+                    ],
+                    "expected_outcome": "Reusable sanitization utility for all innerHTML assignments",
+                    "sequence_order": 2,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B5-T3",
+                    "task_description": "Sanitize user-generated content in flashcard modules",
+                    "affected_files": [
+                        "js/workspaceFlashcardIntegration.js",
+                        "js/flashcardManager.js"
+                    ],
+                    "dependencies": [
+                        "B5-T2"
+                    ],
+                    "actions": [
+                        "Import sanitize.js",
+                        "Replace questionContent.innerHTML = card.question with questionContent.innerHTML = sanitizeHTML(card.question)",
+                        "Replace answerContent.innerHTML = card.answer with answerContent.innerHTML = sanitizeHTML(card.answer)",
+                        "Sanitize all dynamic card content before rendering"
+                    ],
+                    "expected_outcome": "Flashcard content safe from XSS injection",
+                    "sequence_order": 3,
+                    "estimated_effort": "1.5 hours"
+                },
+                {
+                    "task_id": "B5-T4",
+                    "task_description": "Sanitize external API responses in Todoist integration",
+                    "affected_files": [
+                        "js/todoistIntegration.js"
+                    ],
+                    "dependencies": [
+                        "B5-T2"
+                    ],
+                    "actions": [
+                        "Import sanitize.js",
+                        "Sanitize task.content before innerHTML assignment",
+                        "Sanitize project names and labels",
+                        "Sanitize user display name and email"
+                    ],
+                    "expected_outcome": "Todoist API data safe from XSS injection",
+                    "sequence_order": 4,
+                    "estimated_effort": "1 hour"
+                },
+                {
+                    "task_id": "B5-T5",
+                    "task_description": "Sanitize dynamic content in timetable and test feedback modules",
+                    "affected_files": [
+                        "js/timetableAnalyzer.js",
+                        "js/test-feedback.js"
+                    ],
+                    "dependencies": [
+                        "B5-T2"
+                    ],
+                    "actions": [
+                        "Sanitize schedule HTML before container.innerHTML assignment",
+                        "Sanitize AI-generated feedback before rendering",
+                        "Use textContent for plain text fields"
+                    ],
+                    "expected_outcome": "AI-generated and file-based content safe from XSS",
+                    "sequence_order": 5,
+                    "estimated_effort": "1.5 hours"
+                },
+                {
+                    "task_id": "B5-T6",
+                    "task_description": "Create logging service with levels and sensitive data filtering",
+                    "affected_files": [
+                        "js/utils/Logger.js (new file)"
+                    ],
+                    "dependencies": [],
+                    "actions": [
+                        "Create Logger class with DEBUG, INFO, WARN, ERROR levels",
+                        "Add environment detection (production vs development)",
+                        "Disable DEBUG in production",
+                        "Add sensitive data patterns to filter (apiKey, token, password)",
+                        "Replace direct console.log with Logger.info(), etc."
+                    ],
+                    "expected_outcome": "Controlled logging with sensitive data protection",
+                    "sequence_order": 6,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B5-T7",
+                    "task_description": "Migrate high-priority console statements to Logger",
+                    "affected_files": [
+                        "js/todoistIntegration.js",
+                        "js/auth.js",
+                        "js/googleDriveApi.js"
+                    ],
+                    "dependencies": [
+                        "B5-T6"
+                    ],
+                    "actions": [
+                        "Replace console.log('Callback Parameters:', { code, state }) with Logger.debug()",
+                        "Replace console.log('Stored State:', storedState) with Logger.debug()",
+                        "Replace console.log('Setting up Todoist integration') with Logger.info()",
+                        "Remove or filter sensitive data from remaining logs"
+                    ],
+                    "expected_outcome": "Sensitive authentication data not logged in production",
+                    "sequence_order": 7,
+                    "estimated_effort": "2 hours"
+                },
+                {
+                    "task_id": "B5-T8",
+                    "task_description": "Add Content Security Policy headers",
+                    "affected_files": [
+                        "firebase.json",
+                        "All HTML files"
+                    ],
+                    "dependencies": [
+                        "B3-T9"
+                    ],
+                    "actions": [
+                        "Add CSP meta tag to HTML files",
+                        "Configure Firebase hosting headers in firebase.json",
+                        "Allow inline scripts only via nonce (after inline handler removal)",
+                        "Whitelist required CDN domains",
+                        "Test CSP in browser DevTools"
+                    ],
+                    "expected_outcome": "CSP enforcement prevents inline script execution",
+                    "sequence_order": 8,
+                    "estimated_effort": "2 hours"
+                }
+            ]
+        }
+    ],
+    "quick_wins": [
+        {
+            "task_id": "QW-1",
+            "task_description": "Delete duplicate theme-manager.js file (keep themeManager.js)",
+            "affected_files": [
+                "js/theme-manager.js"
+            ],
+            "actions": [
+                "Verify themeManager.js is the primary file",
+                "Search for imports of theme-manager.js",
+                "Update any imports to use themeManager.js",
+                "Delete js/theme-manager.js"
+            ],
+            "expected_outcome": "Single theme management module, no duplicate logic",
+            "priority": "Immediate",
+            "estimated_effort": "15 minutes"
+        },
+        {
+            "task_id": "QW-2",
+            "task_description": "Remove console.log statements with sensitive data from todoistIntegration.js",
+            "affected_files": [
+                "js/todoistIntegration.js"
+            ],
+            "actions": [
+                "Line 65: Remove/comment console.log('Callback Parameters:', { code, state })",
+                "Line 66: Remove/comment console.log('Stored State:', storedState)",
+                "Line 403: Remove/comment console.log('storedToken: ...') if present"
+            ],
+            "expected_outcome": "No OAuth tokens or auth codes logged to console",
+            "priority": "Immediate",
+            "estimated_effort": "10 minutes"
+        },
+        {
+            "task_id": "QW-3",
+            "task_description": "Fix inconsistent storageBucket in firebaseAuth.js legacy config",
+            "affected_files": [
+                "js/firebaseAuth.js"
+            ],
+            "actions": [
+                "Line 26: Change storageBucket from 'mzm-gpace.appspot.com' to 'mzm-gpace.firebasestorage.app'",
+                "Verify matches firebaseConfig.js configuration"
+            ],
+            "expected_outcome": "Consistent Firebase configuration across all files",
+            "priority": "Immediate",
+            "estimated_effort": "5 minutes"
+        },
+        {
+            "task_id": "QW-4",
+            "task_description": "Add .catch() handlers to unhandled promise chains",
+            "affected_files": [
+                "js/workspace-tables-links.js",
+                "js/workspace-document.js",
+                "js/semester-management.js"
+            ],
+            "actions": [
+                "workspace-tables-links.js:144: Add .catch() to clipboard.writeText()",
+                "workspace-document.js:375: Add .catch() to Packer.toBlob()",
+                "Add error handling to other unhandled .then() chains"
+            ],
+            "expected_outcome": "No unhandled promise rejections in console",
+            "priority": "Immediate",
+            "estimated_effort": "30 minutes"
+        },
+        {
+            "task_id": "QW-5",
+            "task_description": "Remove debug onclick handlers from grind.html modals",
+            "affected_files": [
+                "grind.html"
+            ],
+            "actions": [
+                "Line 103: Remove onclick=\"console.log('Modal closed')\"",
+                "Line 108: Remove onchange=\"console.log('Subject selected:', this.value)\"",
+                "Line 114: Remove onchange=\"console.log('Material type selected:', this.value)\"",
+                "Line 125: Remove onchange=\"console.log('File selected:', this.files[0])\"",
+                "Line 141: Remove onclick=\"console.log('Upload cancelled')\""
+            ],
+            "expected_outcome": "No debug console.log calls in production HTML",
+            "priority": "Immediate",
+            "estimated_effort": "10 minutes"
+        },
+        {
+            "task_id": "QW-6",
+            "task_description": "Create _archived directory and document archival policy",
+            "affected_files": [
+                "_archived/ (new directory)",
+                "_archived/README.md (new file)"
+            ],
+            "actions": [
+                "Create _archived/ directory at project root",
+                "Create README.md documenting: purpose, date archived, reason archived",
+                "Add _archived/ to .gitignore if not tracking archived files"
+            ],
+            "expected_outcome": "Clear archival location for deprecated files",
+            "priority": "Immediate",
+            "estimated_effort": "10 minutes"
+        }
+    ],
+    "overall_strategy": "## Remediation Strategy Overview\n\n### Critical Path\n**Batch 1 (Firebase) → Batch 2 (Globals) → Batch 3 (Handlers) → Batch 4 (Storage) → Batch 5 (Security)**\n\n### Prioritization Rationale\n\n1. **Batch 1 (Firebase Consolidation)** - MUST come first because:\n   - Currently blocking reliable authentication\n   - Causes random `app/duplicate-app` errors\n   - All other features depend on stable auth\n\n2. **Batch 2 (Global State)** - Second priority because:\n   - Reduces hidden dependencies\n   - Makes Batch 3 (inline handlers) safer\n   - Improves testability for subsequent changes\n\n3. **Batch 3 (Inline Handlers)** - Depends on Batch 2 because:\n   - Handlers will call module functions, not window globals\n   - Event delegation requires stable function references\n   - Required before CSP can be enforced\n\n4. **Batch 4 (Storage)** - Can run parallel to Batch 3 because:\n   - Independent of event handling changes\n   - Data layer abstraction is orthogonal\n   - Provides encryption for sensitive tokens\n\n5. **Batch 5 (Security)** - Last because:\n   - CSP requires inline handlers removed (Batch 3)\n   - DOMPurify can be added incrementally\n   - Logging changes are low-risk\n\n### Quick Wins Execution\n\nQuick wins should be executed **before Batch 1** as they:\n- Take < 1 hour total\n- Have zero dependencies\n- Immediately improve security (remove sensitive logs)\n- Set up infrastructure (_archived directory)\n\n### Risk Mitigation\n\n- **Git branching**: Each batch should be a feature branch\n- **Testing checkpoints**: Run full app test after each batch\n- **Rollback points**: Tag commits before each batch starts\n- **Gradual rollout**: Deploy batch changes to staging first\n\n### Success Metrics\n\n| Metric | Current | After Batch 1 | After Batch 5 |\n|--------|---------|---------------|---------------|\n| Firebase init files | 4 | 1 | 1 |\n| window.* assignments | 240+ | 240+ | < 50 |\n| Inline handlers | 95+ | 95+ | 0 |\n| Direct localStorage calls | 480+ | 480+ | 0 |\n| innerHTML without sanitization | 300+ | 300+ | 0 |\n| Console logs with sensitive data | 10+ | 8+ | 0 |"
+}

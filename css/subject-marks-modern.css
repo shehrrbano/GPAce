@@ -1,0 +1,385 @@
+/* ==========================================================================
+   Subject Marks / Performance Tracker — Modern Deep Blue Redesign
+   Matching Daily Drip / Study Spaces / Grind Mode
+   ========================================================================== */
+
+:root {
+  --dd-bg:           #050b18;
+  --dd-bg-2:         #0a1326;
+  --dd-card:         linear-gradient(180deg, rgba(31, 41, 55, 0.55), rgba(17, 26, 44, 0.55));
+  --dd-card-solid:   #0f1830;
+  --dd-line:         rgba(255, 255, 255, 0.08);
+  --dd-line-strong:  rgba(255, 255, 255, 0.14);
+  --dd-text:         #f1f5f9;
+  --dd-text-2:       #cbd5e1;
+  --dd-text-muted:   #64748b;
+
+  --accent-hue: 217;
+  --accent:        oklch(0.65 0.13 var(--accent-hue));
+  --accent-deep:   oklch(0.50 0.13 var(--accent-hue));
+  --accent-light:  oklch(0.82 0.10 var(--accent-hue));
+  --accent-soft:   oklch(0.55 0.12 var(--accent-hue) / 0.18);
+  --accent-border: oklch(0.55 0.12 var(--accent-hue) / 0.34);
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --sidebar-width: 320px;
+  --shadow-card: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.40 0.10 var(--accent-hue) / 0.18), transparent 70%),
+    var(--dd-bg);
+  color: var(--dd-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding-top: 72px; /* Nav height */
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   Master-Detail Layout
+   ============================================ */
+.marks-layout {
+  display: flex;
+  min-height: calc(100vh - 72px);
+  max-width: 1600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Sidebar: Subject List */
+.subject-sidebar {
+  width: var(--sidebar-width);
+  background: var(--dd-bg-2);
+  border-right: 1px solid var(--dd-line);
+  height: calc(100vh - 72px);
+  position: sticky;
+  top: 72px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--dd-line);
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: var(--dd-text-muted);
+}
+
+.subject-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subject-list::-webkit-scrollbar { width: 4px; }
+.subject-list::-webkit-scrollbar-thumb { background: var(--dd-line-strong); border-radius: 10px; }
+
+/* Main Content: Details */
+.marks-content {
+  flex: 1;
+  padding: 40px;
+  min-width: 0; /* Prevent flex blowout */
+}
+
+/* ============================================
+   Subject Card (Sidebar)
+   ============================================ */
+.subject-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--dd-line);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  width: 100%;
+}
+
+.subject-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--dd-line-strong);
+  transform: translateX(4px);
+}
+
+.subject-card.active {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.subject-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.subject-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subject-credits {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-light);
+  background: var(--accent-soft);
+  padding: 2px 8px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.mini-progress-track {
+  height: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 10px;
+  transition: width 0.6s ease;
+}
+
+.subject-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--dd-text-muted);
+}
+
+/* ============================================
+   Detail Components
+   ============================================ */
+.content-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  color: var(--dd-text-muted);
+  text-align: center;
+  gap: 16px;
+}
+
+.content-placeholder i {
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+/* Performance Header Card */
+.performance-card {
+  background: var(--dd-card);
+  border: 1px solid var(--dd-line);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+}
+
+.performance-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 90% 10%, oklch(0.65 0.13 217 / 0.1), transparent 50%);
+  pointer-events: none;
+}
+
+.performance-info h2 {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.big-percentage {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+/* Standard GPAce Cards */
+.card {
+  background: var(--dd-card);
+  border: 1px solid var(--dd-line);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  color: var(--dd-text);
+}
+
+.card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Form Styling */
+.form-group label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dd-text-muted);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-control, .form-select {
+  background: rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid var(--dd-line) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  transition: all 0.2s !important;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px oklch(0.65 0.13 217 / 0.15) !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep)) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  padding: 10px 20px !important;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.25) !important;
+  transition: all 0.2s !important;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.35) !important;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4 !important;
+  transform: none !important;
+}
+
+.btn-danger {
+  background: linear-gradient(180deg, #ff4b5c, #d63031) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(214, 48, 49, 0.25) !important;
+  transition: all 0.2s !important;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(214, 48, 49, 0.35) !important;
+}
+
+/* Accordion Styling (Marks History) */
+.accordion-item {
+  background: transparent;
+  border: none;
+  margin-bottom: 8px;
+}
+
+.accordion-button {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--dd-text-2);
+  border: 1px solid var(--dd-line);
+  border-radius: 12px !important;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 20px;
+}
+
+.accordion-button:not(.collapsed) {
+  background: var(--accent-soft);
+  color: var(--accent-light);
+  border-color: var(--accent-border);
+}
+
+.accordion-button::after { filter: invert(1) brightness(2); }
+
+.list-group-item {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--dd-line);
+  padding: 12px 0;
+  color: var(--dd-text-2);
+}
+
+.list-group-item:last-child { border-bottom: none; }
+
+/* Progress Bars */
+.progress {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 100px;
+  height: 8px;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #00d2ff, var(--accent));
+  border-radius: 100px;
+}
+
+/* ============================================
+   GPA Predictor Integration
+   ============================================ */
+#gpaPredictorContainer {
+  background: var(--dd-card) !important;
+  border: 1px solid var(--dd-line) !important;
+  box-shadow: var(--shadow-card) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .marks-layout { flex-direction: column; }
+  .subject-sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    position: relative;
+    top: 0;
+  }
+  .marks-content { padding: 24px 20px; }
+}

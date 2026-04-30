@@ -1,0 +1,175 @@
+{
+  "nodes": [
+    {
+      "id": "daily_calendar_html",
+      "label": "daily-calendar.html",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Main entry point for the daily calendar view. Contains the core UI layout and a heavy orchestration script that bridges data to the grid."
+    },
+    {
+      "id": "bootstrap_fn",
+      "label": "bootstrap()",
+      "file_type": "code",
+      "source_file": "daily-calendar.html",
+      "rationale": "Main initialization function in daily-calendar.html. Fetches schedule, seeds inputs, and waits for CalendarManager to be ready."
+    },
+    {
+      "id": "renderstrip_fn",
+      "label": "renderStrip()",
+      "file_type": "code",
+      "source_file": "daily-calendar.html",
+      "rationale": "Calculates and renders the top 'Active window' strip (Wake to Sleep duration)."
+    },
+    {
+      "id": "renderstats_fn",
+      "label": "renderStats()",
+      "file_type": "code",
+      "source_file": "daily-calendar.html",
+      "rationale": "Computes and renders the Total Available, Study Time, and Scheduled stats Pills."
+    },
+    {
+      "id": "oncalendarrendered_fn",
+      "label": "onCalendarRendered()",
+      "file_type": "code",
+      "source_file": "daily-calendar.html",
+      "rationale": "Hook called after the grid renders. Updates axis labels, skins blocks with type marks (C/S/B), and picks the current task."
+    },
+    {
+      "id": "calendarmanager_js",
+      "label": "CalendarManager",
+      "file_type": "code",
+      "source_file": "js/calendarManager.js",
+      "rationale": "Orchestrator for the daily view. Manages the lifecycle: load -> render -> event-handling."
+    },
+    {
+      "id": "calendarrenderer_js",
+      "label": "CalendarRenderer",
+      "file_type": "code",
+      "source_file": "js/components/CalendarRenderer.js",
+      "rationale": "Pure UI renderer. Creates the 15-minute grid and maps events to pixel positions."
+    },
+    {
+      "id": "calendarevents_js",
+      "label": "CalendarEvents",
+      "file_type": "code",
+      "source_file": "js/controllers/CalendarEvents.js",
+      "rationale": "Interaction controller. Handles the snapping logic (20px per 15 mins) for drag and resize."
+    },
+    {
+      "id": "calendarservice_js",
+      "label": "CalendarService",
+      "file_type": "code",
+      "source_file": "js/services/CalendarService.js",
+      "rationale": "Data model and logic service. Handles time-to-minutes conversions and API interactions."
+    },
+    {
+      "id": "calendarviewmanager_js",
+      "label": "CalendarViewManager",
+      "file_type": "code",
+      "source_file": "js/calendar-views.js",
+      "rationale": "Manages switching between Daily, Weekly, and Monthly views. Potentially overlaps with CalendarManager."
+    }
+  ],
+  "edges": [
+    {
+      "source": "daily_calendar_html",
+      "target": "bootstrap_fn",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html"
+    },
+    {
+      "source": "bootstrap_fn",
+      "target": "calendarmanager_js",
+      "relation": "awaits",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html"
+    },
+    {
+      "source": "bootstrap_fn",
+      "target": "renderstrip_fn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html"
+    },
+    {
+      "source": "bootstrap_fn",
+      "target": "renderstats_fn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html"
+    },
+    {
+      "source": "daily_calendar_html",
+      "target": "oncalendarrendered_fn",
+      "relation": "observes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html",
+      "rationale": "Uses MutationObserver on .calendar-grid to trigger onCalendarRendered."
+    },
+    {
+      "source": "oncalendarrendered_fn",
+      "target": "renderstats_fn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html"
+    },
+    {
+      "source": "calendarmanager_js",
+      "target": "calendarrenderer_js",
+      "relation": "instantiates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "js/calendarManager.js"
+    },
+    {
+      "source": "calendarmanager_js",
+      "target": "calendarevents_js",
+      "relation": "instantiates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "js/calendarManager.js"
+    },
+    {
+      "source": "calendarrenderer_js",
+      "target": "calendarservice_js",
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "js/components/CalendarRenderer.js"
+    },
+    {
+      "source": "calendarviewmanager_js",
+      "target": "daily_calendar_html",
+      "relation": "redirects_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "js/calendar-views.js",
+      "rationale": "switchView('daily') redirects to daily-calendar.html."
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "data_consistency_flow",
+      "label": "Data Consistency Flow",
+      "nodes": [
+        "calendarservice_js",
+        "renderstats_fn",
+        "renderstrip_fn"
+      ],
+      "relation": "synchronizes",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "rationale": "All three nodes rely on the same StorageService 'dailySchedule' key for consistent time display."
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

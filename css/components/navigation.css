@@ -1,0 +1,212 @@
+/**
+ * Navigation Component CSS (UI UX PRO MAX Standard)
+ * Modern Pill Style with Icon-Only Default and Expanded Active State
+ */
+
+.pm-nav {
+    background-color: var(--nav-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    padding: 0 40px !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: var(--nav-height) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* --- Brand --- */
+.pm-nav-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    font-size: 1.4rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
+}
+
+.pm-nav-brand img {
+    height: 44px !important;
+    width: auto !important;
+}
+
+.pm-nav-brand span {
+    background: linear-gradient(135deg, #FFF 0%, #AAA 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* --- Links Container (Pill) --- */
+.pm-nav-links-pill {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 40px !important;
+    padding: 5px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+.pm-nav-links {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+/* --- Navigation Items --- */
+.nav-item {
+    position: relative !important;
+    color: var(--text-color-secondary) !important;
+    text-decoration: none !important;
+    height: 40px !important;
+    width: 44px !important; /* Default icon-only width */
+    padding: 0 !important;
+    border-radius: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+.nav-item i {
+    font-size: 1.2rem !important;
+    flex-shrink: 0 !important;
+    transition: transform 0.3s ease !important;
+}
+
+.nav-label {
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    opacity: 0 !important;
+    max-width: 0 !important;
+    margin-left: 0 !important;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    pointer-events: none !important;
+}
+
+/* --- Active State: Permanent Expansion --- */
+.nav-item.active {
+    width: auto !important;
+    padding: 0 18px !important;
+    background-color: var(--primary-color) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(255, 45, 85, 0.4) !important;
+}
+
+.nav-item.active .nav-label {
+    opacity: 1 !important;
+    max-width: 200px !important;
+    margin-left: 8px !important;
+}
+
+/* --- Hover State: Temporary Expansion --- */
+.nav-item:hover {
+    width: auto !important;
+    padding: 0 18px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-color) !important;
+}
+
+.nav-item:hover .nav-label {
+    opacity: 1 !important;
+    max-width: 200px !important;
+    margin-left: 8px !important;
+}
+
+/* Ensure active item hover doesn't break color */
+.nav-item.active:hover {
+    background-color: var(--primary-color) !important;
+    color: #FFFFFF !important;
+}
+
+/* --- Right Actions --- */
+.pm-nav-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.pm-drawer-toggle {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text-color) !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+}
+
+.pm-drawer-toggle:hover {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    transform: rotate(45deg) !important;
+}
+
+/* --- Mobile Logic --- */
+@media (max-width: 992px) {
+    .pm-nav { padding: 0 20px !important; }
+    .pm-nav-brand span { display: none !important; }
+    
+    .pm-nav-links-pill {
+        position: fixed !important;
+        top: calc(var(--nav-height) + 10px) !important;
+        left: 20px !important;
+        right: 20px !important;
+        margin: 0 !important;
+        background: var(--nav-bg) !important;
+        display: none !important;
+        flex-direction: column !important;
+        border-radius: 20px !important;
+        padding: 10px !important;
+        backdrop-filter: blur(30px) !important;
+    }
+    
+    .pm-nav-links-pill.mobile-show {
+        display: flex !important;
+        animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    
+    .pm-nav-links {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 5px !important;
+    }
+    
+    .nav-item {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        padding: 0 20px !important;
+    }
+    
+    .nav-item .nav-label {
+        opacity: 1 !important;
+        max-width: none !important;
+        margin-left: 15px !important;
+    }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

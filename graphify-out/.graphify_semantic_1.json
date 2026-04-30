@@ -1,0 +1,139 @@
+{
+  "nodes": [
+    {
+      "id": "grind_now_focusing_card",
+      "label": "Now Focusing Card",
+      "file_type": "document",
+      "source_file": "grind.html",
+      "source_location": {
+        "start_line": 351,
+        "end_line": 361
+      }
+    },
+    {
+      "id": "grind_task_queue_card",
+      "label": "Task Queue Card",
+      "file_type": "document",
+      "source_file": "grind.html",
+      "source_location": {
+        "start_line": 364,
+        "end_line": 374
+      }
+    },
+    {
+      "id": "grind_timer_section",
+      "label": "Timer & Focus Controls",
+      "file_type": "document",
+      "source_file": "grind.html",
+      "source_location": {
+        "start_line": 377,
+        "end_line": 427
+      }
+    },
+    {
+      "id": "grind_stats_grid",
+      "label": "Performance Stats Grid",
+      "file_type": "document",
+      "source_file": "grind.html",
+      "source_location": {
+        "start_line": 430,
+        "end_line": 472
+      }
+    },
+    {
+      "id": "grind_theming_rationale",
+      "label": "Global Theming Rationale",
+      "file_type": "document",
+      "source_file": "css/grind.css",
+      "source_location": {
+        "start_line": 5,
+        "end_line": 9
+      }
+    },
+    {
+      "id": "command_center_dock",
+      "label": "Unified Floating Dock",
+      "file_type": "document",
+      "source_file": "css/components/command-center.css",
+      "source_location": {
+        "start_line": 15,
+        "end_line": 38
+      }
+    },
+    {
+      "id": "command_center_unified_dock_rationale",
+      "label": "Unified Dock Rationale",
+      "file_type": "document",
+      "source_file": "css/components/command-center.css",
+      "source_location": {
+        "start_line": 1,
+        "end_line": 5
+      }
+    },
+    {
+      "id": "sidedrawer_side_drawer",
+      "label": "Side Drawer",
+      "file_type": "document",
+      "source_file": "css/sideDrawer.css",
+      "source_location": {
+        "start_line": 24,
+        "end_line": 45
+      }
+    },
+    {
+      "id": "sidedrawer_modern_practices_rationale",
+      "label": "Modern CSS Best Practices Rationale",
+      "file_type": "document",
+      "source_file": "css/sideDrawer.css",
+      "source_location": {
+        "start_line": 1,
+        "end_line": 13
+      }
+    },
+    {
+      "id": "task_display_current_task_header",
+      "label": "Current Task Header",
+      "file_type": "document",
+      "source_file": "css/task-display.css",
+      "source_location": {
+        "start_line": 2,
+        "end_line": 5
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "command_center_unified_dock_rationale",
+      "target": "command_center_dock",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "css/components/command-center.css",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "sidedrawer_modern_practices_rationale",
+      "target": "sidedrawer_side_drawer",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "css/sideDrawer.css",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "grind_theming_rationale",
+      "target": "grind_now_focusing_card",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "css/grind.css",
+      "source_location": null,
+      "weight": 0.8
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

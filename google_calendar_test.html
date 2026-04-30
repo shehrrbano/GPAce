@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar UI Mockup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --google-gray: #dadce0;
+            --google-red: #ea4335;
+            --google-bg: #ffffff;
+            --google-text: #3c4043;
+            --hour-height: 60px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f1f3f4;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .calendar-container {
+            background: var(--google-bg);
+            border: 1px solid var(--google-gray);
+            border-radius: 8px;
+            width: 800px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
+        }
+
+        .calendar-header {
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--google-gray);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--google-gray);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--google-text);
+        }
+
+        .view-btn.active {
+            background: #e8f0fe;
+            color: #1967d2;
+            border-color: transparent;
+        }
+
+        .calendar-grid-container {
+            display: flex;
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .time-axis {
+            width: 60px;
+            border-right: 1px solid var(--google-gray);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .hour-label {
+            height: var(--hour-height);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 11px;
+            color: #70757a;
+            transform: translateY(-50%);
+        }
+
+        .calendar-grid {
+            flex: 1;
+            position: relative;
+            background: white;
+            min-height: 1440px; /* 24 * 60 */
+        }
+
+        .grid-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: var(--google-gray);
+        }
+
+        .event {
+            position: absolute;
+            background-color: #039be5;
+            color: white;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            opacity: 0.8;
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .event.study { background-color: #7986cb; }
+        .event.break { background-color: #33b679; }
+
+        .time-marker {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--google-red);
+            z-index: 10;
+        }
+
+        .time-marker::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: -5px;
+            width: 12px;
+            height: 12px;
+            background-color: var(--google-red);
+            border-radius: 50%;
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --google-bg: #1f1f1f;
+                --google-gray: #3c4043;
+                --google-text: #e8eaed;
+            }
+            .calendar-grid { background: #1f1f1f; }
+            .hour-label { color: #9aa0a6; }
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="view-controls">
+                <button class="view-btn active">Daily</button>
+                <button class="view-btn">Weekly</button>
+                <button class="view-btn">Monthly</button>
+            </div>
+            <div id="currentDate" style="font-weight: 500; color: var(--google-text);">Wednesday, April 29, 2026</div>
+        </div>
+        <div class="calendar-grid-container">
+            <div class="time-axis">
+                <div class="hour-label">1 AM</div>
+                <div class="hour-label">2 AM</div>
+                <div class="hour-label">3 AM</div>
+                <div class="hour-label">4 AM</div>
+                <div class="hour-label">5 AM</div>
+                <div class="hour-label">6 AM</div>
+                <div class="hour-label">7 AM</div>
+                <div class="hour-label">8 AM</div>
+                <div class="hour-label">9 AM</div>
+                <div class="hour-label">10 AM</div>
+                <div class="hour-label">11 AM</div>
+                <div class="hour-label">12 PM</div>
+                <div class="hour-label">1 PM</div>
+                <div class="hour-label">2 PM</div>
+                <div class="hour-label">3 PM</div>
+                <div class="hour-label">4 PM</div>
+            </div>
+            <div class="calendar-grid">
+                <!-- Grid lines -->
+                <div class="grid-line" style="top: 60px;"></div>
+                <div class="grid-line" style="top: 120px;"></div>
+                <div class="grid-line" style="top: 180px;"></div>
+                <div class="grid-line" style="top: 240px;"></div>
+                <div class="grid-line" style="top: 300px;"></div>
+                <div class="grid-line" style="top: 360px;"></div>
+                <div class="grid-line" style="top: 420px;"></div>
+                <div class="grid-line" style="top: 480px;"></div>
+                <div class="grid-line" style="top: 540px;"></div>
+                <div class="grid-line" style="top: 600px;"></div>
+                
+                <!-- Time marker -->
+                <div class="time-marker" style="top: 500px;"></div>
+
+                <!-- Sample events -->
+                <div class="event study" style="top: 150px; height: 90px; left: 10px; width: calc(100% - 20px);">
+                    Study Session: Mathematics
+                </div>
+                <div class="event break" style="top: 250px; height: 30px; left: 10px; width: calc(100% - 20px);">
+                    Coffee Break
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

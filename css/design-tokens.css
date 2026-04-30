@@ -1,0 +1,159 @@
+/**
+ * design-tokens.css
+ * Centralized design tokens and CSS variables for the GPAce application.
+ * 
+ * Import this file at the top of all other CSS files to ensure consistent
+ * theming and reduce duplication.
+ * 
+ * Usage:
+ *   @import url('design-tokens.css');
+ *   
+ *   or in HTML:
+ *   <link href="css/design-tokens.css" rel="stylesheet">
+ */
+
+/* ============================================
+   Core Color Palette
+   ============================================ */
+:root {
+    /* Brand Colors */
+    --primary-color: #007AFF;
+    --primary-color-hover: #0062CC;
+    --primary-color-rgb: 0, 122, 255;
+
+    --secondary-color: #5856D6;
+    --secondary-color-hover: #4543B3;
+    --secondary-color-rgb: 88, 86, 214;
+
+    /* Status Colors */
+    --success-color: #34C759;
+    --warning-color: #FF9F0A;
+    --danger-color: #FF3B30;
+    --info-color: #007AFF;
+
+    /* Dark Theme (Default) */
+    --background-color: #050505;
+    --text-color: #F5F5F7;
+    --text-color-secondary: #8E8E93;
+    --card-bg: #121212;
+    --hover-bg: rgba(255, 255, 255, 0.08);
+    --active-bg: rgba(0, 122, 255, 0.15);
+    --nav-bg: rgba(5, 5, 5, 0.7);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-color-thick: rgba(255, 255, 255, 0.15);
+    
+    /* Glassmorphism */
+    --glass-bg: rgba(20, 20, 20, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-blur: blur(20px);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+    --shadow-accent: 0 0 20px rgba(0, 122, 255, 0.2);
+
+    /* Layout */
+    --nav-height: 72px;
+    --sidebar-width: 280px;
+    --container-max-width: 1400px;
+}
+
+/* ============================================
+   Animation Keyframes
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   Navigation Scroll-Hide Behavior
+   ============================================ */
+.top-nav {
+    transition: transform 0.3s ease-in-out;
+    will-change: transform;
+}
+
+.top-nav.nav-hidden {
+    transform: translateY(-100%);
+}
+
+/* Ensure body padding adjusts when nav is hidden */
+body:has(.top-nav.nav-hidden) {
+    /* Smooth content shift */
+    transition: padding-top 0.3s ease-in-out;
+}

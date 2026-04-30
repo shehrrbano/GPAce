@@ -1,0 +1,161 @@
+{
+  "nodes": [
+    {
+      "id": "html_body",
+      "label": "<body>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Root container. Styled with dynamic radial gradient in daily-calendar.css L35."
+    },
+    {
+      "id": "container_main",
+      "label": "<main class='container'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Flex layout container. L51 of CSS defines max-width: 1180px and gap: 16px."
+    },
+    {
+      "id": "section_strip",
+      "label": "<section class='dd-strip'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Top info strip. L69 CSS: Grid template 1fr 1.2fr 1fr."
+    },
+    {
+      "id": "node_wake_val",
+      "label": "<span id='ddWakeVal'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Wake time display. Styled by .strip-val (L121) with font-size: 22px."
+    },
+    {
+      "id": "section_stats",
+      "label": "<section class='stats-trio'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "3-column grid for stats. L227 CSS: grid-template-columns: repeat(3, 1fr)."
+    },
+    {
+      "id": "section_calendar",
+      "label": "<section class='calendar-container'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Main schedule surface. L366 CSS: Background var(--dd-card), border-radius 8px."
+    },
+    {
+      "id": "node_grid_container",
+      "label": "<div class='calendar-grid-container'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Scrollable grid wrapper. L378 CSS: position: relative, height: 720px."
+    },
+    {
+      "id": "node_time_axis",
+      "label": "<div class='time-axis'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Left time column. L394 CSS: width: 80px, border-right: 1px solid."
+    },
+    {
+      "id": "node_calendar_grid",
+      "label": "<div class='calendar-grid'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "The 15-minute grid. L413 CSS: grid-template-rows: repeat(96, 15px)."
+    },
+    {
+      "id": "node_task_block",
+      "label": "<div class='task-block'>",
+      "file_type": "document",
+      "source_file": "daily-calendar.html",
+      "rationale": "Event pill. L459 CSS: Absolute positioned with border-left: 4px accent."
+    },
+    {
+      "id": "css_root_tokens",
+      "label": ":root design tokens",
+      "file_type": "code",
+      "source_file": "css/daily-calendar.css",
+      "rationale": "Defines --dd-bg, --accent, and --gap (16px) used across all HTML nodes."
+    },
+    {
+      "id": "css_grid_slot",
+      "label": ".grid-slot",
+      "file_type": "code",
+      "source_file": "css/daily-calendar.css",
+      "rationale": "Styles individual grid rows. L422: border-bottom: 1px solid rgba(255,255,255,0.08)."
+    },
+    {
+      "id": "css_current_indicator",
+      "label": ".current-time-indicator",
+      "file_type": "code",
+      "source_file": "css/daily-calendar.css",
+      "rationale": "Styles the red 'Now' line. L589: background: var(--google-red), height: 2px."
+    }
+  ],
+  "edges": [
+    {
+      "source": "css_root_tokens",
+      "target": "html_body",
+      "relation": "applies_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "css/daily-calendar.css"
+    },
+    {
+      "source": "section_strip",
+      "target": "node_wake_val",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html"
+    },
+    {
+      "source": "node_grid_container",
+      "target": "node_time_axis",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html"
+    },
+    {
+      "source": "node_grid_container",
+      "target": "node_calendar_grid",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daily-calendar.html"
+    },
+    {
+      "source": "css_grid_slot",
+      "target": "node_calendar_grid",
+      "relation": "populates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "css/daily-calendar.css",
+      "rationale": "Styles the dynamically generated .grid-slot nodes inside the grid."
+    },
+    {
+      "source": "css_current_indicator",
+      "target": "node_calendar_grid",
+      "relation": "overlays",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "css/daily-calendar.css"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "15min_precision_system",
+      "label": "15-Minute Precision System",
+      "nodes": [
+        "node_calendar_grid",
+        "css_grid_slot",
+        "node_task_block"
+      ],
+      "relation": "coordinate",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "rationale": "Combines HTML structure (rows) and CSS sizing (15px) to achieve sub-hour accuracy."
+    }
+  ]
+}

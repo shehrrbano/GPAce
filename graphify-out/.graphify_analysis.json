@@ -1,0 +1,319 @@
+{
+  "communities": {
+    "0": [
+      "js_controllers_taskcreationcontroller_js",
+      "services_storageservice",
+      "taskcreationcontroller_taskcreationcontroller",
+      "taskcreationcontroller_taskcreationcontroller_addfilestouploadpreview",
+      "taskcreationcontroller_taskcreationcontroller_addrelevantlinktotask",
+      "taskcreationcontroller_taskcreationcontroller_constructor",
+      "taskcreationcontroller_taskcreationcontroller_createtask",
+      "taskcreationcontroller_taskcreationcontroller_handlefileselect",
+      "taskcreationcontroller_taskcreationcontroller_handleuploadprogress",
+      "taskcreationcontroller_taskcreationcontroller_hidetaskmodal",
+      "taskcreationcontroller_taskcreationcontroller_init",
+      "taskcreationcontroller_taskcreationcontroller_loadprojects",
+      "taskcreationcontroller_taskcreationcontroller_loadsubcategories",
+      "taskcreationcontroller_taskcreationcontroller_removerelevantlink",
+      "taskcreationcontroller_taskcreationcontroller_renderrelevantlinks",
+      "taskcreationcontroller_taskcreationcontroller_setupeventlisteners",
+      "taskcreationcontroller_taskcreationcontroller_setupfileuploadlisteners",
+      "taskcreationcontroller_taskcreationcontroller_showtaskmodal",
+      "taskcreationcontroller_taskcreationcontroller_updateprioritytasks",
+      "taskcreationcontroller_taskcreationcontroller_updatespeed",
+      "taskcreationcontroller_taskcreationcontroller_uploadfilesfortask",
+      "ui_taskmodal"
+    ],
+    "1": [
+      "js_controllers_taskdisplaycontroller_js",
+      "taskdisplaycontroller_taskdisplaycontroller",
+      "taskdisplaycontroller_taskdisplaycontroller_constructor",
+      "taskdisplaycontroller_taskdisplaycontroller_displayprioritytask",
+      "taskdisplaycontroller_taskdisplaycontroller_displayprioritytaskimpl",
+      "taskdisplaycontroller_taskdisplaycontroller_escapehtml",
+      "taskdisplaycontroller_taskdisplaycontroller_findcurrenttaskindex",
+      "taskdisplaycontroller_taskdisplaycontroller_flattengroupedtasks",
+      "taskdisplaycontroller_taskdisplaycontroller_generatetasktemplate",
+      "taskdisplaycontroller_taskdisplaycontroller_grouptasksbyinterleavedate",
+      "taskdisplaycontroller_taskdisplaycontroller_hashstring",
+      "taskdisplaycontroller_taskdisplaycontroller_init",
+      "taskdisplaycontroller_taskdisplaycontroller_initializetaskextras",
+      "taskdisplaycontroller_taskdisplaycontroller_loadprioritylistsorter",
+      "taskdisplaycontroller_taskdisplaycontroller_navigatetask",
+      "taskdisplaycontroller_taskdisplaycontroller_rendertask",
+      "taskdisplaycontroller_taskdisplaycontroller_setupstoragelistener",
+      "ui_prioritytaskbox"
+    ],
+    "2": [
+      "energycontroller_energycontroller",
+      "energycontroller_energycontroller_constructor",
+      "energycontroller_energycontroller_handlefatigueselection",
+      "energycontroller_energycontroller_hidefatiguemodal",
+      "energycontroller_energycontroller_init",
+      "energycontroller_energycontroller_initenergygraph",
+      "energycontroller_energycontroller_loadstoredenergylevel",
+      "energycontroller_energycontroller_setupeventlisteners",
+      "energycontroller_energycontroller_showfatiguemodal",
+      "energycontroller_energycontroller_updateenergychart",
+      "energycontroller_energycontroller_updateenergyvisualization",
+      "energycontroller_energycontroller_updatefatiguelevelui",
+      "js_controllers_energycontroller_js",
+      "timercontroller_timercontroller_logsessionenergy",
+      "ui_fatiguemodal",
+      "ui_hologramcontainer"
+    ],
+    "3": [
+      "js_controllers_timercontroller_js",
+      "timercontroller_timercontroller",
+      "timercontroller_timercontroller_constructor",
+      "timercontroller_timercontroller_handletimercomplete",
+      "timercontroller_timercontroller_loadpreferences",
+      "timercontroller_timercontroller_loadstate",
+      "timercontroller_timercontroller_loadstats",
+      "timercontroller_timercontroller_playnotificationsound",
+      "timercontroller_timercontroller_promptforenergylevel",
+      "timercontroller_timercontroller_savestats",
+      "timercontroller_timercontroller_setupvisibilityhandler",
+      "timercontroller_timercontroller_showbrowsernotification",
+      "timercontroller_timercontroller_updatestatsdisplay",
+      "ui_startbtn",
+      "ui_timer"
+    ],
+    "4": [
+      "core_tasksystem",
+      "grindcontroller_grindcontroller",
+      "grindcontroller_grindcontroller_addsafelistener",
+      "grindcontroller_grindcontroller_ccscannotes",
+      "grindcontroller_grindcontroller_constructor",
+      "grindcontroller_grindcontroller_init",
+      "grindcontroller_grindcontroller_setupeventlisteners",
+      "grindcontroller_grindcontroller_toggleaicontainer",
+      "grindcontroller_grindcontroller_toggleworkspace",
+      "js_controllers_grindcontroller_js",
+      "timercontroller_timercontroller_toggle"
+    ],
+    "5": [
+      "timercontroller_timercontroller_pausetimer",
+      "timercontroller_timercontroller_resettimer",
+      "timercontroller_timercontroller_savestate",
+      "timercontroller_timercontroller_shownotification",
+      "timercontroller_timercontroller_updatebuttonstate",
+      "timercontroller_timercontroller_updatetitlewithcurrenttime"
+    ],
+    "6": [
+      "timercontroller_timercontroller_startbreak",
+      "timercontroller_timercontroller_startfocus",
+      "timercontroller_timercontroller_starttimer",
+      "timercontroller_timercontroller_starttitleupdates",
+      "timercontroller_timercontroller_stoptitleupdates"
+    ],
+    "7": [
+      "timercontroller_timercontroller_init",
+      "timercontroller_timercontroller_setcustomtime",
+      "timercontroller_timercontroller_setupeventlisteners",
+      "timercontroller_timercontroller_updatedisplay"
+    ],
+    "8": [
+      "grindcontroller_setupeventlisteners",
+      "taskcreationcontroller_showtaskmodal",
+      "ui_synctasksbtn"
+    ],
+    "9": [
+      "grind_now_focusing_card",
+      "grind_theming_rationale"
+    ],
+    "10": [
+      "command_center_dock",
+      "command_center_unified_dock_rationale"
+    ],
+    "11": [
+      "sidedrawer_modern_practices_rationale",
+      "sidedrawer_side_drawer"
+    ],
+    "12": [
+      "taskcreationcontroller_createtask",
+      "taskdisplaycontroller_displayprioritytask"
+    ],
+    "13": [
+      "energycontroller_showfatiguemodal",
+      "timercontroller_handletimercomplete"
+    ],
+    "14": [
+      "energycontroller_handlefatigueselection",
+      "timercontroller_starttimer"
+    ],
+    "15": [
+      "grind_task_queue_card"
+    ],
+    "16": [
+      "grind_timer_section"
+    ],
+    "17": [
+      "grind_stats_grid"
+    ],
+    "18": [
+      "task_display_current_task_header"
+    ],
+    "19": [
+      "grindcontroller_init"
+    ]
+  },
+  "cohesion": {
+    "0": 0.13,
+    "1": 0.2,
+    "2": 0.2,
+    "3": 0.22,
+    "4": 0.24,
+    "5": 0.53,
+    "6": 0.6,
+    "7": 0.5,
+    "8": 0.67,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0
+  },
+  "gods": [
+    {
+      "id": "timercontroller_timercontroller",
+      "label": "TimerController",
+      "degree": 31
+    },
+    {
+      "id": "taskcreationcontroller_taskcreationcontroller",
+      "label": "TaskCreationController",
+      "degree": 21
+    },
+    {
+      "id": "taskdisplaycontroller_taskdisplaycontroller",
+      "label": "TaskDisplayController",
+      "degree": 17
+    },
+    {
+      "id": "energycontroller_energycontroller",
+      "label": "EnergyController",
+      "degree": 14
+    },
+    {
+      "id": "grindcontroller_grindcontroller",
+      "label": "GrindController",
+      "degree": 9
+    },
+    {
+      "id": "grindcontroller_setupeventlisteners",
+      "label": "Setup Event Listeners",
+      "degree": 2
+    },
+    {
+      "id": "grind_now_focusing_card",
+      "label": "Now Focusing Card",
+      "degree": 1
+    },
+    {
+      "id": "grind_theming_rationale",
+      "label": "Global Theming Rationale",
+      "degree": 1
+    },
+    {
+      "id": "command_center_dock",
+      "label": "Unified Floating Dock",
+      "degree": 1
+    },
+    {
+      "id": "command_center_unified_dock_rationale",
+      "label": "Unified Dock Rationale",
+      "degree": 1
+    }
+  ],
+  "surprises": [
+    {
+      "source": "TimerController",
+      "target": "Timer Display",
+      "source_files": [
+        "js\\controllers\\TimerController.js",
+        "grind.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "manages_display",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Timer Display` unexpectedly reaches hub `TimerController`"
+    },
+    {
+      "source": "TimerController",
+      "target": "Start Timer Button",
+      "source_files": [
+        "js\\controllers\\TimerController.js",
+        "grind.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "binds_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Start Timer Button` unexpectedly reaches hub `TimerController`"
+    },
+    {
+      "source": "TaskDisplayController",
+      "target": "Priority Task Box",
+      "source_files": [
+        "js\\controllers\\TaskDisplayController.js",
+        "grind.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "renders_into",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Priority Task Box` unexpectedly reaches hub `TaskDisplayController`"
+    },
+    {
+      "source": "EnergyController",
+      "target": "Hologram Container",
+      "source_files": [
+        "js\\controllers\\EnergyController.js",
+        "grind.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "dispatches_events_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Hologram Container` unexpectedly reaches hub `EnergyController`"
+    },
+    {
+      "source": "EnergyController",
+      "target": "Fatigue Modal",
+      "source_files": [
+        "js\\controllers\\EnergyController.js",
+        "grind.html"
+      ],
+      "confidence": "INFERRED",
+      "relation": "manages_visibility",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Fatigue Modal` unexpectedly reaches hub `EnergyController`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `TimerController` connect `Community 3` to `Community 2`, `Community 4`, `Community 5`, `Community 6`, `Community 7`?",
+      "why": "High betweenness centrality (0.132) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `TimerController` (e.g. with `Timer Display` and `Start Timer Button`) actually correct?",
+      "why": "`TimerController` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `EnergyController` (e.g. with `Hologram Container` and `Fatigue Modal`) actually correct?",
+      "why": "`EnergyController` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `Now Focusing Card`, `Task Queue Card`, `Timer & Focus Controls` to the rest of the system?",
+      "why": "27 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.13 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
