@@ -39,16 +39,16 @@ class GPAPredictor {
     render() {
         const scale = this.service.scales[this.currentScale];
         this.container.innerHTML = `
-            <div class="gpa-predictor-section" role="region" aria-label="GPA Predictor">
-                <div class="gpa-predictor-header">
-                    <div class="gpa-predictor-title">
-                        <span class="icon">📊</span>
-                        <h3>GPA Predictor</h3>
+            <div class="predictor-card-legacy" role="region" aria-label="GPA Predictor">
+                <div class="predictor-header-legacy">
+                    <div class="predictor-title-wrap">
+                        <i class="bi bi-calculator" style="font-size: 24px; color: #ff2d55;"></i>
+                        <h3 style="color: white; font-weight: 700;">GPA Predictor</h3>
                     </div>
                     <div class="gpa-predictor-controls">
-                        <div class="scale-selector">
-                            <label for="gpaScale">Scale:</label>
-                            <select id="gpaScale">
+                        <div class="scale-selector" style="display: flex; align-items: center; gap: 10px;">
+                            <label for="gpaScale" style="font-size: 13px; color: #888;">Scale:</label>
+                            <select id="gpaScale" class="row-input-legacy" style="width: auto; padding: 4px 10px;">
                                 ${Object.entries(this.service.scales).map(([key, s]) => `
                                     <option value="${key}" ${key === this.currentScale ? 'selected' : ''}>
                                         ${s.name}
@@ -56,52 +56,56 @@ class GPAPredictor {
                                 `).join('')}
                             </select>
                         </div>
-                        <div class="input-mode-toggle">
-                            <button type="button" class="${this.inputMode === 'marks' ? 'active' : ''}" data-mode="marks">Marks</button>
-                            <button type="button" class="${this.inputMode === 'grade' ? 'active' : ''}" data-mode="grade">Grade</button>
+                        <div class="input-mode-toggle" style="margin-top: 10px; display: flex; gap: 5px;">
+                            <button type="button" class="btn-legacy-action ${this.inputMode === 'marks' ? 'active' : ''}" data-mode="marks" style="font-size: 11px; padding: 4px 10px;">Marks</button>
+                            <button type="button" class="btn-legacy-action ${this.inputMode === 'grade' ? 'active' : ''}" data-mode="grade" style="font-size: 11px; padding: 4px 10px;">Grade</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="gpa-display-card">
-                    <div id="gpaMainValue" class="gpa-main-value empty">—</div>
-                    <div class="gpa-scale-indicator">out of ${scale.maxGPA.toFixed(1)}</div>
-                    <div id="gpaClassification" class="gpa-classification" style="display:none;"></div>
-                    <div class="gpa-progress-container">
-                        <div class="gpa-progress-track">
-                            <div id="gpaProgressFill" class="gpa-progress-fill" style="width: 0%;"></div>
-                        </div>
+                <div class="gpa-main-display-legacy">
+                    <div id="gpaMainValue" class="gpa-value-large empty">—</div>
+                    <div class="gpa-label-sub">Academic GPA (Out of ${scale.maxGPA.toFixed(1)})</div>
+                </div>
+
+                <div class="predictor-stats-row">
+                    <div class="stat-box-legacy">
+                        <span id="totalCredits" class="val">0</span>
+                        <span class="lbl">Total Credits</span>
+                    </div>
+                    <div class="stat-box-legacy">
+                        <span id="averageMarks" class="val">—</span>
+                        <span class="lbl">Avg. Percentage</span>
                     </div>
                 </div>
 
-                <div class="gpa-stats-grid">
-                    <div class="gpa-stat-card"><div id="totalCredits" class="gpa-stat-value">0</div><div class="gpa-stat-label">Total Credits</div></div>
-                    <div class="gpa-stat-card"><div id="totalGradePoints" class="gpa-stat-value">0</div><div class="gpa-stat-label">Grade Points</div></div>
-                    <div class="gpa-stat-card"><div id="subjectCount" class="gpa-stat-value">0</div><div class="gpa-stat-label">Subjects</div></div>
-                    <div class="gpa-stat-card"><div id="averageMarks" class="gpa-stat-value">—</div><div class="gpa-stat-label">Avg. Marks</div></div>
+                <div class="gpa-subjects-container" style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 20px;">
+                    <table class="subjects-table-legacy">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">SUBJECT</th>
+                                <th style="width: 15%;">CREDITS</th>
+                                <th style="width: 15%;">${this.inputMode === 'marks' ? 'MARKS' : 'GRADE'}</th>
+                                <th style="width: 15%;">RESULT</th>
+                                <th style="width: 10%;">GP</th>
+                                <th style="width: 5%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjectRowsContainer">
+                            ${this.renderSubjectRows()}
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="gpa-subjects-container">
-                    <div class="gpa-subjects-header">
-                        <span>Subject</span><span>Credits</span><span>${this.inputMode === 'marks' ? 'Marks' : 'Grade'}</span><span>Grade</span><span>GP</span><span></span>
-                    </div>
-                    <div id="subjectRowsContainer" class="gpa-subjects-list">${this.renderSubjectRows()}</div>
+                <div style="margin-top: 20px;">
+                    <button type="button" class="btn-legacy-action" id="addSubjectBtn" style="width: 100%; justify-content: center; border-style: dashed; opacity: 0.7;">
+                        <i class="bi bi-plus-lg"></i> Add Subject Entry
+                    </button>
                 </div>
 
-                <button type="button" class="btn-add-subject" id="addSubjectBtn">Add New Subject</button>
-
-                <div class="what-if-section">
-                    <h4>🎯 What-If Scenario</h4>
-                    <div class="what-if-slider-container">
-                        <div class="what-if-slider-label">If I score in remaining subjects: <span id="whatIfValue">75%</span></div>
-                        <input type="range" id="whatIfSlider" min="0" max="100" value="75">
-                        <div class="what-if-result">Projected GPA: <span id="whatIfGPA">—</span></div>
-                    </div>
-                </div>
-
-                <div class="gpa-actions">
-                    <button type="button" class="btn-gpa-action secondary" id="syncBtn">🔄 Sync</button>
-                    <button type="button" class="btn-gpa-action danger" id="resetBtn">🗑️ Reset</button>
+                <div class="predictor-actions-legacy">
+                    <button type="button" class="btn-legacy-action" id="syncBtn"><i class="bi bi-arrow-repeat"></i> Force Sync</button>
+                    <button type="button" class="btn-legacy-action danger" id="resetBtn" style="color: #ff4b5c;"><i class="bi bi-trash"></i> Reset</button>
                 </div>
             </div>
         `;
@@ -109,7 +113,7 @@ class GPAPredictor {
 
     renderSubjectRows() {
         if (this.subjects.length === 0) {
-            return '<div class="gpa-empty-state"><h4>No Subjects</h4><p>Click "Add New Subject" to start.</p></div>';
+            return '<tr><td colspan="6" style="text-align: center; color: #666; padding: 40px;">No subjects added. Click "Add Subject Entry" to start.</td></tr>';
         }
         return this.subjects.map((s, i) => this.renderSubjectRow(s, i)).join('');
     }
@@ -117,24 +121,24 @@ class GPAPredictor {
     renderSubjectRow(s, i) {
         const info = this.service.getGradeInfo(s.marks);
         return `
-            <div class="gpa-subject-row" data-index="${i}">
-                <input type="text" class="subject-name-input" data-index="${i}" value="${s.name}" placeholder="Name">
-                <input type="number" class="subject-credits-input" data-index="${i}" value="${s.credits}" min="0" max="12">
-                <div class="marks-grade-input-wrapper">
-                    <input type="number" class="subject-marks-input" data-index="${i}" value="${s.marks || ''}" 
+            <tr data-index="${i}">
+                <td><input type="text" class="row-input-legacy subject-name-input" data-index="${i}" value="${s.name}" placeholder="Name"></td>
+                <td><input type="number" class="row-input-legacy subject-credits-input" data-index="${i}" value="${s.credits}" min="0" max="12"></td>
+                <td>
+                    <input type="number" class="row-input-legacy subject-marks-input" data-index="${i}" value="${s.marks || ''}" 
                            style="display: ${this.inputMode === 'marks' ? 'block' : 'none'}">
-                    <select class="subject-grade-select" data-index="${i}"
+                    <select class="row-input-legacy subject-grade-select" data-index="${i}"
                             style="display: ${this.inputMode === 'grade' ? 'block' : 'none'}">
                         <option value="">Select</option>
                         ${this.service.scales[this.currentScale].grades.map(g => `
                             <option value="${g.grade}" ${s.selectedGrade === g.grade ? 'selected' : ''}>${g.grade}</option>
                         `).join('')}
                     </select>
-                </div>
-                <span class="grade-badge">${info.grade || '—'}</span>
-                <span class="grade-point-display">${info.gp !== null ? info.gp.toFixed(1) : '—'}</span>
-                <button type="button" class="btn-remove-row" data-index="${i}">✕</button>
-            </div>
+                </td>
+                <td style="color: ${info.grade === 'F' ? '#ff4b5c' : '#00ff88'}; font-weight: 700;">${info.grade || '—'}</td>
+                <td style="font-weight: 600;">${info.gp !== null ? info.gp.toFixed(1) : '—'}</td>
+                <td><button type="button" class="btn-remove-row" data-index="${i}" style="background: none; border: none; color: #555; cursor: pointer;"><i class="bi bi-x-lg"></i></button></td>
+            </tr>
         `;
     }
 

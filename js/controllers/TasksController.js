@@ -38,12 +38,13 @@ class TasksController {
         const lastProject = storageService.get('last_project');
         const subjects = SemesterService.getCurrentSubjects() || [];
         
-        if (lastProject && (lastProject === 'extra' || subjects.some(s => s.tag === lastProject))) {
+        if (lastProject && subjects.some(s => s.tag === lastProject)) {
             await this.selectProject(lastProject);
         } else if (subjects.length > 0) {
             await this.selectProject(subjects[0].tag);
         } else {
-            await this.selectProject('extra');
+            this.currentProject = null;
+            this.renderTasks();
         }
 
         this.initialized = true;
@@ -223,12 +224,9 @@ class TasksController {
         if (!header) return;
 
         let name = "Hustle Hub";
-        if (this.currentProject === 'extra') name = "Extra Curricular";
-        else {
-            const subjects = SemesterService.getCurrentSubjects() || [];
-            const current = subjects.find(s => s.tag === this.currentProject);
-            if (current) name = current.name;
-        }
+        const subjects = SemesterService.getCurrentSubjects() || [];
+        const current = subjects.find(s => s.tag === this.currentProject);
+        if (current) name = current.name;
 
         const sectionPill = this.currentSection !== 'all' 
             ? `<span class="chip" style="background: rgba(255,255,255,0.08); color: var(--dd-text-2); margin-left: 12px;">${this.currentSection}</span>`

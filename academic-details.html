@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPAce - Brain Juice</title>
+    <title>GPAce - Academic Details</title>
 
     <!-- SEO Meta Tags -->
     <meta name="description"
@@ -29,14 +29,6 @@
     <style>
       body {
         padding-top: var(--nav-height, 72px);
-      }
-      #root:empty::after {
-        content: "Syncing Data...";
-        display: block;
-        padding: 100px;
-        text-align: center;
-        color: #64748b;
-        font-family: 'Inter', sans-serif;
       }
     </style>
 </head>
@@ -66,7 +58,7 @@
 
     <!-- React Logic -->
     <script type="text/babel" data-presets="env,react">
-        const { useState, useEffect, useMemo } = React;
+        const { useState, useEffect, useMemo, useRef } = React;
 
         const IconAD = ({ name, size = 18, stroke = 2 }) => {
           const paths = {
@@ -104,25 +96,7 @@
           const [bulk, setBulk] = useState("");
           const [stats, setStats] = useState({ gpaceSizeKB: 0 });
           const [showArchived, setShowArchived] = useState(false);
-
-          const loadExampleData = (targetSem) => {
-            const example = [
-              { name: "Compressible Aerodynamics", creditHours: 3 },
-              { name: "Computer Aided Drafting", creditHours: 1 },
-              { name: "Mechanics of Materials", creditHours: 3 },
-              { name: "Mechanics of Materials Lab", creditHours: 1 },
-              { name: "Control Systems", creditHours: 3 },
-              { name: "Control Systems Lab", creditHours: 1 },
-              { name: "Engineering Mathematics", creditHours: 3 },
-              { name: "Numerical Analysis", creditHours: 2 },
-              { name: "Numerical Analysis Lab", creditHours: 1 },
-            ].map((s, i) => ({
-              ...s, id: Date.now() + i, tag: s.name.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4) + (10 + i),
-              relativeScore: 0, cognitiveDifficulty: 60, academicPerformance: 0
-            }));
-            setSubjects(example);
-            saveToBackend(example, targetSem);
-          };
+          const [forms, setForms] = useState([]);
 
           const saveToBackend = (updatedSubjects, targetSem = semester) => {
             if (window.SemesterService) {
@@ -132,21 +106,21 @@
             }
           };
 
+          const init = async () => {
+            if (!window.SemesterService || !window.storageService) return;
+            try {
+              await window.SemesterService.initialize();
+              const cur = window.SemesterService.getCurrentSemester() || 'default';
+              const sems = window.SemesterService.getAllSemesters() || {};
+              setSemester(cur);
+              setAllSemesters(sems);
+              const curSubs = sems[cur]?.subjects || [];
+              setSubjects(curSubs);
+              setStats(window.storageService.getStats() || { gpaceSizeKB: 0 });
+            } catch (e) { console.error(e); }
+          };
+
           useEffect(() => {
-            const init = async () => {
-              if (!window.SemesterService || !window.storageService) return;
-              try {
-                await window.SemesterService.initialize();
-                const cur = window.SemesterService.getCurrentSemester() || 'default';
-                const sems = window.SemesterService.getAllSemesters() || {};
-                setSemester(cur);
-                setAllSemesters(sems);
-                const curSubs = sems[cur]?.subjects || [];
-                setSubjects(curSubs);
-                if (curSubs.length === 0 && (cur === 'default' || cur === 'Spring 2025')) loadExampleData(cur);
-                setStats(window.storageService.getStats() || { gpaceSizeKB: 0 });
-              } catch (e) { console.error(e); }
-            };
             const check = setInterval(() => {
               if (window.SemesterService && window.storageService) { init(); clearInterval(check); }
             }, 100);
@@ -157,6 +131,57 @@
           const gpaceKB = Number(stats?.gpaceSizeKB) || 0;
           const storagePercent = Math.min(100, (gpaceKB / 10240) * 100);
           const currentSemesterData = allSemesters?.[semester] || { name: semester };
+
+          const generateForms = () => {
+            const n = parseInt(count);
+            if (isNaN(n) || n <= 0) return;
+            const newForms = Array.from({ length: n }, (_, i) => ({
+              id: Date.now() + i,
+              name: "",
+              creditHours: 3,
+              cognitiveDifficulty: 50,
+              tag: ""
+            }));
+            setForms(newForms);
+          };
+
+          const handleFormChange = (id, field, value) => {
+            setForms(prev => prev.map(f => {
+                if (f.id === id) {
+                    const updated = { ...f, [field]: value };
+                    if (field === 'name') {
+                        // Generate tag based on name (first 4 letters + random number)
+                        const base = value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4) || "SUBJ";
+                        updated.tag = base + Math.floor(Math.random() * 900 + 100);
+                    }
+                    return updated;
+                }
+                return f;
+            }));
+          };
+
+          const deleteGeneratedForm = (id) => {
+            setForms(prev => prev.filter(f => f.id !== id));
+          };
+
+          const saveAllSubjects = () => {
+            const validForms = forms.filter(f => f.name.trim());
+            if (validForms.length === 0) {
+                setForms([]);
+                return;
+            }
+            const updated = [...subjects, ...validForms.map(f => ({
+                ...f,
+                relativeScore: 0,
+                academicPerformance: 50
+            }))];
+            setSubjects(updated);
+            saveToBackend(updated);
+            setForms([]);
+            setCount("");
+          };
+
+          const totalFormCredits = useMemo(() => forms.reduce((s, x) => s + (Number(x.creditHours) || 0), 0), [forms]);
 
           const parseBulk = () => {
             const lines = bulk.split("\n").map(l => l.trim()).filter(Boolean);
@@ -169,7 +194,7 @@
               }
               return { 
                 id: Date.now() + i, name: name || "Untitled", creditHours: cr, 
-                tag: (name || "SUBJ").toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4) + Math.floor(Math.random() * 100),
+                tag: (name || "SUBJ").toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4) + Math.floor(Math.random() * 900 + 100),
                 relativeScore: 0, cognitiveDifficulty: 50, academicPerformance: 50
               };
             });
@@ -177,20 +202,6 @@
             setSubjects(updated);
             saveToBackend(updated);
             setBulk("");
-          };
-
-          const handleAddCount = () => {
-            const countNum = parseInt(count);
-            if (isNaN(countNum) || countNum <= 0) return;
-            const newSubs = Array.from({ length: countNum }, (_, i) => ({
-              id: Date.now() + i, name: "", creditHours: 3, 
-              tag: "SUBJ" + Math.floor(Math.random() * 100),
-              relativeScore: 0, cognitiveDifficulty: 50, academicPerformance: 50
-            }));
-            const updated = [...subjects, ...newSubs];
-            setSubjects(updated);
-            saveToBackend(updated);
-            setCount("");
           };
 
           return (
@@ -212,18 +223,30 @@
                       <div className="sem-help">Select or create a semester to manage subject data separately for different academic periods.</div>
                     </div>
                     <div className="sem-select-wrap">
-                       <label className="sem-label">Select Semester</label>
-                       <div className="sem-select-group">
-                         <div className="sem-select">
-                            <select value={semester} onChange={(e) => {
-                              setSemester(e.target.value); 
-                              window.SemesterService.setCurrentSemester(e.target.value);
-                            }}>
-                              {Object.keys(allSemesters || {}).map(id => <option key={id} value={id}>{allSemesters[id].name || id}</option>)}
-                            </select>
-                            <IconAD name="chevD" size={14} />
+                       <div className="sem-select-container">
+                         <div className="sem-label-side">
+                           <span>Select</span>
+                           <span>Semester:</span>
                          </div>
-                         <button className="icon-btn-outline"><IconAD name="settings" size={18} /></button>
+                         <div className="sem-select-group">
+                           <div className="sem-select">
+                              <select value={semester} onChange={(e) => {
+                                setSemester(e.target.value); 
+                                window.SemesterService.setCurrentSemester(e.target.value);
+                                const sems = window.SemesterService.getAllSemesters() || {};
+                                setSubjects(sems[e.target.value]?.subjects || []);
+                              }}>
+                                {Object.keys(allSemesters || {}).map(id => <option key={id} value={id}>{allSemesters[id].name || id}</option>)}
+                              </select>
+                              <IconAD name="chevD" size={14} />
+                           </div>
+                           <div className="sem-actions-wrap">
+                             <button className="icon-btn-outline">
+                               <IconAD name="settings" size={18} />
+                               <IconAD name="chevD" size={10} stroke={3} />
+                             </button>
+                           </div>
+                         </div>
                        </div>
                     </div>
                   </div>
@@ -258,7 +281,7 @@
                   <label className="form-label">Enter Number of Subjects</label>
                   <div className="inline-form">
                     <input type="number" value={count} onChange={e => setCount(e.target.value)} className="acd-input" placeholder="e.g. 5" />
-                    <button className="btn-primary" onClick={handleAddCount}><IconAD name="sparkles" size={16} /> Generate Forms</button>
+                    <button className="btn-primary" onClick={generateForms}><IconAD name="sparkles" size={16} /> Generate Forms</button>
                   </div>
 
                   <div className="divider-or">OR</div>
@@ -270,6 +293,36 @@
                     <button className="btn-primary" onClick={parseBulk} disabled={!bulk.trim()}><IconAD name="check" size={16} /> Add Subjects</button>
                     <span style={{fontSize:'13px', color:'var(--dd-text-muted)'}}>{(bulk.split("\n").filter(l => l.trim()).length)} line(s) detected</span>
                   </div>
+
+                  {forms.length > 0 && (
+                    <div className="generated-forms" style={{marginTop:'32px'}}>
+                        {forms.map((f, i) => (
+                            <div key={f.id} className="subject-form-block" style={{marginBottom:'24px', padding:'20px', border:'1px solid var(--dd-line)', borderRadius:'12px'}}>
+                                <h4 style={{color:'white', marginBottom:'16px'}}>Subject {i+1}</h4>
+                                <div className="mb-3">
+                                    <label className="form-label">Subject Name</label>
+                                    <input type="text" className="acd-input w-100" value={f.name} onChange={e => handleFormChange(f.id, 'name', e.target.value)} />
+                                    {f.tag && <div style={{fontSize:'12px', color:'var(--dd-text-muted)', marginTop:'4px'}}>Tag: {f.tag}</div>}
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Credit Hours</label>
+                                    <input type="number" className="acd-input w-100" value={f.creditHours} onChange={e => handleFormChange(f.id, 'creditHours', e.target.value)} />
+                                </div>
+                                <div className="mb-3">
+                                    <div className="d-flex justify-content-between align-items-center mb-2">
+                                        <label className="form-label mb-0">Cognitive Difficulty Level (1-100)</label>
+                                        <span style={{color:'white', fontWeight:600}}>{f.cognitiveDifficulty}</span>
+                                    </div>
+                                    <input type="range" className="w-100" min="1" max="100" value={f.cognitiveDifficulty} onChange={e => handleFormChange(f.id, 'cognitiveDifficulty', e.target.value)} />
+                                    <div style={{fontSize:'11px', color:'var(--dd-text-muted)', marginTop:'8px'}}>
+                                        1 = Very Easy, 50 = Moderate, 100 = Very Challenging
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                        <button className="btn-primary w-100" style={{padding:'14px'}} onClick={saveAllSubjects}>Save All Subjects</button>
+                    </div>
+                  )}
                 </section>
 
                 <section className="card">
@@ -300,11 +353,6 @@
                   </div>
                 </section>
               </main>
-
-              <button className="theme-fab" onClick={() => document.body.classList.toggle('light-theme')}>
-                <IconAD name="sun" size={16} />
-                <span>Light Mode</span>
-              </button>
             </div>
           );
         }

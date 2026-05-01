@@ -102,7 +102,7 @@
     padding: 0 18px !important;
     background-color: var(--primary-color) !important;
     color: #FFFFFF !important;
-    box-shadow: 0 4px 12px rgba(255, 45, 85, 0.4) !important;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4) !important;
 }
 
 .nav-item.active .nav-label {

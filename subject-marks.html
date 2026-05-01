@@ -31,23 +31,9 @@
     <link href="css/components/navigation.css" rel="stylesheet">
     <link href="css/sideDrawer.css" rel="stylesheet">
     <link href="css/subject-marks-modern.css" rel="stylesheet">
-    <link href="css/gpa-predictor.css" rel="stylesheet">
 
     <!-- DOMPurify -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
-    
-    <style>
-      #gpaPredictorContainer:empty::after {
-        content: "Booting Predictor Engine...";
-        display: block;
-        padding: 60px;
-        text-align: center;
-        color: var(--dd-text-muted);
-        font-family: 'Inter', sans-serif;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-      }
-    </style>
 </head>
 
 <body data-bg="deep">
@@ -56,9 +42,6 @@
     <div class="marks-layout">
         <!-- Sidebar -->
         <aside class="subject-sidebar">
-            <div class="sidebar-header">
-                <h3>My Subjects</h3>
-            </div>
             <div id="subjectsList" class="subject-list">
                 <div class="text-center p-3 text-muted">Syncing subjects...</div>
             </div>
@@ -73,63 +56,82 @@
             </div>
 
             <div id="activeContent" class="d-none">
-                <!-- Performance Summary -->
-                <div class="performance-card">
-                    <div class="performance-info">
-                        <h2 id="subjectName">Subject Name</h2>
-                        <p class="text-muted"><span id="creditHours">0</span> Credit Hours</p>
-                    </div>
-                    <div class="performance-stat text-end">
-                        <div class="big-percentage"><span id="academicPerformance">0</span>%</div>
-                        <div class="text-muted" style="font-size: 11px; font-weight: 800; margin-top: 4px; letter-spacing: 0.1em;">CURRENT GRADE</div>
-                    </div>
+                <!-- Subject Header -->
+                <div class="subject-header-row">
+                    <h2 id="subjectName">Subject Name</h2>
+                    <div class="header-percentage"><span id="academicPerformance">0</span>%</div>
                 </div>
+                <div class="header-divider"></div>
 
-                <!-- Global Progress -->
-                <div class="mb-5 px-1">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="small fw-bold text-muted uppercase" style="letter-spacing: 0.1em; font-size: 10px;">COURSE PROGRESS</span>
-                        <span id="performanceText" class="small fw-bold">0%</span>
-                    </div>
-                    <div class="progress">
-                        <div id="performanceBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-lg-5">
-                        <div class="card mb-4">
-                            <h3><i class="bi bi-sliders2-vertical"></i> Weightages</h3>
-                            <div class="form-group mb-3"><label for="assignmentWeightage">Assignments (%)</label><input type="number" id="assignmentWeightage" name="assignmentWeightage" class="form-control weightage-input"></div>
-                            <div class="form-group mb-3"><label for="quizWeightage">Quizzes (%)</label><input type="number" id="quizWeightage" name="quizWeightage" class="form-control weightage-input"></div>
-                            <div class="form-group mb-3"><label for="midtermWeightage">Mid Term / OHT (%)</label><input type="number" id="midtermWeightage" name="midtermWeightage" class="form-control weightage-input"></div>
-                            <div class="form-group mb-3"><label for="finalWeightage">Finals (%)</label><input type="number" id="finalWeightage" name="finalWeightage" class="form-control weightage-input"></div>
-                            <div class="form-group mb-4"><label for="revisionWeightage">Revisions (%)</label><input type="number" id="revisionWeightage" name="revisionWeightage" class="form-control weightage-input"></div>
-                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                                <span class="fw-bold">Total: <span id="totalWeightage">100</span>%</span>
-                                <button id="saveWeightagesBtn" class="btn btn-primary">Save Config</button>
+                <div class="marks-grid">
+                    <!-- Left Column: Weightages -->
+                    <div class="grid-column">
+                        <h3>Weightages</h3>
+                        <div class="weightages-box">
+                            <div class="weightage-item">
+                                <div class="weightage-label">Assignments (%)</div>
+                                <div class="weightage-input-wrap"><input type="number" id="assignmentWeightage" class="weightage-input"></div>
+                            </div>
+                            <div class="weightage-item">
+                                <div class="weightage-label">Quizzes (%)</div>
+                                <div class="weightage-input-wrap"><input type="number" id="quizWeightage" class="weightage-input"></div>
+                            </div>
+                            <div class="weightage-item">
+                                <div class="weightage-label">Mid Term / OHT (%)</div>
+                                <div class="weightage-input-wrap"><input type="number" id="midtermWeightage" class="weightage-input"></div>
+                            </div>
+                            <div class="weightage-item">
+                                <div class="weightage-label">Finals (%)</div>
+                                <div class="weightage-input-wrap"><input type="number" id="finalWeightage" class="weightage-input"></div>
+                            </div>
+                            <div class="weightage-item">
+                                <div class="weightage-label">Revision (%)</div>
+                                <div class="weightage-input-wrap"><input type="number" id="revisionWeightage" class="weightage-input"></div>
+                            </div>
+                            <div class="weightages-footer">
+                                <div class="total-weight-label">Total: <span id="totalWeightage">100</span>%</div>
+                                <button id="saveWeightagesBtn" class="btn btn-primary btn-sm">Save Config</button>
                             </div>
                         </div>
-                        <div class="card">
-                            <h3><i class="bi bi-pie-chart"></i> Category Breakdown</h3>
-                            <div id="categoryContributions" class="mt-2"></div>
-                        </div>
                     </div>
 
-                    <div class="col-lg-7">
-                        <div class="card mb-4">
-                            <h3><i class="bi bi-plus-circle"></i> Add New Mark</h3>
-                            <div class="row g-3">
-                                <div class="col-md-5"><label for="markCategory" class="form-label small fw-bold text-muted">CATEGORY</label><select id="markCategory" name="markCategory" class="form-select"><option value="assignment">Assignment</option><option value="quiz">Quiz</option><option value="midterm">Mid Term</option><option value="final">Final</option><option value="revision">Revision</option></select></div>
-                                <div class="col-md-7"><label for="markTitle" class="form-label small fw-bold text-muted">TITLE</label><input type="text" id="markTitle" name="markTitle" class="form-control" placeholder="e.g. Quiz 1"></div>
-                                <div class="col-md-4"><label for="obtainedMarks" class="form-label small fw-bold text-muted">OBTAINED</label><input type="number" id="obtainedMarks" name="obtainedMarks" class="form-control" placeholder="0"></div>
-                                <div class="col-md-4"><label for="totalMarks" class="form-label small fw-bold text-muted">TOTAL</label><input type="number" id="totalMarks" name="totalMarks" class="form-control" placeholder="100"></div>
-                                <div class="col-md-4 d-flex align-items-end"><button id="addMarkBtn" class="btn btn-primary w-100" style="height: 44px;">Add Mark</button></div>
+                    <!-- Right Column: Add New Mark -->
+                    <div class="grid-column">
+                        <h3>Add New Mark</h3>
+                        <div class="add-mark-box">
+                            <div class="add-mark-row">
+                                <div class="form-field">
+                                    <label>CATEGORY</label>
+                                    <select id="markCategory">
+                                        <option value="assignment">Assignment</option>
+                                        <option value="quiz">Quiz</option>
+                                        <option value="midterm">Mid Term</option>
+                                        <option value="final">Final</option>
+                                        <option value="revision">Revision</option>
+                                    </select>
+                                </div>
+                                <div class="form-field">
+                                    <label>TITLE</label>
+                                    <input type="text" id="markTitle" placeholder="e.g. Quiz 1">
+                                </div>
                             </div>
+                            <div class="add-mark-row">
+                                <div class="form-field">
+                                    <label>OBTAINED</label>
+                                    <input type="number" id="obtainedMarks" placeholder="0">
+                                </div>
+                                <div class="form-field">
+                                    <label>TOTAL</label>
+                                    <input type="number" id="totalMarks" placeholder="100">
+                                </div>
+                            </div>
+                            <button id="addMarkBtn" class="btn-add-legacy">Add Entry</button>
                         </div>
-                        <div class="card">
-                            <h3><i class="bi bi-clock-history"></i> Marks History</h3>
-                            <div id="existingMarks" class="mt-2"></div>
+
+                        <!-- Marks History Inside Right Column -->
+                        <div class="history-section">
+                            <h3>Marks History</h3>
+                            <div id="existingMarks" class="history-list"></div>
                         </div>
                     </div>
                 </div>
@@ -138,8 +140,8 @@
     </div>
 
     <!-- GPA Predictor -->
-    <div class="container-fluid py-5 px-4" style="background: var(--dd-bg-2);">
-        <div id="gpaPredictorContainer" class="mx-auto" style="max-width: 1400px; min-height: 400px;"></div>
+    <div class="predictor-wrapper">
+        <div id="gpaPredictorContainer"></div>
     </div>
 
     <!-- Core Dependencies -->
@@ -152,17 +154,14 @@
         import SemesterService from './js/services/SemesterService.js';
         import taskSystem from './js/core/TaskSystem.js';
         
-        // Expose to window for legacy scripts
         window.SemesterService = SemesterService;
         window.storageService = storageService;
         
-        // Final Init
         await Promise.all([
             SemesterService.initialize(),
             taskSystem.init()
         ]);
         
-        console.log('[App] Core system initialized');
         window.dispatchEvent(new CustomEvent('gpace-ready'));
     </script>
 
@@ -173,13 +172,11 @@
     <script type="module" src="js/gpa-predictor.js"></script>
 
     <script>
-        // Direct Initialization of GPA Predictor
         window.addEventListener('load', () => {
             const check = setInterval(() => {
                 if (typeof window.initGPAPredictor === 'function') {
                     window.initGPAPredictor('gpaPredictorContainer');
                     clearInterval(check);
-                    console.log('[App] Predictor UI active');
                 }
             }, 100);
             setTimeout(() => clearInterval(check), 5000);

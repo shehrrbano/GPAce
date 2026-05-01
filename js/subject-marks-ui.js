@@ -311,11 +311,11 @@ function toggleTheme() {
     body.classList.toggle('light-theme');
 
     if (body.classList.contains('light-theme')) {
-        if (themeIcon) themeIcon.textContent = '🌚';
+        if (themeIcon) themeIcon.className = 'theme-icon bi bi-moon-fill';
         if (themeText) themeText.textContent = 'Dark Mode';
         storage.set('theme', 'light');
     } else {
-        if (themeIcon) themeIcon.textContent = '🌞';
+        if (themeIcon) themeIcon.className = 'theme-icon bi bi-sun-fill';
         if (themeText) themeText.textContent = 'Light Mode';
         storage.set('theme', 'dark');
     }
@@ -330,7 +330,7 @@ function initTheme() {
         document.body.classList.add('light-theme');
         const themeIcon = document.querySelector('.theme-icon');
         const themeText = document.querySelector('.theme-text');
-        if (themeIcon) themeIcon.textContent = '🌚';
+        if (themeIcon) themeIcon.className = 'theme-icon bi bi-moon-fill';
         if (themeText) themeText.textContent = 'Dark Mode';
     }
 }
@@ -413,18 +413,8 @@ function renderSubjectList() {
         card.className = `subject-card ${isActive ? 'active' : ''}`;
         card.dataset.tag = subject.tag;
         card.innerHTML = `
-            <div class="subj-pip" style="background: oklch(0.65 0.2 ${(idx * 47) % 360})"></div>
-            <div class="subject-card-header">
-                <span class="subject-name" title="${escapeHtml(subject.name)}">${escapeHtml(subject.name)}</span>
-                <span class="subject-credits">${subject.creditHours} CH</span>
-            </div>
-            <div class="mini-progress-track">
-                <div class="mini-progress-fill" style="width: ${perfo}%"></div>
-            </div>
-            <div class="subject-stats">
-                <span>View Details</span>
-                <span>${perfo}%</span>
-            </div>
+            <span class="subject-name">${escapeHtml(subject.name)} ${subject.creditHours} CH</span>
+            <span class="subject-stats">View Details ${perfo}%</span>
         `;
         container.appendChild(card);
     });
@@ -939,14 +929,18 @@ function displayExistingMarks(subjectTag) {
     const subjectMarks = state.marks[subjectTag] || {};
     let hasAnyMarks = false;
 
-    // Build HTML with proper sanitization
+    // Build HTML with legacy table structure
     let html = `
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Existing Marks</h4>
-            <button class="btn btn-danger" data-action="delete-all-marks" id="deleteAllMarksBtn">
-                <i class="bi bi-trash"></i> Delete All Marks
-            </button>
-        </div>
+        <table class="subjects-table-legacy">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">CATEGORY</th>
+                    <th style="width: 30%;">TITLE</th>
+                    <th style="width: 25%;">SCORE</th>
+                    <th style="width: 15%;"></th>
+                </tr>
+            </thead>
+            <tbody>
     `;
 
     for (const [category, marksList] of Object.entries(subjectMarks)) {
@@ -954,37 +948,46 @@ function displayExistingMarks(subjectTag) {
 
         if (Array.isArray(marksList) && marksList.length > 0) {
             hasAnyMarks = true;
-            const categoryName = escapeHtml(category.charAt(0).toUpperCase() + category.slice(1));
-
-            html += `<div class="mb-3"><h5>${categoryName}</h5><ul class="list-group">`;
+            const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
 
             marksList.forEach((mark, index) => {
-                const title = mark.title ? escapeHtml(mark.title) + ': ' : '';
                 html += `
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>${title}Obtained: ${escapeHtml(String(mark.obtained))} / Total: ${escapeHtml(String(mark.total))}</span>
-                        <button class="btn btn-danger btn-sm"
-                                data-action="delete-mark"
-                                data-category="${escapeHtml(category)}"
-                                data-index="${index}"
-                                aria-label="Delete mark">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </li>
+                    <tr>
+                        <td style="font-size: 12px; color: #888;">${escapeHtml(categoryName)}</td>
+                        <td style="font-weight: 600;">${escapeHtml(mark.title || categoryName)}</td>
+                        <td style="font-weight: 700; color: #00ff88;">${mark.obtained} / ${mark.total}</td>
+                        <td style="text-align: right;">
+                            <button type="button" 
+                                    data-action="delete-mark"
+                                    data-category="${escapeHtml(category)}"
+                                    data-index="${index}"
+                                    style="background: none; border: none; color: #ff4b5c; cursor: pointer; font-size: 14px;">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
                 `;
             });
-
-            html += '</ul></div>';
         }
     }
 
-    container.innerHTML = html;
-
-    // Hide delete all button if no marks
-    const deleteAllBtn = document.getElementById('deleteAllMarksBtn');
-    if (deleteAllBtn && !hasAnyMarks) {
-        deleteAllBtn.style.display = 'none';
+    if (!hasAnyMarks) {
+        html += '<tr><td colspan="4" style="text-align: center; color: #666; padding: 20px;">No marks recorded yet.</td></tr>';
     }
+
+    html += `
+            </tbody>
+        </table>
+        ${hasAnyMarks ? `
+            <div style="margin-top: 20px; text-align: right;">
+                <button class="btn-legacy-action" data-action="delete-all-marks" style="color: #ff4b5c; border-color: rgba(255,75,92,0.3); margin-left: auto;">
+                    <i class="bi bi-trash"></i> Clear All History
+                </button>
+            </div>
+        ` : ''}
+    `;
+
+    container.innerHTML = html;
 }
 
 // ============================================

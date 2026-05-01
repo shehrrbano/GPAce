@@ -4,32 +4,35 @@
    ========================================================================== */
 
 :root {
-  --dd-bg:           #1f1f1f;
-  --dd-bg-2:         #2d2d2d;
-  --dd-card:         #1f1f1f;
-  --dd-card-solid:   #1f1f1f;
-  --dd-line:         #3c4043;
-  --dd-line-strong:  #5f6368;
-  --dd-text:         #e8eaed;
-  --dd-text-2:       #9aa0a6;
-  --dd-text-muted:   #80868b;
+  --dd-bg:           #050b18;
+  --dd-bg-2:         #0a1326;
+  --dd-card:         linear-gradient(180deg, rgba(31, 41, 55, 0.55), rgba(17, 26, 44, 0.55));
+  --dd-card-solid:   #0f1830;
+  --dd-line:         rgba(255, 255, 255, 0.08);
+  --dd-line-strong:  rgba(255, 255, 255, 0.14);
+  --dd-text:         #f1f5f9;
+  --dd-text-2:       #cbd5e1;
+  --dd-text-muted:   #64748b;
 
-  --google-gray:     #3c4043;
-  --google-red:      #ea4335;
-  --google-blue:     #8ab4f8;
+  --google-gray:     rgba(255, 255, 255, 0.08);
+  --google-red:      oklch(0.65 0.18 25);
+  --google-blue:     oklch(0.65 0.13 217);
 
   --accent-hue: 217;
-  --accent:        #8ab4f8;
-  --accent-deep:   #1967d2;
-  --accent-light:  #d2e3fc;
-  --accent-soft:   rgba(138, 180, 248, 0.1);
-  --accent-border: #3c4043;
+  --accent:        oklch(0.65 0.13 var(--accent-hue));
+  --accent-deep:   oklch(0.50 0.13 var(--accent-hue));
+  --accent-light:  oklch(0.82 0.10 var(--accent-hue));
+  --accent-soft:   oklch(0.55 0.12 var(--accent-hue) / 0.18);
+  --accent-border: oklch(0.55 0.12 var(--accent-hue) / 0.34);
 
-  --r-sm: 4px;
-  --r-md: 4px;
-  --r-lg: 8px;
+  /* SideDrawer Compatibility */
+  --primary-color: var(--accent);
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
   --gap: 16px;
-  --shadow-card: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+  --shadow-card: 0 14px 40px rgba(0, 0, 0, 0.45);
 }
 
 body {
