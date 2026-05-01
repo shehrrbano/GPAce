@@ -259,25 +259,38 @@ class GoogleDriveService {
 
             try {
                 if (silent) {
-                    console.log('[GoogleDrive] Requesting silent token refresh...');
+                    console.debug('[GoogleDrive] Requesting silent token refresh...');
+                    // Use prompt: 'none' for truly silent, but handle interaction_required gracefully
                     this.tokenClient.requestAccessToken({ prompt: 'none' });
                 } else {
                     console.log('[GoogleDrive] Requesting user-interactive token...');
+                    // prompt: '' or prompt: 'select_account' for interactive
                     this.tokenClient.requestAccessToken({ prompt: '' });
                 }
                 
                 // Set a timeout to prevent hanging forever
                 setTimeout(() => {
-                    if (!this.isAuthorized && this._authReject) {
-                        this._authReject(new Error('Auth timeout'));
+                    if (!this.isAuthorized && this._authResolve) {
+                        // Resolve with null instead of rejecting on timeout for silent auth
+                        if (silent) {
+                            console.debug('[GoogleDrive] Silent auth timeout');
+                            this._authResolve(null);
+                        } else {
+                            if (this._authReject) this._authReject(new Error('Auth timeout'));
+                        }
                         this._authResolve = null;
                         this._authReject = null;
                     }
-                }, 60000); // 1 minute timeout for user interaction
+                }, 30000); // 30s timeout
 
             } catch (err) {
-                console.error('[GoogleDrive] Token request failed:', err);
-                reject(err);
+                if (silent) {
+                    console.debug('[GoogleDrive] Silent token request failed:', err);
+                    resolve(null);
+                } else {
+                    console.error('[GoogleDrive] Token request failed:', err);
+                    reject(err);
+                }
             }
         });
     }
@@ -463,7 +476,7 @@ const googleDriveService = new GoogleDriveService();
 
 // Auto-initialize when loaded
 if (typeof window !== 'undefined') {
-    googleDriveService.init().catch(err => console.warn('[GoogleDrive] Auto-init failed:', err));
+    googleDriveService.init().catch(err => console.debug('[GoogleDrive] Auto-init failed (expected if keys missing):', err));
 }
 
 export default googleDriveService;

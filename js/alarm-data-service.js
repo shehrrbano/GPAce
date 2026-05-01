@@ -167,21 +167,28 @@ class AlarmDataService {
 
     // Initialize Firestore sync
     async initializeFirestoreSync() {
-        if (!this.userId) return;
+        if (!this.userId || this.firestoreInitialized) return;
+        this.firestoreInitialized = true;
 
-        // Get initial data from Firestore
-        const alarmsRef = collection(db, `users/${this.userId}/alarms`);
+        try {
+            // Get initial data from Firestore
+            const alarmsRef = collection(db, `users/${this.userId}/alarms`);
 
-        // Set up real-time sync
-        onSnapshot(alarmsRef, (snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === 'added' || change.type === 'modified') {
-                    this.updateAlarm(change.doc.id, change.doc.data());
-                } else if (change.type === 'removed') {
-                    this.deleteAlarm(change.doc.id);
-                }
+            // Set up real-time sync
+            this.unsubscribe = onSnapshot(alarmsRef, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        this.updateAlarm(change.doc.id, change.doc.data());
+                    } else if (change.type === 'removed') {
+                        this.deleteAlarm(change.doc.id);
+                    }
+                });
+            }, (error) => {
+                console.debug('[AlarmService] Firestore connection quiet failure:', error.message);
             });
-        });
+        } catch (e) {
+            console.debug('[AlarmService] Failed to setup Firestore sync:', e.message);
+        }
     }
 
     // Load alarms from all sources

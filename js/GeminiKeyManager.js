@@ -262,8 +262,7 @@ class GeminiKeyManager {
             this.saveToStorage();
             console.log(`[GeminiKeyManager] Sync complete. Total keys: ${this.keys.length}, Added: ${addedCount}, Updated: ${updatedCount}`);
         } else if (this.keys.length === 0) {
-            console.warn('[GeminiKeyManager] No keys found in any storage location!');
-            console.log('[GeminiKeyManager] Checked: SecureStorage, gpace_secure_*, gpace_*, raw localStorage');
+            console.debug('[GeminiKeyManager] No keys found in any storage location!');
         } else {
             console.log(`[GeminiKeyManager] Keys already in sync. Total: ${this.keys.length}`);
         }

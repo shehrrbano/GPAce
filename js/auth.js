@@ -2,6 +2,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"; // Keep for getOrCreateFirebaseApp
 import {
     getAuth,
+    setPersistence,
+    browserLocalPersistence,
     signInWithPopup,
     GoogleAuthProvider,
     onAuthStateChanged,
@@ -103,7 +105,16 @@ export async function handleSignOut() {
 }
 
 // Listen for auth state changes
-export function initializeAuth() {
+export async function initializeAuth() {
+    if (!auth) return;
+
+    try {
+        await setPersistence(auth, browserLocalPersistence);
+        console.log('🔐 Auth persistence set to LOCAL');
+    } catch (error) {
+        console.error('Error setting auth persistence:', error);
+    }
+
     onAuthStateChanged(auth, async (user) => { // Make async
         if (user) {
             console.log('🔐 User authenticated via Firebase:', user.email);

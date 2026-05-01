@@ -4,61 +4,82 @@
  * 
  * Uses global StorageAdapter for consistent storage access
  */
-import { storageService } from './services/StorageService.js';
-
 class SideDrawer {
     constructor() {
         this.isOpen = false;
-        this.storage = storageService;
-        this.init();
-        this.initializeAuth();
+        this.initialized = false;
     }
 
     init() {
+        if (this.initialized) return;
+        this.initialized = true;
         // Create drawer HTML
         const drawer = document.createElement('div');
         drawer.className = 'side-drawer';
         drawer.innerHTML = `
+            <div class="drawer-overlay"></div>
             <div class="drawer-content">
-                <button class="drawer-close">&times;</button>
                 <div class="drawer-header">
-                    <h3>Settings</h3>
-                </div>
-                <div class="drawer-body">
-                    <div id="userProfile" class="user-profile">
-                        <!-- Profile content will be dynamically updated -->
+                    <div class="header-main">
+                        <span class="kicker">Command Center</span>
+                        <h3>Settings</h3>
                     </div>
-                    <button id="authButton" class="auth-button">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In
+                    <button class="drawer-close" aria-label="Close Drawer">
+                        <i class="bi bi-x-lg"></i>
                     </button>
-                    <div class="theme-section">
-                        <h4>Theme</h4>
-                        <div class="theme-buttons">
-                            <button class="theme-btn light-theme" data-theme="light">
-                                <i class="bi bi-sun-fill"></i>
-                                Light
-                            </button>
-                            <button class="theme-btn dark-theme" data-theme="dark">
-                                <i class="bi bi-moon-fill"></i>
-                                Dark
+                </div>
+                
+                <div class="drawer-body">
+                    <div class="drawer-section profile-section">
+                        <div id="userProfile" class="user-profile">
+                            <!-- Profile content will be dynamically updated -->
+                        </div>
+                        <div id="authContainer" class="auth-container">
+                            <button id="authButton" class="btn-auth">
+                                <i class="bi bi-google"></i>
+                                <span>Sign In with Google</span>
                             </button>
                         </div>
                     </div>
-                    <div class="drawer-links">
-                        <a href="settings.html" class="drawer-link">
-                            <i class="bi bi-gear"></i>
-                            Settings
-                        </a>
-                        <a href="sleep-saboteurs.html" class="drawer-link">
-                            <i class="bi bi-clock"></i>
-                            Sleep Saboteurs
-                        </a>
-                        <a href="priority-calculator.html" class="drawer-link">
-                            <i class="bi bi-calculator"></i>
-                            Priority Calculator
-                        </a>
+
+                    <div class="drawer-section">
+                        <span class="section-kicker">Appearance</span>
+                        <div class="theme-control">
+                            <div class="theme-buttons">
+                                <button class="theme-btn light-theme" data-theme="light">
+                                    <i class="bi bi-sun"></i>
+                                    <span>Light</span>
+                                </button>
+                                <button class="theme-btn dark-theme" data-theme="dark">
+                                    <i class="bi bi-moon-stars"></i>
+                                    <span>Dark</span>
+                                </button>
+                                <div class="theme-pill"></div>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="drawer-section">
+                        <span class="section-kicker">Navigation</span>
+                        <nav class="drawer-links">
+                            <a href="settings.html" class="drawer-link">
+                                <div class="link-icon"><i class="bi bi-gear"></i></div>
+                                <div class="link-label">Settings</div>
+                            </a>
+                            <a href="sleep-saboteurs.html" class="drawer-link">
+                                <div class="link-icon"><i class="bi bi-alarm"></i></div>
+                                <div class="link-label">Sleep Saboteurs</div>
+                            </a>
+                            <a href="priority-calculator.html" class="drawer-link">
+                                <div class="link-icon"><i class="bi bi-calculator"></i></div>
+                                <div class="link-label">Priority Calculator</div>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                
+                <div class="drawer-footer">
+                    <div class="footer-meta">GPAce v2.0 · Grind Mode</div>
                 </div>
             </div>
         `;
@@ -72,9 +93,7 @@ class SideDrawer {
         // Event listeners
         this.setupEventListeners();
 
-        // Watch for navigation replacement (inject-header.js may replace the nav)
-        this.watchForNavigationChanges();
-    }
+
 
     /**
      * Ensures the drawer toggle button exists in the DOM
@@ -129,9 +148,10 @@ class SideDrawer {
     }
 
     setupEventListeners() {
-        const drawerToggles = document.querySelectorAll('.drawer-toggle');
+        const drawerToggles = document.querySelectorAll('.pm-drawer-toggle, .drawer-toggle');
         const drawerClose = document.querySelector('.drawer-close');
         const authButton = document.getElementById('authButton');
+        const overlay = document.querySelector('.drawer-overlay');
 
         // Global event for external components
         if (!window._drawerBound) {
@@ -153,6 +173,10 @@ class SideDrawer {
             drawerClose.addEventListener('click', () => this.closeDrawer());
         }
 
+        if (overlay) {
+            overlay.addEventListener('click', () => this.closeDrawer());
+        }
+
         if (authButton && !authButton.hasAttribute('data-drawer-bound')) {
             authButton.setAttribute('data-drawer-bound', 'true');
             authButton.addEventListener('click', () => this.handleAuth());
@@ -171,7 +195,7 @@ class SideDrawer {
     async handleAuth() {
         const auth = window.auth; // Get auth instance from window
 
-        if (auth.currentUser) {
+        if (auth?.currentUser) {
             try {
                 await window.signOutUser();
                 console.log('User signed out successfully');
@@ -198,46 +222,49 @@ class SideDrawer {
     updateUIForUser(user) {
         const authButton = document.getElementById('authButton');
         const userProfile = document.getElementById('userProfile');
+        const authContainer = document.getElementById('authContainer');
 
-        if (authButton && userProfile) {
-            // Update auth button
-            authButton.innerHTML = `
-                <img src="${user.photoURL || 'default-avatar.png'}" alt="${user.displayName}" class="user-avatar">
-                <span class="user-name">${user.displayName || user.email}</span>
-                <button id="sideDrawerSignOutBtn" class="logout-btn">Sign Out</button>
+        if (userProfile) {
+            if (authContainer) authContainer.style.display = 'none';
+
+            userProfile.innerHTML = `
+                <div class="profile-card">
+                    <div class="profile-main">
+                        <div class="avatar-wrapper">
+                            <img src="${user.photoURL || 'assets/images/default-avatar.png'}" alt="${user.displayName}" class="user-avatar">
+                            <div class="avatar-glow"></div>
+                        </div>
+                        <div class="profile-info">
+                            <span class="user-name">${user.displayName || user.email}</span>
+                            <span class="user-status">Verified Agent</span>
+                        </div>
+                    </div>
+                    <button id="sideDrawerSignOutBtn" class="btn-logout" title="Sign Out">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+                </div>
             `;
 
-            // Add event listener to the sign out button
             const signOutBtn = document.getElementById('sideDrawerSignOutBtn');
             if (signOutBtn) {
                 signOutBtn.addEventListener('click', () => this.handleAuth());
             }
 
-            // Show user profile
-            userProfile.style.display = 'flex';
-            // Data initialization handled by DataInitializationService, not here
+            userProfile.style.display = 'block';
         }
     }
 
     updateUIForSignedOut() {
-        const authButton = document.getElementById('authButton');
+        const authContainer = document.getElementById('authContainer');
         const userProfile = document.getElementById('userProfile');
 
-        if (authButton && userProfile) {
-            // Reset auth button
-            authButton.innerHTML = `
-                <i class="fas fa-sign-in-alt"></i>
-                Sign In
-            `;
-
-            // Hide user profile
-            userProfile.style.display = 'none';
-        }
+        if (authContainer) authContainer.style.display = 'block';
+        if (userProfile) userProfile.style.display = 'none';
     }
 
     initializeAuth() {
         // Listen for auth state changes with retry mechanism for async module loading
-        const maxRetries = 20; // 20 retries * 100ms = 2 seconds max wait
+        const maxRetries = 20; 
         let retryCount = 0;
 
         const setupAuthListener = () => {
@@ -251,11 +278,8 @@ class SideDrawer {
                     }
                 });
             } else if (retryCount < maxRetries) {
-                // Auth module not yet loaded, retry after 100ms
                 retryCount++;
                 setTimeout(setupAuthListener, 100);
-            } else {
-                console.warn('[SideDrawer] Auth not available after maximum retries. Auth features will be limited.');
             }
         };
 
@@ -279,18 +303,12 @@ class SideDrawer {
     }
 
     handleThemeChange(theme) {
-        const storage = getStorage();
         const body = document.body;
+        const drawer = document.querySelector('.side-drawer');
         const themeButtons = document.querySelectorAll('.theme-btn');
 
         // Update theme
-        if (theme === 'light') {
-            body.classList.add('light-theme');
-            storage.set('theme', 'light');
-        } else {
-            body.classList.remove('light-theme');
-            storage.set('theme', 'dark');
-        }
+
 
         // Update active state of theme buttons
         themeButtons.forEach(button => {
@@ -299,7 +317,11 @@ class SideDrawer {
     }
 }
 
-// Initialize drawer
-document.addEventListener('DOMContentLoaded', () => {
-    window.sideDrawer = new SideDrawer();
-});
+// Instantiate and expose globally
+const sideDrawer = new SideDrawer();
+window.sideDrawer = sideDrawer;
+
+// Also support module export
+export { SideDrawer };
+export default sideDrawer;
+

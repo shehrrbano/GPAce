@@ -71,6 +71,9 @@ async function initializeCommonComponents() {
 
     // Inject navigation if NavigationComponent is available
     await injectNavigationIfAvailable();
+
+    // Inject Side Drawer component
+    injectSideDrawer();
 }
 
 /**
@@ -80,6 +83,7 @@ function injectStylesheets() {
     const stylesheets = [
         { id: 'design-tokens-css', href: 'css/design-tokens.css' },
         { id: 'navigation-component-css', href: 'css/components/navigation.css' },
+        { id: 'side-drawer-css', href: 'css/sideDrawer.css' },
         { id: 'bootstrap-icons', href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css' }
     ];
 
@@ -207,6 +211,31 @@ function scheduleAlarms(worker, alarms) {
             });
         }
     });
+}
+
+/**
+ * Injects the Side Drawer component script if missing
+ */
+function injectSideDrawer() {
+    // Check if sideDrawer.js is already loaded or already present in DOM
+    if (window.sideDrawer || document.querySelector('script[src="js/sideDrawer.js"]')) {
+        // If loaded but not initialized, init it
+        if (window.sideDrawer && typeof window.sideDrawer.init === 'function' && !window.sideDrawer.initialized) {
+            window.sideDrawer.init();
+        }
+        return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'js/sideDrawer.js';
+    script.type = 'module'; // sideDrawer.js uses ESM exports now
+    script.onload = () => {
+        if (window.sideDrawer && typeof window.sideDrawer.init === 'function') {
+            window.sideDrawer.init();
+        }
+    };
+    document.body.appendChild(script);
+    console.debug('[InjectHeader] Dynamically injected sideDrawer.js');
 }
 
 /**
