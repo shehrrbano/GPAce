@@ -92,8 +92,7 @@ class SideDrawer {
 
         // Event listeners
         this.setupEventListeners();
-
-
+    }
 
     /**
      * Ensures the drawer toggle button exists in the DOM
@@ -303,17 +302,28 @@ class SideDrawer {
     }
 
     handleThemeChange(theme) {
-        const body = document.body;
-        const drawer = document.querySelector('.side-drawer');
+        // Update theme on document element
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        // Persist theme choice
+        localStorage.setItem('gpace_theme', theme);
+        
+        // Update body class if needed (legacy support)
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.body.classList.remove('light-theme');
+        } else {
+            document.body.classList.add('light-theme');
+            document.body.classList.remove('dark-theme');
+        }
+
+        // Update active state of theme buttons in drawer
         const themeButtons = document.querySelectorAll('.theme-btn');
-
-        // Update theme
-
-
-        // Update active state of theme buttons
         themeButtons.forEach(button => {
             button.classList.toggle('active', button.dataset.theme === theme);
         });
+        
+        console.log(`[SideDrawer] Theme changed to: ${theme}`);
     }
 }
 
