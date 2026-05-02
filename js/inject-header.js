@@ -82,6 +82,7 @@ async function initializeCommonComponents() {
 function injectStylesheets() {
     const stylesheets = [
         { id: 'design-tokens-css', href: 'css/design-tokens.css' },
+        { id: 'mobile-native-css', href: 'css/mobile-native.css' },
         { id: 'navigation-component-css', href: 'css/components/navigation.css' },
         { id: 'side-drawer-css', href: 'css/sideDrawer.css' },
         { id: 'bootstrap-icons', href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css' }
