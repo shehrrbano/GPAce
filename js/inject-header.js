@@ -173,8 +173,8 @@ async function initializeAlarmServiceWorker(STORAGE_KEYS) {
     }
 
     try {
-        const registration = await navigator.serviceWorker.register('/js/alarm-service-worker.js');
-        console.log('[InjectHeader] Alarm Service Worker registered');
+        const registration = await navigator.serviceWorker.register('/sw.js');
+        console.log('[InjectHeader] PWA Service Worker registered');
 
         // Load alarms from storage and schedule active ones
         const alarms = storageService.get(STORAGE_KEYS.ALARMS || 'alarms', []);
@@ -217,23 +217,21 @@ function scheduleAlarms(worker, alarms) {
  * Injects the Side Drawer component script if missing
  */
 function injectSideDrawer() {
-    // Check if sideDrawer.js is already loaded or already present in DOM
-    if (window.sideDrawer || document.querySelector('script[src="js/sideDrawer.js"]')) {
-        // If loaded but not initialized, init it
-        if (window.sideDrawer && typeof window.sideDrawer.init === 'function' && !window.sideDrawer.initialized) {
-            window.sideDrawer.init();
-        }
+    // If it's already there and initialized, we're good
+    if (window.sideDrawer?.initialized) return;
+
+    // Check if the script is already in the DOM (use partial match for flexibility)
+    const existingScript = document.querySelector('script[src*="sideDrawer.js"]');
+    
+    if (existingScript) {
+        // Script exists, it will handle its own auto-initialization on load/DOMReady
+        console.debug('[InjectHeader] sideDrawer.js already present, skipping injection');
         return;
     }
 
     const script = document.createElement('script');
     script.src = 'js/sideDrawer.js';
-    script.type = 'module'; // sideDrawer.js uses ESM exports now
-    script.onload = () => {
-        if (window.sideDrawer && typeof window.sideDrawer.init === 'function') {
-            window.sideDrawer.init();
-        }
-    };
+    script.type = 'module';
     document.body.appendChild(script);
     console.debug('[InjectHeader] Dynamically injected sideDrawer.js');
 }
