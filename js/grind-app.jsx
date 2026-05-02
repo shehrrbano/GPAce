@@ -219,10 +219,12 @@ function App() {
     
     window.addEventListener('google-drive-initialized', handleDriveUpdate);
     window.addEventListener('google-drive-authenticated', handleDriveUpdate);
+    window.addEventListener('google-drive-authorized', handleDriveUpdate); // new: fires on restore
     
     return () => {
       window.removeEventListener('google-drive-initialized', handleDriveUpdate);
       window.removeEventListener('google-drive-authenticated', handleDriveUpdate);
+      window.removeEventListener('google-drive-authorized', handleDriveUpdate);
     };
   }, [currentTask?.id]);
 
@@ -737,15 +739,62 @@ function CurrentTaskCard({ task, libraryCount = 0, taskFiles = [], loadingFiles 
 
 function SubjectLibrary({ files, loading, taskId }) {
   const [filter, setFilter] = React.useState('');
-  const [isAuthorized, setIsAuthorized] = React.useState(window.googleDriveAPI?.isAuthorized || false);
+
+  // Helper: check if user was previously connected (survives token expiry)
+  const wasConnectedBefore = () => {
+    try {
+      return localStorage.getItem('gpace_gdrive_was_connected') === 'true';
+    } catch(e) { return false; }
+  };
+
+  // Tri-state: true = authorized, false = not connected, 'connecting' = initializing a previous session
+  const getInitialAuthState = () => {
+    if (window.googleDriveAPI?.isAuthorized) return true;
+    if (!window.googleDriveAPI?.isInitialized && wasConnectedBefore()) return 'connecting';
+    return false;
+  };
+
+  const [isAuthorized, setIsAuthorized] = React.useState(getInitialAuthState);
 
   React.useEffect(() => {
-    const updateAuthStatus = () => setIsAuthorized(window.googleDriveAPI?.isAuthorized || false);
-    window.addEventListener('google-drive-authenticated', updateAuthStatus);
+    const onAuthorized = () => setIsAuthorized(true);
+    const onSignedOut = () => setIsAuthorized(false);
+    const updateAuthStatus = () => {
+      if (window.googleDriveAPI?.isAuthorized) {
+        setIsAuthorized(true);
+      } else if (window.googleDriveAPI?.isInitialized) {
+        // Initialized but not authorized — show connect button
+        setIsAuthorized(false);
+      }
+      // If not initialized yet and was connected before, keep 'connecting'
+    };
+
+    window.addEventListener('google-drive-authorized', onAuthorized);
+    window.addEventListener('google-drive-authenticated', onAuthorized);
+    window.addEventListener('google-drive-signed-out', onSignedOut);
     window.addEventListener('google-drive-initialized', updateAuthStatus);
+
+    // Polling fallback: check every 300ms for up to 6 seconds after mount
+    // Handles case where Drive was already initialized before component mounted
+    let pollCount = 0;
+    const pollInterval = setInterval(() => {
+      pollCount++;
+      if (window.googleDriveAPI?.isAuthorized) {
+        setIsAuthorized(true);
+        clearInterval(pollInterval);
+      } else if (window.googleDriveAPI?.isInitialized || pollCount >= 20) {
+        // Initialized but not authorized, OR timed out — resolve to false
+        setIsAuthorized(prev => prev === 'connecting' ? false : prev);
+        clearInterval(pollInterval);
+      }
+    }, 300);
+
     return () => {
-      window.removeEventListener('google-drive-authenticated', updateAuthStatus);
+      window.removeEventListener('google-drive-authorized', onAuthorized);
+      window.removeEventListener('google-drive-authenticated', onAuthorized);
+      window.removeEventListener('google-drive-signed-out', onSignedOut);
       window.removeEventListener('google-drive-initialized', updateAuthStatus);
+      clearInterval(pollInterval);
     };
   }, []);
   
@@ -794,12 +843,17 @@ function SubjectLibrary({ files, loading, taskId }) {
         </div>
       </div>
       <div className="sl-scroll-area">
-        {!isAuthorized ? (
+        {isAuthorized === 'connecting' ? (
+          <div className="center-all flex-col" style={{ height: '120px', gap: '8px' }}>
+            <div className="spinner-small" />
+            <div className="muted smaller" style={{ opacity: 0.6 }}>Restoring Drive...</div>
+          </div>
+        ) : !isAuthorized ? (
           <div className="center-all flex-col" style={{ height: '120px', gap: '12px' }}>
             <div className="muted smaller">Drive Access Required</div>
             <button 
               className="btn-ghost small" 
-              onClick={() => window.googleDriveAPI.authorize(false)}
+              onClick={() => window.googleDriveAPI?.authorize(false)}
               style={{ padding: '6px 12px', borderColor: 'var(--accent)' }}
             >
               <Icon name="zap" size={12} /> Connect Drive
@@ -828,6 +882,7 @@ function SubjectLibrary({ files, loading, taskId }) {
           </div>
         )}
       </div>
+
       <button className="btn-add-library" onClick={() => window.noteToTaskController?.openFilePicker()}>
         <Icon name="plus" size={10} /> ADD TO LIBRARY
       </button>
@@ -917,7 +972,23 @@ function EnergyGraph({ data }) {
 
     // Gradient fill
     const grad = ctx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, accent + '33'); // 20% opacity
+    // Support oklch transparency safely, fallback to rgba if needed
+    let fillStyle = 'rgba(56, 189, 248, 0.2)'; // Safe default fallback
+    try {
+        if (accent.includes('oklch')) {
+            // Many browsers do not yet support oklch in canvas gradients.
+            // Using a safe rgba fallback that matches the Grind Mode blue accent.
+            fillStyle = 'rgba(56, 189, 248, 0.2)'; 
+        } else if (accent.startsWith('#')) {
+            fillStyle = accent + '33';
+        } else if (accent.startsWith('rgb')) {
+            fillStyle = accent.replace('rgb', 'rgba').replace(')', ', 0.2)');
+        }
+    } catch (e) {
+        console.warn('Canvas color parse fallback applied', e);
+    }
+
+    grad.addColorStop(0, fillStyle);
     grad.addColorStop(1, 'transparent');
     ctx.fillStyle = grad;
     ctx.lineTo(w, h);
@@ -1087,4 +1158,8 @@ function ErrorBoundary({ children }) {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <ErrorBound
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  </React.StrictMode>
+);

@@ -37,7 +37,15 @@ const getStorageAdapter = async () => {
 /**
  * Initialize common components on page load
  */
+let _commonComponentsInitialized = false;
 async function initializeCommonComponents() {
+    // Idempotency guard: prevent running twice (BootstrapManager + auto-init)
+    if (_commonComponentsInitialized) {
+        console.debug('[InjectHeader] Already initialized, skipping duplicate call');
+        return;
+    }
+    _commonComponentsInitialized = true;
+
     // Batch 12: Moving to common header even on React pages
     // if (window.location.pathname.includes('grind.html') || document.getElementById('root')) {
     //     console.log('[InjectHeader] React root detected, skipping common header injection');
@@ -271,38 +279,48 @@ async function injectNavigationIfAvailable() {
         console.debug('[InjectHeader] NavigationComponent not loaded:', error.message);
     }
 
-    // Always setup scroll-hide for navigation (works with static or injected nav)
-    setupScrollHide();
+    // Setup scroll-hide AFTER nav has been injected (retry if not found immediately)
+    setupScrollHideWithRetry();
 }
 
 /**
- * Sets up scroll-to-hide behavior for navigation
- * - Navigation auto-hides after 2 seconds of inactivity
- * - Only shows when actively scrolling up
- * - Always visible at the very top of the page
+ * Sets up scroll-to-hide behavior for navigation with retry logic.
+ * Retries up to 10 times (50ms apart) to find the nav element
+ * since NavigationComponent injects it asynchronously.
  */
-function setupScrollHide() {
+function setupScrollHideWithRetry(attempts = 0) {
     const nav = document.querySelector('.pm-nav') || document.querySelector('.top-nav');
     if (!nav) {
-        console.debug('[InjectHeader] No navigation element found for scroll-hide');
+        if (attempts < 20) {
+            setTimeout(() => setupScrollHideWithRetry(attempts + 1), 50);
+        } else {
+            console.debug('[InjectHeader] No navigation element found for scroll-hide after retries');
+        }
         return;
     }
 
+    // CRITICAL: Ensure nav is always visible on initial load — remove any stale nav-hidden class
+    nav.classList.remove('nav-hidden');
+
+    // Guard: don't attach multiple scroll listeners to the same element
+    if (nav.dataset.scrollHideBound) return;
+    nav.dataset.scrollHideBound = 'true';
+
     let lastScrollY = window.scrollY;
     let ticking = false;
-    const scrollThreshold = 10; // Slightly lower for more responsive "up" detection
+    const scrollThreshold = 10;
 
     function handleScroll() {
         const currentScrollY = window.scrollY;
         
-        // Premium touch: Add a shadow/border when not at the very top
+        // Premium touch: add depth shadow when scrolled
         if (currentScrollY > 10) {
             nav.classList.add('nav-scrolled');
         } else {
             nav.classList.remove('nav-scrolled');
         }
 
-        // Always show at top (prevents mobile bounce issues)
+        // Always visible at the very top of the page
         if (currentScrollY <= 60) {
             nav.classList.remove('nav-hidden');
             lastScrollY = currentScrollY;
@@ -310,18 +328,17 @@ function setupScrollHide() {
             return;
         }
 
-        // Calculate delta
         const delta = currentScrollY - lastScrollY;
 
-        // Hide when scrolling DOWN past threshold
+        // Hide when scrolling DOWN
         if (delta > scrollThreshold) {
             nav.classList.add('nav-hidden');
-            lastScrollY = currentScrollY; // Reset anchor
+            lastScrollY = currentScrollY;
         } 
-        // Show when scrolling UP past threshold
+        // Show when scrolling UP
         else if (delta < -scrollThreshold) {
             nav.classList.remove('nav-hidden');
-            lastScrollY = currentScrollY; // Reset anchor
+            lastScrollY = currentScrollY;
         }
 
         ticking = false;
@@ -334,7 +351,7 @@ function setupScrollHide() {
         }
     }, { passive: true });
 
-    console.log('[InjectHeader] Smart scroll-hide behavior initialized');
+    console.log('[InjectHeader] Smart scroll-hide behavior initialized on', nav.className);
 }
 
 // Export for module support
@@ -345,3 +362,17 @@ if (typeof window !== 'undefined') {
     window.initializeCommonComponents = initializeCommonComponents;
 }
 
+/**
+ * AUTO-INIT: Run immediately when the module loads.
+ * This ensures the header is always injected regardless of whether
+ * BootstrapManager.boot() is called (fixes the disappeared header bug).
+ * BootstrapManager will call it again but initializeCommonComponents is idempotent.
+ */
+(function autoInit() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => initializeCommonComponents());
+    } else {
+        // DOM already ready — run immediately
+        initializeCommonComponents();
+    }
+})();

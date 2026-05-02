@@ -141,19 +141,8 @@
 }
 
 /* ============================================
-   Navigation Scroll-Hide Behavior
+   Navigation Scroll Tokens
+   These classes are managed by inject-header.js and navigation.css
    ============================================ */
-.top-nav {
-    transition: transform 0.3s ease-in-out;
-    will-change: transform;
-}
-
-.top-nav.nav-hidden {
-    transform: translateY(-100%);
-}
-
-/* Ensure body padding adjusts when nav is hidden */
-body:has(.top-nav.nav-hidden) {
-    /* Smooth content shift */
-    transition: padding-top 0.3s ease-in-out;
-}
+/* NOTE: .nav-hidden and scroll-hide transitions are defined in
+   css/components/navigation.css to keep nav styles co-located. */

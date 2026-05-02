@@ -6,122 +6,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPAce - Priority List</title>
+    <meta name="description" content="Your ranked academic task list sorted by priority score. Focus on what matters most.">
 
-    <!-- PWA Manifest & Branding -->
+    <!-- PWA / Branding -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#050b18">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="assets/images/gpace-logo-white.png">
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/images/gpace-logo-white.png">
     <link rel="shortcut icon" type="image/png" href="assets/images/gpace-logo-white.png">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Side Drawer Styles -->
+    <link href="css/design-tokens.css" rel="stylesheet">
     <link href="css/sideDrawer.css" rel="stylesheet">
-    <!-- Priority List Styles -->
     <link href="css/priority-list.css" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Navigation Bar -->
-    <div class="container mt-4">
-        <div class="list-header">
-            <div class="priority-score">Priority</div>
-            <div class="task-title">Task</div>
-            <div class="task-section">Section</div>
-            <div class="project-name">Project</div>
-            <div class="due-date">Due Date</div>
+    <!-- Header injected by inject-header.js -->
+
+    <main class="pl-container" id="main-content">
+
+        <!-- Page Header -->
+        <header class="pl-page-header">
+            <div class="pl-page-title">
+                <div class="pl-icon-badge">
+                    <i class="bi bi-list-stars"></i>
+                </div>
+                <div>
+                    <h1>Priority List</h1>
+                    <p class="pl-subtitle">Tasks ranked by urgency, difficulty, and academic weight</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <div class="pl-stats-bar">
+            <div class="pl-stat-card" style="--stat-accent: #007AFF">
+                <div class="stat-value" id="stat-total">—</div>
+                <div class="stat-label">Active Tasks</div>
+            </div>
+            <div class="pl-stat-card" style="--stat-accent: #FF9F0A">
+                <div class="stat-value" id="stat-top-score">—</div>
+                <div class="stat-label">Top Score</div>
+            </div>
+            <div class="pl-stat-card" style="--stat-accent: #FF3B30">
+                <div class="stat-value" id="stat-overdue">—</div>
+                <div class="stat-label">Overdue</div>
+            </div>
         </div>
 
-        <div class="task-navigation">
-            <button onclick="navigateTask('prev')" class="nav-arrow" title="Previous Task">
-                <i class="bi bi-chevron-left"></i>
+        <!-- Controls -->
+        <div class="pl-controls">
+            <div class="pl-search-wrap">
+                <i class="bi bi-search"></i>
+                <input
+                    type="text"
+                    class="pl-search"
+                    id="pl-search"
+                    placeholder="Search tasks, projects…"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="pl-control-group">
+                <span class="pl-control-label">Sort by:</span>
+                <select class="pl-select" id="pl-sort-field" aria-label="Sort field">
+                    <option value="score" selected>Priority Score</option>
+                    <option value="dueDate">Due Date</option>
+                    <option value="title">Title</option>
+                    <option value="project">Project</option>
+                </select>
+            </div>
+
+            <button class="pl-icon-btn" id="pl-sort-dir" title="Toggle sort direction" aria-label="Toggle sort direction">
+                <i class="bi bi-sort-down-alt"></i>
             </button>
-            <span class="navigation-text">Navigate Tasks</span>
-            <button onclick="navigateTask('next')" class="nav-arrow" title="Next Task">
-                <i class="bi bi-chevron-right"></i>
+
+            <button class="pl-icon-btn" id="pl-refresh" title="Recalculate scores" aria-label="Recalculate scores">
+                <i class="bi bi-arrow-clockwise"></i>
             </button>
+
+            <a href="priority-calculator.html" class="pl-icon-btn" title="Open Calculator" aria-label="Open Priority Calculator">
+                <i class="bi bi-calculator"></i>
+            </a>
         </div>
 
-        <div id="taskList">
-            <!-- Tasks will be populated here -->
+        <!-- Column Headers (desktop) -->
+        <div class="pl-list-header" aria-hidden="true">
+            <div></div><!-- rank -->
+            <div>Score</div>
+            <div>Task</div>
+            <div style="text-align:right">Section</div>
+            <div style="text-align:right">Due Date</div>
+            <div style="text-align:right">Actions</div>
         </div>
-    </div>
 
-    <a href="priority-calculator.html" class="back-button">
-        <i class="bi bi-arrow-left"></i> Back to Calculator
+        <!-- Task List -->
+        <div id="pl-task-list" role="list" aria-label="Priority task list">
+            <!-- Populated by priority-list-engine.js -->
+            <div style="padding:60px 20px; text-align:center; color:rgba(255,255,255,0.3); font-size:0.9rem">
+                <i class="bi bi-arrow-repeat" style="font-size:1.5rem; display:block; margin-bottom:10px; animation:spin 1s linear infinite"></i>
+                Loading tasks…
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FAB -->
+    <a href="priority-calculator.html" class="pl-fab" aria-label="Back to Priority Calculator">
+        <i class="bi bi-calculator"></i>
+        Calculator
     </a>
 
-    <!-- Firebase Initialization -->
+    <!-- ── Scripts ─────────────────────────────────────────── -->
+
+    <!-- Storage singleton (must be first) -->
+    <script>
+        // Bootstrap getStorage before any module loads
+        if (typeof window.getStorage === 'undefined') {
+            window.getStorage = () => window.storageService || window.StorageService || {
+                get: (k, d) => {
+                    try {
+                        // Try gpace_ prefixed
+                        let raw = localStorage.getItem('gpace_' + k);
+                        if (raw === null) raw = localStorage.getItem(k);
+                        if (raw === null) return d;
+                        return JSON.parse(raw);
+                    } catch { return d; }
+                },
+                set: (k, v) => {
+                    try {
+                        const s = JSON.stringify(v);
+                        localStorage.setItem('gpace_' + k, s);
+                        localStorage.setItem(k, s); // also write raw
+                    } catch {}
+                }
+            };
+        }
+    </script>
+
+    <!-- Firebase -->
     <script type="module">
-        import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
         import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { firebaseConfig, getOrCreateFirebaseApp } from './js/firebaseConfig.js';
-
-        // Initialize Firebase safely using centralized helper
+        import { getOrCreateFirebaseApp } from './js/firebaseConfig.js';
         const app = await getOrCreateFirebaseApp(initializeApp, getApps);
-        console.log("Firebase initialized via helper:", app ? "success" : "failed");
-
-        // Set up global variables with guards
         if (app) {
-            if (!window.db) window.db = getFirestore(app);
+            if (!window.db)   window.db   = getFirestore(app);
             if (!window.auth) window.auth = getAuth(app);
         }
     </script>
 
-    <!-- Authentication Setup -->
+    <!-- Auth -->
     <script type="module">
         import { auth as importedAuth, signInWithGoogle, signOutUser, initializeAuth } from './js/auth.js';
         window.auth = window.auth || importedAuth;
         window.signInWithGoogle = signInWithGoogle;
         window.signOutUser = signOutUser;
-
-        // Initialize authentication
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeAuth();
-        });
+        document.addEventListener('DOMContentLoaded', () => initializeAuth());
     </script>
 
-    <!-- Firestore Data Operations -->
-    <script type="module">
-        import { initializeFirestoreData } from './js/initFirestoreData.js';
-        window.initializeFirestoreData = initializeFirestoreData;
+    <!-- StorageService (sets window.storageService with gpace_ prefix support) -->
+    <script type="module" src="js/services/StorageService.js"></script>
 
-        // Initialize data when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                if (typeof window.initializeFirestoreData === 'function') {
-                    window.initializeFirestoreData();
-                }
-            }, 1500);
-        });
-    </script>
-
-    <!-- Global getStorage singleton - MUST be defined before any scripts that use it -->
-    <script>
-        if (typeof window.getStorage === 'undefined') {
-            window.getStorage = () => window.StorageService || {
-                get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
-                set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
-            };
-        }
-    </script>
-
+    <!-- Core infrastructure -->
     <script type="module" src="js/common.js"></script>
     <script type="module" src="js/cross-tab-sync.js"></script>
-    <script type="module" src="js/priority-sync-fix.js"></script>
-    <script src="js/priority-list-sorting.js"></script>
-    <script type="module" src="js/priority-list-utils.js"></script>
+
+    <!-- The self-contained priority engine (non-module so it runs immediately) -->
+    <!-- Runs first so the UI is ready when data arrives via events below -->
+    <script src="js/priority-list-engine.js"></script>
+
+    <!-- Task System + Data Initialization → fires 'dataInitialized' + 'gpac_tasks_updated' -->
+    <script type="module">
+        import taskSystem from './js/core/TaskSystem.js';
+        import dataInitService from './js/services/DataInitializationService.js';
+        window.TaskSystem  = taskSystem;
+        window.taskService = taskSystem;
+        window.TaskService = taskSystem;
+        // Initialize data (auth → subjects → task subscriptions → dataInitialized event)
+        dataInitService.init().catch(e => console.warn('[PriorityList] DataInitService error:', e));
+    </script>
+
+    <!-- Navigation & Side Drawer -->
     <script type="module" src="js/core/BootstrapManager.js"></script>
     <script type="module" src="js/sideDrawer.js"></script>
     <script type="module" src="/js/inject-header.js"></script>
 </body>
 
 </html>
-
-
-

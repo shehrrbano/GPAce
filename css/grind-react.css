@@ -1,7 +1,11 @@
 :root {
   --accent-hue: 217;
+  --accent-hue: 217;
+  --accent: #60A5FA;                                   /* Fallback Hex */
   --accent: oklch(0.70 0.15 var(--accent-hue));        /* Calm Primary #60A5FA-ish */
+  --accent-light: #93C5FD;                             /* Fallback Hex */
   --accent-light: oklch(0.85 0.10 var(--accent-hue));  /* Ethereal Accent */
+  --accent-deep: #3B82F6;                              /* Fallback Hex */
   --accent-deep: oklch(0.50 0.20 var(--accent-hue));   /* Deep Support */
   --accent-2: oklch(0.65 0.12 calc(var(--accent-hue) + 12));
   --accent-3: oklch(0.78 0.10 calc(var(--accent-hue) - 18));
@@ -62,6 +66,8 @@ html, body { margin: 0; padding: 0; }
 body {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   background:
+    radial-gradient(1100px 600px at 80% -10%, rgba(96, 165, 250, 0.1), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(59, 130, 246, 0.1), transparent 60%),
     radial-gradient(1100px 600px at 80% -10%, oklch(0.32 0.10 var(--accent-hue) / 0.35), transparent 60%),
     radial-gradient(900px 500px at -10% 110%, oklch(0.25 0.08 calc(var(--accent-hue) + 30) / 0.35), transparent 60%),
     var(--bg-0);

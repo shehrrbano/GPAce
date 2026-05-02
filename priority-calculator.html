@@ -7,124 +7,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPAce - Priority Calculator</title>
 
-    <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="Calculate and prioritize your academic tasks with GPAce Priority Calculator. Smart task ranking based on deadlines, difficulty, and performance.">
-
-    <!-- Favicon -->
+    <meta name="description" content="Calculate and prioritize your academic tasks with GPAce Priority Calculator. Smart task ranking based on deadlines, difficulty, and performance.">
     <link rel="icon" type="image/png" href="assets/images/gpace-logo-white.png">
     <link rel="shortcut icon" type="image/png" href="assets/images/gpace-logo-white.png">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet" />
+
     <!-- CSS Dependencies -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="css/design-tokens.css" rel="stylesheet">
-    <link href="css/sideDrawer.css" rel="stylesheet">
-    <link href="css/priority-calculator.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/design-tokens.css" />
+    <link rel="stylesheet" href="css/components/navigation.css" />
+    <link rel="stylesheet" href="css/grind-react.css" />
+    <link rel="stylesheet" href="css/sideDrawer.css" />
+    <link rel="stylesheet" href="css/priority-calculator.css" />
+    
+    <style>
+      :root {
+        --nav-height: 72px;
+      }
+      body {
+        padding-top: var(--nav-height);
+      }
+    </style>
 </head>
 
-<body>
-    <!-- Navigation Bar (will be replaced by inject-header.js) -->
-    <!-- Formula Explanation Box -->
-    <section class="formula-box" aria-labelledby="formula-heading">
-        <h4 id="formula-heading">
-            Priority Score Formula
-            <i class="bi bi-info-circle info-icon" aria-label="How the priority score is calculated"
-                title="How the priority score is calculated"></i>
-        </h4>
+<body data-bg="deep" data-density="comfortable">
+    <div class="app">
+        <!-- Layout Master (Split Pane) -->
+        <div class="layout-master">
+            <main class="stage">
+                
+                <!-- Priority Queue -->
+                <section class="left-col">
+                    <div class="card current-task">
+                        <div class="card-header-top">
+                            <div class="task-meta">
+                                <span class="status-badge">PRIORITY QUEUE</span>
+                            </div>
+                            <button class="btn-ghost small" onclick="window.location.href='priority-list.html'">
+                                <i class="bi bi-list-check"></i> VIEW ALL
+                            </button>
+                        </div>
+                        <h1 class="ct-title" style="margin-bottom: 20px;">Priority Calculator</h1>
+                        
+                        <div id="priorityList" role="list">
+                            <!-- Tasks injected via JS -->
+                        </div>
+                    </div>
+                </section>
 
-        <div class="formula-component">
-            <strong>Credit Hours Points (CHP)</strong>
-            <p>Reflects the relative importance of the subject based on credit hours.</p>
-            <code>CHP = Relative Score of Subject (0-100)</code>
+                <!-- Formula Breakdown -->
+                <section class="right-col">
+                    <div class="card queue">
+                        <div class="queue-head">
+                            <h3>Priority Score Formula</h3>
+                        </div>
+                        <div class="telemetry" style="padding: 16px;">
+                            <div class="metric">
+                                <div class="metric-head">
+                                    <div class="brand-mark small" style="width:24px; height:24px; border-radius:6px;"><i class="bi bi-clock"></i></div>
+                                    <span class="metric-label">Credit Hours (CHP)</span>
+                                </div>
+                                <div class="metric-value" style="font-size: 13px; margin-top: 10px; font-weight: normal; color: var(--text-muted); line-height: 1.4;">
+                                    Reflects subject importance based on credit hours.<br/>
+                                    <code style="color: var(--accent-light); font-size: 11px; display:block; margin-top:4px;">CHP = Relative Score (0-100)</code>
+                                </div>
+                            </div>
+
+                            <div class="metric">
+                                <div class="metric-head">
+                                    <div class="brand-mark small" style="width:24px; height:24px; border-radius:6px;"><i class="bi bi-brain"></i></div>
+                                    <span class="metric-label">Cognitive Diff (CDP)</span>
+                                </div>
+                                <div class="metric-value" style="font-size: 13px; margin-top: 10px; font-weight: normal; color: var(--text-muted); line-height: 1.4;">
+                                    Measures task complexity and intellectual challenge.<br/>
+                                    <code style="color: var(--accent-light); font-size: 11px; display:block; margin-top:4px;">CDP = Cog Diff (1-100)</code>
+                                </div>
+                            </div>
+
+                            <div class="metric">
+                                <div class="metric-head">
+                                    <div class="brand-mark small" style="width:24px; height:24px; border-radius:6px;"><i class="bi bi-bar-chart"></i></div>
+                                    <span class="metric-label">Task Weightage (TWP)</span>
+                                </div>
+                                <div class="metric-value" style="font-size: 13px; margin-top: 10px; font-weight: normal; color: var(--text-muted); line-height: 1.4;">
+                                    Indicates the importance of the task within its section.<br/>
+                                    <code style="color: var(--accent-light); font-size: 11px; display:block; margin-top:4px;">TWP = Avg Weightage (0-100)</code>
+                                </div>
+                            </div>
+
+                            <div class="metric">
+                                <div class="metric-head">
+                                    <div class="brand-mark small" style="width:24px; height:24px; border-radius:6px;"><i class="bi bi-hourglass-split"></i></div>
+                                    <span class="metric-label">Time Remaining (TRP)</span>
+                                </div>
+                                <div class="metric-value" style="font-size: 13px; margin-top: 10px; font-weight: normal; color: var(--text-muted); line-height: 1.4;">
+                                    Dynamically adjusts priority based on task deadline.<br/>
+                                    <code style="color: var(--accent-light); font-size: 11px; display:block; margin-top:4px;">Upc: 100 * (1/(Days + Hrs/24))</code>
+                                    <code style="color: var(--accent-light); font-size: 11px; display:block; margin-top:2px;">Ovd: 100 * (1+log(Days+1))</code>
+                                </div>
+                            </div>
+
+                            <div class="metric">
+                                <div class="metric-head">
+                                    <div class="brand-mark small" style="width:24px; height:24px; border-radius:6px;"><i class="bi bi-graph-up-arrow"></i></div>
+                                    <span class="metric-label">Acad Perf Adj (APA)</span>
+                                </div>
+                                <div class="metric-value" style="font-size: 13px; margin-top: 10px; font-weight: normal; color: var(--text-muted); line-height: 1.4;">
+                                    Higher overall subject performance reduces priority.<br/>
+                                    <code style="color: var(--accent-light); font-size: 11px; display:block; margin-top:4px;">APA = Subject Perf (0-100)</code>
+                                </div>
+                            </div>
+
+                            <div class="metric" style="background: rgba(240, 155, 59, 0.1); border-color: rgba(240, 155, 59, 0.3);">
+                                <div class="metric-head">
+                                    <div class="brand-mark small" style="width:24px; height:24px; border-radius:6px; background: #f09b3b;"><i class="bi bi-lightning" style="color: black;"></i></div>
+                                    <span class="metric-label" style="color: #f09b3b;">Final Priority Score</span>
+                                </div>
+                                <div class="metric-value" style="font-size: 13px; margin-top: 10px; font-weight: normal; color: var(--text-muted); line-height: 1.4;">
+                                    APA acts as a percentage reduction of the total score.<br/>
+                                    <code style="color: #f09b3b; font-size: 11px; display:block; margin-top:4px;">Score = (CHP+CDP+TWP+TRP) × (1 - APA/100)</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
         </div>
+    </div>
 
-        <div class="formula-component">
-            <strong>Cognitive Difficulty Points (CDP)</strong>
-            <p>Measures the complexity and intellectual challenge of the task.</p>
-            <code>CDP = Cognitive Difficulty of Subject (1-100)</code>
-        </div>
-
-        <div class="formula-component">
-            <strong>Task Weightage Points (TWP)</strong>
-            <p>Indicates the importance of the task within its section.</p>
-            <code>TWP = Average Weightage of Task Section (0-100)</code>
-        </div>
-
-        <div class="formula-component">
-            <strong>Time Remaining Points (TRP)</strong>
-            <p>Dynamically adjusts priority based on task deadline.</p>
-            <code>TRP = Calculation Method:
-- If Task is Upcoming: 100 * (1 / (Days + Hours/24))
-- If Task is Overdue: 100 * (1 + log(Overdue Days + 1))</code>
-            <small class="text-muted">
-                Overdue tasks get increasing priority.
-                Upcoming tasks get inverse priority boost.
-            </small>
-        </div>
-
-        <div class="formula-component">
-            <strong>Academic Performance Adjustment (APA)</strong>
-            <p>Uses the overall subject performance from Subject Marks page.</p>
-            <code>APA = Overall Subject Performance (0-100)
-Example: If subject performance is 2%, APA = 2</code>
-            <small class="text-muted">
-                Performance is taken directly from the Subject Marks page.
-                Higher performance reduces priority to focus on weaker subjects.
-            </small>
-        </div>
-
-        <div class="formula-total">
-            <strong>Final Priority Score</strong>
-            <code>Priority Score = (CHP + CDP + TWP + TRP) × (1 - APA/100)</code>
-            <small class="text-muted">APA acts as a percentage reduction of the total score</small>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="container py-5" id="main-content">
-        <h1 class="mb-4">Priority Calculator</h1>
-        <div id="priorityList" role="list" aria-label="Prioritized tasks"></div>
-    </main>
-
-    <!-- View All Tasks Button -->
-    <a href="priority-list.html" class="view-all-button" aria-label="View all priority tasks">
-        <i class="bi bi-list-check" aria-hidden="true"></i>
-        View All Tasks
-    </a>
-
-    <!-- Scripts - Loaded in correct dependency order -->
-    <!-- Bootstrap JS -->
+    <!-- Scripts -->
+    <!-- Bootstrap JS (Optional now, but keeping for compatibility) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Phase 2 Nuclear Rebuild: Task Sync System -->
     <script type="module" src="js/core/TaskSystemLoader.js"></script>
 
-    <!-- Core Services (loaded first) -->
+    <!-- Core Services -->
     <script type="module" src="js/services/StorageService.js"></script>
     <script type="module" src="js/services/SecureStorage.js"></script>
     <script type="module" src="js/utils/Sanitizer.js"></script>
     <script type="module" src="js/utils/Logger.js"></script>
-    <script type="module" src="js/services/StorageService.js"></script>
-
-    <!-- Authentication (handles Firebase internally) -->
+    
     <script type="module" src="js/auth.js"></script>
-
-    <!-- Firestore Data -->
     <script type="module" src="js/initFirestoreData.js"></script>
-
-    <!-- Cross-tab Sync & Common -->
     <script type="module" src="js/cross-tab-sync.js"></script>
     <script type="module" src="js/common.js"></script>
-
-    <!-- Priority Calculator Logic -->
+    
     <script src="js/priority-calculator.js"></script>
 
-    <!-- Side Drawer & Navigation (load last) -->
     <script type="module" src="js/core/BootstrapManager.js"></script>
     <script type="module" src="js/inject-header.js"></script>
 </body>
-
 </html>
 
 

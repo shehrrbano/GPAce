@@ -133,19 +133,28 @@ export async function initializeAuth() {
             updateUIForUser(user);
 
             // --- MODIFICATION: Ensure Drive API syncs with Firebase state ---
-            if (window.googleDriveAPI && typeof window.googleDriveAPI.handleFirebaseSignIn === 'function') {
-                try {
-                    console.log("onAuthStateChanged(user): Triggering Drive API sign-in handling...");
-                    await window.googleDriveAPI.handleFirebaseSignIn();
-                } catch (driveError) {
-                    console.warn("Drive API failed to sync with Firebase sign-in on initial load:", driveError);
-                    // App can continue, Drive features might require manual auth later
+            // Wait briefly to ensure googleDriveApi._initClient() has finished
+            // restoring any persisted session token before we attempt silent auth.
+            const syncDriveState = async () => {
+                if (window.googleDriveAPI && typeof window.googleDriveAPI.handleFirebaseSignIn === 'function') {
+                    try {
+                        // Skip if already authorized from persisted session
+                        if (window.googleDriveAPI.isAuthorized) {
+                            console.debug('[Auth] Drive already authorized from persisted session — skipping sync');
+                            return;
+                        }
+                        console.log("[onAuthStateChanged(user)] Triggering Drive API sign-in handling...");
+                        await window.googleDriveAPI.handleFirebaseSignIn();
+                    } catch (driveError) {
+                        console.warn("Drive API failed to sync with Firebase sign-in on initial load:", driveError);
+                    }
+                } else {
+                    console.debug("[Auth] googleDriveAPI not available yet, will retry when loaded.");
+                    window._pendingDriveAuthSync = true;
                 }
-            } else {
-                console.debug("[Auth] googleDriveAPI not available yet, will retry when loaded.");
-                // Set a flag to try again later if googleDriveAPI loads after auth state check
-                window._pendingDriveAuthSync = true;
-            }
+            };
+            // Delay by 600ms to allow module-loading async code to complete
+            setTimeout(syncDriveState, 600);
             // --- END MODIFICATION ---
 
 

@@ -745,9 +745,12 @@ function App() {
     };
     window.addEventListener('google-drive-initialized', handleDriveUpdate);
     window.addEventListener('google-drive-authenticated', handleDriveUpdate);
+    window.addEventListener('google-drive-authorized', handleDriveUpdate); // new: fires on restore
+
     return function () {
       window.removeEventListener('google-drive-initialized', handleDriveUpdate);
       window.removeEventListener('google-drive-authenticated', handleDriveUpdate);
+      window.removeEventListener('google-drive-authorized', handleDriveUpdate);
     };
   }, [currentTask === null || currentTask === void 0 ? void 0 : currentTask.id]);
   return /*#__PURE__*/React.createElement("div", {
@@ -820,6 +823,8 @@ function App() {
   }))), /*#__PURE__*/React.createElement("div", {
     className: "workspace-overlay ".concat(isWorkspaceOpen ? 'is-visible' : ''),
     onClick: toggleWorkspace
+  }), /*#__PURE__*/React.createElement(CommandCenter, {
+    onToggleAI: toggleWorkspace
   }), /*#__PURE__*/React.createElement(WorkspaceToggle, {
     active: isWorkspaceOpen,
     onClick: toggleWorkspace
@@ -1502,7 +1507,6 @@ function CurrentTaskCard(_ref6) {
   }), " AI HELP")));
 }
 function SubjectLibrary(_ref7) {
-  var _window$googleDriveAP2;
   var files = _ref7.files,
     loading = _ref7.loading,
     taskId = _ref7.taskId;
@@ -1510,20 +1514,72 @@ function SubjectLibrary(_ref7) {
     _React$useState8 = _slicedToArray(_React$useState7, 2),
     filter = _React$useState8[0],
     setFilter = _React$useState8[1];
-  var _React$useState9 = React.useState(((_window$googleDriveAP2 = window.googleDriveAPI) === null || _window$googleDriveAP2 === void 0 ? void 0 : _window$googleDriveAP2.isAuthorized) || false),
+
+  // Helper: check if user was previously connected (survives token expiry)
+  var wasConnectedBefore = function wasConnectedBefore() {
+    try {
+      return localStorage.getItem('gpace_gdrive_was_connected') === 'true';
+    } catch (e) {
+      return false;
+    }
+  };
+
+  // Tri-state: true = authorized, false = not connected, 'connecting' = initializing a previous session
+  var getInitialAuthState = function getInitialAuthState() {
+    var _window$googleDriveAP2, _window$googleDriveAP3;
+    if ((_window$googleDriveAP2 = window.googleDriveAPI) !== null && _window$googleDriveAP2 !== void 0 && _window$googleDriveAP2.isAuthorized) return true;
+    if (!((_window$googleDriveAP3 = window.googleDriveAPI) !== null && _window$googleDriveAP3 !== void 0 && _window$googleDriveAP3.isInitialized) && wasConnectedBefore()) return 'connecting';
+    return false;
+  };
+  var _React$useState9 = React.useState(getInitialAuthState),
     _React$useState0 = _slicedToArray(_React$useState9, 2),
     isAuthorized = _React$useState0[0],
     setIsAuthorized = _React$useState0[1];
   React.useEffect(function () {
-    var updateAuthStatus = function updateAuthStatus() {
-      var _window$googleDriveAP3;
-      return setIsAuthorized(((_window$googleDriveAP3 = window.googleDriveAPI) === null || _window$googleDriveAP3 === void 0 ? void 0 : _window$googleDriveAP3.isAuthorized) || false);
+    var onAuthorized = function onAuthorized() {
+      return setIsAuthorized(true);
     };
-    window.addEventListener('google-drive-authenticated', updateAuthStatus);
+    var onSignedOut = function onSignedOut() {
+      return setIsAuthorized(false);
+    };
+    var updateAuthStatus = function updateAuthStatus() {
+      var _window$googleDriveAP4, _window$googleDriveAP5;
+      if ((_window$googleDriveAP4 = window.googleDriveAPI) !== null && _window$googleDriveAP4 !== void 0 && _window$googleDriveAP4.isAuthorized) {
+        setIsAuthorized(true);
+      } else if ((_window$googleDriveAP5 = window.googleDriveAPI) !== null && _window$googleDriveAP5 !== void 0 && _window$googleDriveAP5.isInitialized) {
+        // Initialized but not authorized — show connect button
+        setIsAuthorized(false);
+      }
+      // If not initialized yet and was connected before, keep 'connecting'
+    };
+    window.addEventListener('google-drive-authorized', onAuthorized);
+    window.addEventListener('google-drive-authenticated', onAuthorized);
+    window.addEventListener('google-drive-signed-out', onSignedOut);
     window.addEventListener('google-drive-initialized', updateAuthStatus);
+
+    // Polling fallback: check every 300ms for up to 6 seconds after mount
+    // Handles case where Drive was already initialized before component mounted
+    var pollCount = 0;
+    var pollInterval = setInterval(function () {
+      var _window$googleDriveAP6, _window$googleDriveAP7;
+      pollCount++;
+      if ((_window$googleDriveAP6 = window.googleDriveAPI) !== null && _window$googleDriveAP6 !== void 0 && _window$googleDriveAP6.isAuthorized) {
+        setIsAuthorized(true);
+        clearInterval(pollInterval);
+      } else if ((_window$googleDriveAP7 = window.googleDriveAPI) !== null && _window$googleDriveAP7 !== void 0 && _window$googleDriveAP7.isInitialized || pollCount >= 20) {
+        // Initialized but not authorized, OR timed out — resolve to false
+        setIsAuthorized(function (prev) {
+          return prev === 'connecting' ? false : prev;
+        });
+        clearInterval(pollInterval);
+      }
+    }, 300);
     return function () {
-      window.removeEventListener('google-drive-authenticated', updateAuthStatus);
+      window.removeEventListener('google-drive-authorized', onAuthorized);
+      window.removeEventListener('google-drive-authenticated', onAuthorized);
+      window.removeEventListener('google-drive-signed-out', onSignedOut);
       window.removeEventListener('google-drive-initialized', updateAuthStatus);
+      clearInterval(pollInterval);
     };
   }, []);
   var filteredFiles = React.useMemo(function () {
@@ -1596,7 +1652,20 @@ function SubjectLibrary(_ref7) {
     }
   }))), /*#__PURE__*/React.createElement("div", {
     className: "sl-scroll-area"
-  }, !isAuthorized ? /*#__PURE__*/React.createElement("div", {
+  }, isAuthorized === 'connecting' ? /*#__PURE__*/React.createElement("div", {
+    className: "center-all flex-col",
+    style: {
+      height: '120px',
+      gap: '8px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "spinner-small"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "muted smaller",
+    style: {
+      opacity: 0.6
+    }
+  }, "Restoring Drive...")) : !isAuthorized ? /*#__PURE__*/React.createElement("div", {
     className: "center-all flex-col",
     style: {
       height: '120px',
@@ -1607,7 +1676,8 @@ function SubjectLibrary(_ref7) {
   }, "Drive Access Required"), /*#__PURE__*/React.createElement("button", {
     className: "btn-ghost small",
     onClick: function onClick() {
-      return window.googleDriveAPI.authorize(false);
+      var _window$googleDriveAP8;
+      return (_window$googleDriveAP8 = window.googleDriveAPI) === null || _window$googleDriveAP8 === void 0 ? void 0 : _window$googleDriveAP8.authorize(false);
     },
     style: {
       padding: '6px 12px',
@@ -1792,7 +1862,22 @@ function EnergyGraph(_ref0) {
 
     // Gradient fill
     var grad = ctx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, accent + '33'); // 20% opacity
+    // Support oklch transparency safely, fallback to rgba if needed
+    var fillStyle = 'rgba(56, 189, 248, 0.2)'; // Safe default fallback
+    try {
+      if (accent.includes('oklch')) {
+        // Many browsers do not yet support oklch in canvas gradients.
+        // Using a safe rgba fallback that matches the Grind Mode blue accent.
+        fillStyle = 'rgba(56, 189, 248, 0.2)';
+      } else if (accent.startsWith('#')) {
+        fillStyle = accent + '33';
+      } else if (accent.startsWith('rgb')) {
+        fillStyle = accent.replace('rgb', 'rgba').replace(')', ', 0.2)');
+      }
+    } catch (e) {
+      console.warn('Canvas color parse fallback applied', e);
+    }
+    grad.addColorStop(0, fillStyle);
     grad.addColorStop(1, 'transparent');
     ctx.fillStyle = grad;
     ctx.lineTo(w, h);

@@ -514,7 +514,7 @@ function updatePriorityScores() {
             }
 
             const projectCard = document.createElement('div');
-            projectCard.className = 'priority-card';
+            projectCard.className = 'subject-group';
 
             // Get subject-level scores for display
             const creditHoursPoints = subject.relativeScore;
@@ -538,7 +538,7 @@ function updatePriorityScores() {
                 <div class="subject-header">
                     <div class="subject-title-row">
                         <h3>${subject.name}</h3>
-                        <button class="toggle-stats" id="toggle-${subject.tag}">
+                        <button class="toggle-stats icon-btn" id="toggle-${subject.tag}">
                             <i class="bi bi-chevron-down"></i>
                         </button>
                     </div>
@@ -571,11 +571,12 @@ function updatePriorityScores() {
                             return maxScoreB - maxScoreA;
                         })
                         .map(([section, sectionTasks]) => `
-                                <div class="section-tasks mb-4">
+                                <div class="section-tasks">
                                     <h4 class="section-header">
                                         ${section}
-                                        <small class="text-muted">(${sectionTasks.length} task${sectionTasks.length !== 1 ? 's' : ''})</small>
+                                        <small>(${sectionTasks.length} task${sectionTasks.length !== 1 ? 's' : ''})</small>
                                     </h4>
+                                    <div class="queue-list" style="display: flex; flex-direction: column; gap: 4px;">
                                     ${sectionTasks.map(task => {
                             // Use pre-calculated values from task object
                             const totalPoints = task.priorityScore;
@@ -590,53 +591,62 @@ function updatePriorityScores() {
                             const deadline = new Date(task.dueDate);
                             const timeDiff = currentTime.getTime() - deadline.getTime();
                             const daysStatus = timeDiff <= 0
-                                ? `${Math.ceil(Math.abs(timeDiff) / (1000 * 60 * 60 * 24))} days remaining`
-                                : `${Math.ceil(Math.abs(timeDiff) / (1000 * 60 * 60 * 24))} days overdue`;
+                                ? \`\${Math.ceil(Math.abs(timeDiff) / (1000 * 60 * 60 * 24))}d left\`
+                                : \`\${Math.ceil(Math.abs(timeDiff) / (1000 * 60 * 60 * 24))}d over\`;
 
-                            return `
-                                            <div class="task-item mb-3">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div class="task-info">
-                                                        <h5>${task.title}</h5>
-                                                        <small class="text-muted">Due: ${new Date(task.dueDate).toLocaleDateString()} (${daysStatus})</small>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="priority-score me-3">${totalPoints.toFixed(2)}</span>
-                                                        <button class="delete-btn" onclick="deleteTask('${subject.tag}', '${task.id}')" title="Delete Task">
-                                                            <i class="bi bi-trash"></i>
-                                                        </button>
+                            let priorityClass = 'prio-low';
+                            if (totalPoints > 70) priorityClass = 'prio-high';
+                            else if (totalPoints > 40) priorityClass = 'prio-med';
+
+                            return \`
+                                            <div class="task-row">
+                                                <button class="check" onclick="deleteTask('\${subject.tag}', '\${task.id}')" title="Complete/Delete Task">
+                                                    <div class="check-box"></div>
+                                                </button>
+                                                <div class="task-main" onclick="document.getElementById('breakdown-\${task.id}').classList.toggle('show')">
+                                                    <div class="task-title">\${task.title}</div>
+                                                    <div class="task-meta">
+                                                        <span class="meta-badge">\${new Date(task.dueDate).toLocaleDateString()}</span>
+                                                        <span class="meta-badge" style="color: \${timeDiff > 0 ? '#ef4444' : 'var(--text-muted)'}">\${daysStatus}</span>
+                                                        <span class="meta-badge">\${totalPoints.toFixed(1)} pts</span>
                                                     </div>
                                                 </div>
+                                                <div class="task-right">
+                                                    <div class="prio-dot \${priorityClass}"></div>
+                                                </div>
+                                            </div>
+                                            <div class="score-breakdown-wrapper" id="breakdown-\${task.id}" style="margin-left: 40px; margin-right: 12px; margin-bottom: 8px;">
                                                 <div class="score-breakdown">
                                                     <div class="component-score">
-                                                        <span>Credit Hours Points:</span>
-                                                        <span>${creditHoursPoints.toFixed(2)}</span>
+                                                        <span>CHP:</span>
+                                                        <span>\${creditHoursPoints.toFixed(2)}</span>
                                                     </div>
                                                     <div class="component-score">
-                                                        <span>Cognitive Difficulty Points:</span>
-                                                        <span>${cognitiveDifficultyPoints.toFixed(2)}</span>
+                                                        <span>CDP:</span>
+                                                        <span>\${cognitiveDifficultyPoints.toFixed(2)}</span>
                                                     </div>
                                                     <div class="component-score">
-                                                        <span>Task Weightage Points:</span>
-                                                        <span>${taskWeightagePoints.toFixed(2)}</span>
+                                                        <span>TWP:</span>
+                                                        <span>\${taskWeightagePoints.toFixed(2)}</span>
                                                     </div>
                                                     <div class="component-score">
-                                                        <span>Time Remaining Points:</span>
-                                                        <span>${timeRemainingPoints.toFixed(2)}</span>
+                                                        <span>TRP:</span>
+                                                        <span>\${timeRemainingPoints.toFixed(2)}</span>
                                                     </div>
                                                     <div class="component-score">
-                                                        <span>Academic Performance Adjustment:</span>
-                                                        <span>-${academicPerformancePoints.toFixed(2)}</span>
+                                                        <span>APA:</span>
+                                                        <span>-\${academicPerformancePoints.toFixed(2)}</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                        `;
+                                        \`;
                         }).join('')}
+                                    </div>
                                 </div>
                             `).join('')
                     : `
                             <div class="no-tasks-message">
-                                <i class="bi bi-clipboard-check"></i>
+                                <i class="bi bi-inbox"></i>
                                 <p>No active tasks for this subject</p>
                             </div>
                         `}
