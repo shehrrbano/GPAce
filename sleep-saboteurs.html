@@ -2,8 +2,16 @@
 <html lang="en">
 
 <head>
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA Manifest & Branding -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#050b18">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/images/gpace-logo-white.png">
     <title>GPAce - Sleep Saboteurs</title>
 
     <!-- SEO Meta Tags -->
@@ -14,32 +22,28 @@
     <link rel="icon" type="image/png" href="assets/images/gpace-logo-white.png">
     <link rel="shortcut icon" type="image/png" href="assets/images/gpace-logo-white.png">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet" />
+
     <!-- CSS Dependencies -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="css/design-tokens.css" rel="stylesheet">
+    <link href="css/grind-react.css" rel="stylesheet">
     <link href="css/sideDrawer.css" rel="stylesheet">
-    <link href="css/alarm-service.css" rel="stylesheet">
-    <link href="css/sleep-saboteurs.css" rel="stylesheet">
+    <link href="css/sleep-saboteurs-grind.css" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Navigation Bar (will be replaced by inject-header.js) -->
-    <!-- Time Format Toggle -->
-    <button class="time-format-toggle" aria-label="Toggle time format between 12-hour and 24-hour">
-        <i class="bi bi-clock" aria-hidden="true"></i>
-        <span class="format-text">24hr</span>
-    </button>
-
     <!-- Main Container -->
-    <main class="container mt-5" id="main-content">
+    <main class="container" id="main-content">
         <div class="alarm-container">
             <!-- Clock Display -->
             <div class="clock" role="timer" aria-label="Current time">
                 <span class="hour" aria-label="Hours">00</span>
                 <span class="colon" aria-hidden="true">:</span>
                 <span class="minute" aria-label="Minutes">00</span>
-                <span class="colon" aria-hidden="true">:</span>
                 <div class="side">
                     <span class="second" aria-label="Seconds">00</span>
                     <span class="am-pm">AM</span>
@@ -48,32 +52,22 @@
 
             <!-- Date Display -->
             <div class="days" role="status" aria-label="Current date">
-                <span class="month">Jan</span>
-                <span class="day">Monday</span>
+                <span class="month">JAN</span>
+                <span class="day">MONDAY</span>
                 <span class="date">01</span>
             </div>
 
             <!-- Add Alarm Button -->
-            <button id="addAlarmBtn" class="btn alarm-button" aria-label="Add new alarm">
-                <i class="bi bi-plus-circle-fill me-2" aria-hidden="true"></i>Add Alarm
+            <button class="btn-primary alarm-button" id="addAlarmBtn" aria-label="Add new alarm">
+                <i class="bi bi-plus-circle-fill" aria-hidden="true"></i>ADD NEW ALARM
             </button>
 
             <!-- Alarm Form -->
             <div class="alarm-form" role="form" aria-label="Set alarm form">
-                <label id="alarm-time-label">Set Alarm Time</label>
+                <h3 class="kicker" style="text-align: center; margin-bottom: 20px;">Set Alarm Time</h3>
                 <div class="time-inputs">
-                    <div class="input-field">
-                        <label for="hour" class="visually-hidden">Hour (1-12)</label>
-                        <input type="number" id="hour" name="hour" min="1" max="12" placeholder="Hour" required>
-                    </div>
-                    <div class="input-field">
-                        <label for="minute" class="visually-hidden">Minutes (0-59)</label>
-                        <input type="number" id="minute" name="minute" min="0" max="59" placeholder="Min" required>
-                    </div>
-                    <div class="input-field">
-                        <label for="second" class="visually-hidden">Seconds (0-59)</label>
-                        <input type="number" id="second" name="second" min="0" max="59" placeholder="Sec" required>
-                    </div>
+                    <input type="number" id="hour" name="hour" min="1" max="12" placeholder="HH" required>
+                    <input type="number" id="minute" name="minute" min="0" max="59" placeholder="MM" required>
                 </div>
 
                 <div class="am-pm-toggle" role="radiogroup" aria-label="AM or PM selection">
@@ -82,15 +76,13 @@
                 </div>
 
                 <div class="label-input">
-                    <label for="alarm-label-input">Alarm Label</label>
-                    <input type="text" id="alarm-label-input" name="alarmLabel" placeholder="Enter alarm label"
-                        aria-describedby="label-hint">
-                    <span id="label-hint" class="visually-hidden">Optional name for your alarm</span>
+                    <label for="alarm-label" class="kicker">Alarm Label</label>
+                    <input type="text" id="alarm-label" name="alarmLabel" placeholder="Focus Session, Wake Up, etc.">
                 </div>
 
                 <div class="alarm-actions">
-                    <button type="button" class="set-alarm-btn" aria-label="Confirm and set alarm">Set Alarm</button>
-                    <button type="button" class="cancel-alarm-btn" aria-label="Cancel alarm creation">Cancel</button>
+                    <button type="button" class="set-alarm-btn btn-primary" aria-label="Confirm and set alarm">SET ALARM</button>
+                    <button type="button" class="cancel-alarm-btn" aria-label="Cancel alarm creation">CANCEL</button>
                 </div>
             </div>
 
@@ -101,13 +93,6 @@
         </div>
     </main>
 
-    <!-- Wave Animation Container -->
-    <div class="wave-container" aria-hidden="true">
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-    </div>
-
     <!-- Keyboard Shortcuts Tooltip -->
     <div class="keyboard-shortcut" role="note" aria-label="Keyboard shortcuts">
         <span><kbd>Alt</kbd> + <kbd>A</kbd> Quick Add</span>
@@ -115,24 +100,14 @@
         <span><kbd>Alt</kbd> + <kbd>B</kbd> Bulk Add</span>
     </div>
 
-    <!-- Audio Elements -->
-    <audio id="alarm-sound" preload="auto">
-        <source src="alarm-sounds/alexa-ringtone.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
-    <!-- Scripts - Loaded in correct dependency order -->
-    <!-- Bootstrap JS (load first) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core Services (loaded first) -->
+    <!-- Scripts -->
+    <!-- Core Services -->
     <script type="module" src="js/services/StorageService.js"></script>
     <script type="module" src="js/services/SecureStorage.js"></script>
     <script type="module" src="js/utils/Sanitizer.js"></script>
     <script type="module" src="js/utils/Logger.js"></script>
-    <script type="module" src="js/services/StorageService.js"></script>
 
-    <!-- Authentication (handles Firebase internally) -->
+    <!-- Authentication -->
     <script type="module" src="js/auth.js"></script>
 
     <!-- Firestore Data -->
@@ -148,9 +123,11 @@
     <script type="module" src="js/cross-tab-sync.js"></script>
 
     <!-- Side Drawer & Navigation (load last) -->
-    <script type="module" src="js/sideDrawer.js"></script>
     <script type="module" src="js/inject-header.js"></script>
 </body>
 
 </html>
+
+
+
 

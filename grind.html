@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GPAce — Grind Mode</title>
-  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
+  
+  <!-- PWA Manifest & Branding -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#050b18">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="assets/images/gpace-logo-white.png">
+  
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -57,7 +65,6 @@
   <!-- React & Babel Stack -->
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone@7.26.2/babel.min.js" crossorigin></script>
 
   <!-- ESM Bridge: Bootstraps core services -->
   <script type="module">
@@ -119,7 +126,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js" crossorigin="anonymous"></script>
 
   <!-- Main React Application -->
-  <script type="text/babel" data-presets="env,react" src="js/grind-app.jsx?v=8"></script>
+  <script src="js/grind-app.js?v=8"></script>
 
   <!-- Legacy Modals -->
   <div id="noteScanModal" class="modal-overlay" style="display: none;">
@@ -510,3 +517,4 @@
 
 </body>
 </html>
+

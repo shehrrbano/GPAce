@@ -2,8 +2,16 @@
 <html lang="en">
 
 <head>
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA Manifest & Branding -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#050b18">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/images/gpace-logo-white.png">
     <title>GPAce — Daily Drip</title>
     <link rel="icon" type="image/png" href="assets/images/gpace-logo-white.png">
     <link rel="shortcut icon" type="image/png" href="assets/images/gpace-logo-white.png">
@@ -200,6 +208,10 @@
                 <div class="legend-item">
                     <span class="legend-color free-block"></span>
                     <span>Free Time</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color alarm-block"></span>
+                    <span>Alarm</span>
                 </div>
                 <div class="legend-summary" id="ddLegendSummary"></div>
             </div>
@@ -503,17 +515,20 @@
             const stu = sum('study');
             const brk = sum('break');
             const fre = sum('free');
+            const alms = events.filter(e => e.type === 'alarm').length;
+
             if ($('ddLegendSummary')) {
                 $('ddLegendSummary').innerHTML = `
                     <span>Class ${fmtMins(cls)}</span><span class="dot-sep">·</span>
                     <span>Study ${fmtMins(stu)}</span><span class="dot-sep">·</span>
                     <span>Break ${fmtMins(brk)}</span><span class="dot-sep">·</span>
-                    <span>Free ${fmtMins(fre)}</span>
+                    <span>Free ${fmtMins(fre)}</span><span class="dot-sep">·</span>
+                    <span>Alarms ${alms}</span>
                 `;
             }
         };
 
-        const TYPE_LABEL = { class: 'Class', lecture: 'Class', study: 'Study Time', break: 'Break', free: 'Free Time', meeting: 'Meeting', other: 'Other' };
+        const TYPE_LABEL = { alarm: 'Alarm', class: 'Class', lecture: 'Class', study: 'Study Time', break: 'Break', free: 'Free Time', meeting: 'Meeting', other: 'Other' };
         const escapeHtml = (s) => String(s ?? '').replace(/[<>&"']/g, c => ({
             '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
         }[c]));
@@ -644,3 +659,4 @@
 </body>
 
 </html>
+

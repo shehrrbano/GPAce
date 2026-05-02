@@ -2,10 +2,18 @@
 <html lang="en">
 
 <head>
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA Manifest & Branding -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#050b18">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/images/gpace-logo-white.png">
     <title>GPAce Workspace</title>
-    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
+    
 
     <!-- SEO Meta Tags -->
     <meta name="description"
@@ -251,38 +259,7 @@
                         <span>Drop files here</span>
                     </div>
 
-                    <!-- Task Extras (Attachments & Energy - Moved from sidebar) -->
-                    <div id="taskExtrasPanel" class="task-extras-panel">
-                        <div class="task-extras-header">
-                            <label class="extras-label">TASK RESOURCES & INSIGHTS</label>
-                            <div class="extras-controls">
-                                <button id="closeExtrasBtn" class="close-extras-btn" title="Toggle Resources">
-                                    <i class="bi bi-chevron-down"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="task-extras-content">
-                            <div class="extras-grid">
-                                <!-- Energy Graph -->
-                                <div class="energy-section-compact">
-                                    <h4>Energy Level</h4>
-                                    <div class="energy-graph-container-compact">
-                                        <canvas id="energyGraph"></canvas>
-                                    </div>
-                                </div>
-                                <!-- Attachments Container -->
-                                <div class="attachments-section-compact">
-                                    <h4>Attachments</h4>
-                                    <div id="attachmentsContainer" class="attachments-container" role="list">
-                                        <div class="no-attachments-message">
-                                            <i class="bi bi-folder2-open"></i>
-                                            <p>Select a task to view its files</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
                 <!-- Status Bar -->
@@ -404,3 +381,4 @@
 </body>
 
 </html>
+
