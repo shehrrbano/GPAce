@@ -213,4 +213,4 @@ class ResearcherController {
 const researcherController = new ResearcherController();
 export default researcherController;
 
-// document.addEventListener('DOMContentLoaded', () => researcherController.init());
+// document.addEventListener('DOMContentLoaded', () => // researcherController.init());

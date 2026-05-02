@@ -131,9 +131,9 @@ const instantFeedbackController = new InstantFeedbackController();
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => instantFeedbackController.init());
+    document.addEventListener('DOMContentLoaded', () => // instantFeedbackController.init());
 } else {
-    instantFeedbackController.init();
+    // instantFeedbackController.init();
 }
 
 // Export for ES modules

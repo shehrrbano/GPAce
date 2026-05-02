@@ -1,0 +1,104 @@
+{
+  "nodes": [
+    {
+      "id": "UI:ForceSyncButton",
+      "label": "Force Sync Button",
+      "type": "UI_Element",
+      "properties": {
+        "text": "🔄 Force Sync",
+        "locations": ["priority-list-utils.js", "gpa-predictor.js"]
+      }
+    },
+    {
+      "id": "Logic:DataSyncManager",
+      "label": "Data Sync Manager",
+      "type": "Service",
+      "properties": {
+        "file": "js/data-sync-manager.js"
+      }
+    },
+    {
+      "id": "Logic:PrioritySyncFix",
+      "label": "Priority Sync Fix",
+      "type": "Service",
+      "properties": {
+        "file": "js/priority-sync-fix.js"
+      }
+    },
+    {
+      "id": "Logic:SemesterManagement",
+      "label": "Semester Management",
+      "type": "Service",
+      "properties": {
+        "file": "js/semester-management.js"
+      }
+    },
+    {
+      "id": "Logic:StudySpaceFirestore",
+      "label": "Study Space Firestore",
+      "type": "Service",
+      "properties": {
+        "file": "js/studySpacesFirestore.js"
+      }
+    },
+    {
+      "id": "Feature:ForceSync",
+      "label": "Force Sync Feature",
+      "type": "Feature",
+      "properties": {
+        "status": "Redundant/Distributed",
+        "description": "Manual cloud synchronization trigger"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "UI:ForceSyncButton",
+      "to": "Logic:PrioritySyncFix",
+      "label": "triggers",
+      "properties": {
+        "context": "Priority Tasks"
+      }
+    },
+    {
+      "from": "UI:ForceSyncButton",
+      "to": "Logic:SemesterManagement",
+      "label": "triggers",
+      "properties": {
+        "context": "Semester Data"
+      }
+    },
+    {
+      "from": "UI:ForceSyncButton",
+      "to": "Logic:StudySpaceFirestore",
+      "label": "triggers",
+      "properties": {
+        "context": "Study Spaces"
+      }
+    },
+    {
+      "from": "Logic:PrioritySyncFix",
+      "to": "Logic:DataSyncManager",
+      "label": "uses",
+      "properties": {
+        "action": "Force upload"
+      }
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "HE:RedundantForceSync",
+      "label": "Redundant Force Sync Implementation",
+      "elements": [
+        "UI:ForceSyncButton",
+        "Logic:PrioritySyncFix",
+        "Logic:SemesterManagement",
+        "Logic:StudySpaceFirestore"
+      ],
+      "properties": {
+        "issue": "Decentralized manual sync triggers",
+        "recommendation": "Centralize in DataSyncManager"
+      }
+    }
+  ]
+}

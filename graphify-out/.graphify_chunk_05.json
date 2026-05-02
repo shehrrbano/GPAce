@@ -1,0 +1,76 @@
+{
+  "nodes": [
+    {
+      "id": "image_1732749554068_timetable_fall_2023",
+      "label": "Timetable Fall 2023",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732749554068-590947980.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732749717062_timetable_fall_2024",
+      "label": "Timetable Fall 2024",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732749717062-684653347.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "dept_aeronautics_astronautics",
+      "label": "Department of Aeronautics & Astronautics",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732749554068-590947980.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "image_1732749554068_timetable_fall_2023",
+      "target": "dept_aeronautics_astronautics",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads\\default\\image-1732749554068-590947980.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732749717062_timetable_fall_2024",
+      "target": "dept_aeronautics_astronautics",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads\\default\\image-1732749717062-684653347.PNG",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "aeronautics_timetables",
+      "label": "Aeronautics Timetables",
+      "nodes": [
+        "image_1732749554068_timetable_fall_2023",
+        "image_1732749717062_timetable_fall_2024",
+        "dept_aeronautics_astronautics"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "uploads\\default\\image-1732749554068-590947980.PNG"
+    }
+  ],
+  "input_tokens": 2000,
+  "output_tokens": 500
+}

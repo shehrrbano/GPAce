@@ -554,20 +554,6 @@ class StudySpaceController {
     }
 
     /**
-     * Force sync now
-     */
-    async forceSync() {
-        const success = await this.syncToFirestore();
-        if (success) {
-            this.showToast('Study spaces synced successfully!', 'success');
-        } else {
-            this.showToast('Failed to sync. Please try again.', 'danger');
-        }
-        this.updateSyncStatusUI();
-        return success;
-    }
-
-    /**
      * Set sync status
      */
     setSyncStatus(isSyncing, error) {

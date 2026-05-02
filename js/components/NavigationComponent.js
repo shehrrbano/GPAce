@@ -49,10 +49,7 @@ function generateNavHTML() {
         </div>
 
         <div class="pm-nav-actions">
-            <button class="pm-drawer-toggle" id="globalSettingsBtn" title="Settings">
-                <i class="bi bi-gear-fill"></i>
-            </button>
-            <button class="pm-nav-toggle d-md-none" id="navToggleBtn">
+            <button class="pm-drawer-toggle" id="globalSettingsBtn" title="Menu">
                 <i class="bi bi-list"></i>
             </button>
         </div>
@@ -69,7 +66,17 @@ export function injectNavigation(options = {}) {
         return null;
     }
 
-    document.querySelectorAll('.top-nav, .pm-nav').forEach(el => el.remove());
+    // Remove ANY existing navigation or legacy menu buttons to prevent duplication and inconsistency
+    const legacySelectors = [
+        '.top-nav', '.pm-nav', '.menu-toggle', '.hamburger', 
+        '.navbar-toggler', '.drawer-toggle', '#mobileMenuBtn',
+        '.header-menu-btn'
+    ];
+    legacySelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => el.remove());
+    });
+    
+    console.log('[NavigationComponent] Purged legacy navigation and menu elements');
 
     const navHTML = generateNavHTML();
     const tempContainer = document.createElement('div');
@@ -90,13 +97,6 @@ function setupEventListeners() {
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
             window.dispatchEvent(new CustomEvent('toggleSettingsDrawer'));
-        });
-    }
-
-    const navToggle = document.getElementById('navToggleBtn');
-    if (navToggle) {
-        navToggle.addEventListener('click', () => {
-            document.querySelector('.pm-nav-links-pill').classList.toggle('mobile-show');
         });
     }
 }

@@ -165,9 +165,11 @@ class CalendarRenderer {
             
             taskBlock.innerHTML = `
                 <div class="task-time">${event.startTime} - ${event.endTime}</div>
-                <div class="task-title">${event.subject || event.title}</div>
-                <div class="resize-handle top"></div>
-                <div class="resize-handle bottom"></div>
+                <div class="task-title">
+                    ${event.type === 'alarm' ? '<i class="bi bi-alarm me-1"></i>' : ''}
+                    ${event.subject || event.title}
+                </div>
+                ${event.type !== 'alarm' ? '<div class="resize-handle top"></div><div class="resize-handle bottom"></div>' : ''}
             `;
 
             Object.assign(taskBlock.style, {

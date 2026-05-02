@@ -1,0 +1,119 @@
+{
+  "nodes": [
+    {
+      "id": "image_1732848227184_force_sync_button",
+      "label": "Force Sync Button",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848227184-397887927.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848227184_sync_settings_panel",
+      "label": "Sync Settings Panel",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848227184-397887927.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848425929_auto_sync_toggle",
+      "label": "Auto Sync Toggle",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848425929-857821658.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848537899_manual_sync_redundancy",
+      "label": "Redundant Manual Sync Feature",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848537899-232958068.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848719720_sync_status_indicator",
+      "label": "Sync Status Indicator",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848719720-737429281.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "image_1732848227184_force_sync_button",
+      "target": "image_1732848227184_sync_settings_panel",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads\\default\\image-1732848227184-397887927.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732848227184_force_sync_button",
+      "target": "image_1732848537899_manual_sync_redundancy",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "uploads\\default\\image-1732848537899-232958068.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732848425929_auto_sync_toggle",
+      "target": "image_1732848537899_manual_sync_redundancy",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "uploads\\default\\image-1732848425929-857821658.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732848719720_sync_status_indicator",
+      "target": "image_1732848227184_force_sync_button",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "uploads\\default\\image-1732848719720-737429281.PNG",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "redundant_sync_controls",
+      "label": "Redundant Sync Controls",
+      "nodes": [
+        "image_1732848227184_force_sync_button",
+        "image_1732848425929_auto_sync_toggle",
+        "image_1732848537899_manual_sync_redundancy",
+        "image_1732848719720_sync_status_indicator"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "uploads\\default\\image-1732848227184-397887927.PNG"
+    }
+  ],
+  "input_tokens": 1500,
+  "output_tokens": 600
+}

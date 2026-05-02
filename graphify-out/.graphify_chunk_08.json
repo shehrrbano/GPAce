@@ -1,0 +1,97 @@
+{
+  "nodes": [
+    {
+      "id": "ui_force_sync_button",
+      "label": "Force Sync Button",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1741102659089-932219673.png"
+    },
+    {
+      "id": "ui_sync_status_indicator",
+      "label": "Sync Status Indicator",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1741103075402-31512396.png"
+    },
+    {
+      "id": "ui_settings_menu",
+      "label": "Settings Menu",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1742018564314-921624356.jpg"
+    },
+    {
+      "id": "ui_alarm_toggle",
+      "label": "Alarm Toggle Switch",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1742018805123-901377952.jpg"
+    },
+    {
+      "id": "audio_alarm_active",
+      "label": "Alarm Active Sound",
+      "file_type": "audio",
+      "source_file": "alarm-sounds/alarm1.mp3"
+    },
+    {
+      "id": "audio_notification_ping",
+      "label": "Notification Ping",
+      "file_type": "audio",
+      "source_file": "sounds/notification.mp3"
+    },
+    {
+      "id": "ui_redundant_sync_feature",
+      "label": "Redundant Sync Logic",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1742020515985-220752860.jpg"
+    }
+  ],
+  "edges": [
+    {
+      "source": "ui_force_sync_button",
+      "target": "ui_sync_status_indicator",
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads/default/image-1741102659089-932219673.png"
+    },
+    {
+      "source": "ui_force_sync_button",
+      "target": "ui_redundant_sync_feature",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "uploads/default/image-1741102659089-932219673.png"
+    },
+    {
+      "source": "ui_settings_menu",
+      "target": "ui_force_sync_button",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads/default/image-1742018564314-921624356.jpg"
+    },
+    {
+      "source": "ui_alarm_toggle",
+      "target": "audio_alarm_active",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "uploads/default/image-1742018805123-901377952.jpg"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "sync_flow",
+      "label": "Data Synchronization Flow",
+      "nodes": [
+        "ui_force_sync_button",
+        "ui_sync_status_indicator",
+        "ui_redundant_sync_feature"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "uploads/default/image-1741102659089-932219673.png"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

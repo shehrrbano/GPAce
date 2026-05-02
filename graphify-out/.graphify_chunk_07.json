@@ -1,0 +1,85 @@
+{
+  "nodes": [
+    {
+      "id": "ui_force_sync_btn",
+      "label": "Force Sync Button",
+      "type": "UI Element",
+      "description": "Button used to manually trigger data synchronization to Firestore."
+    },
+    {
+      "id": "feat_force_sync",
+      "label": "Force Sync Feature",
+      "type": "Feature",
+      "description": "Manual synchronization mechanism identified as redundant in systems with active background auto-sync."
+    },
+    {
+      "id": "file_js_priority_list_utils_js",
+      "label": "priority-list-utils.js",
+      "type": "File",
+      "path": "js/priority-list-utils.js"
+    },
+    {
+      "id": "file_js_gpa_predictor_js",
+      "label": "gpa-predictor.js",
+      "type": "File",
+      "path": "js/gpa-predictor.js"
+    },
+    {
+      "id": "img_sync_evidence_01",
+      "label": "Sync UI Screenshot 01",
+      "type": "Visual Evidence",
+      "path": "uploads/default/image-1732947394515-681807177.png"
+    },
+    {
+      "id": "img_sync_evidence_02",
+      "label": "Sync UI Screenshot 02",
+      "type": "Visual Evidence",
+      "path": "uploads/default/image-1733024025576-923578314.PNG"
+    },
+    {
+      "id": "img_sync_evidence_25",
+      "label": "Sync UI Screenshot 25",
+      "type": "Visual Evidence",
+      "path": "uploads/default/image-1733741238342-138371976.jpg"
+    }
+  ],
+  "edges": [
+    {
+      "source": "ui_force_sync_btn",
+      "target": "feat_force_sync",
+      "relation": "triggers"
+    },
+    {
+      "source": "file_js_priority_list_utils_js",
+      "target": "ui_force_sync_btn",
+      "relation": "defines"
+    },
+    {
+      "source": "file_js_gpa_predictor_js",
+      "target": "ui_force_sync_btn",
+      "relation": "implements"
+    },
+    {
+      "source": "img_sync_evidence_01",
+      "target": "ui_force_sync_btn",
+      "relation": "depicts"
+    },
+    {
+      "source": "feat_force_sync",
+      "target": "redundancy_group",
+      "relation": "belongs_to"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "sync_redundancy_cluster",
+      "label": "Sync Redundancy Subsystem",
+      "members": [
+        "feat_force_sync",
+        "ui_force_sync_btn",
+        "file_js_priority_list_utils_js"
+      ],
+      "context": "Identified redundant UI patterns across multiple modules."
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 // subject-marks.js - Handles tracking and calculation of subject marks based on weightages
 import { syncSubjectToProjectWeightages, updateAndSyncPerformance } from './weightage-connector.js';
-import { getStorage } from '../services/StorageService.js';
+import { getStorage } from './services/StorageService.js';
 
 
 /**

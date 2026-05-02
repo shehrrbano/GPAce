@@ -5143,10 +5143,7 @@ body.workspace-open .ai-researcher-container.modern {
     /* Hide links (implement mobile menu toggle) */
   }
 
-  .menu-toggle {
-    display: flex;
-    /* Show hamburger menu */
-  }
+  /* Legacy menu toggle removed in favor of NavigationComponent */
 
   .auth-button {
     padding: 0.4rem 0.8rem;

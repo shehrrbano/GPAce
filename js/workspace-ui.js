@@ -189,24 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleTaskExtras(!wasCollapsed);
     }, 50);
 
-    // Mobile Tab Bar mapping
-    const mappings = {
-        'mobileDictateBtn': 'speechRecognitionBtn',
-        'mobileSummarizeBtn': 'summarizeBtn',
-        'mobileInsertBtn': 'uploadImageBtn',
-        'mobileExportBtn': 'exportPdfBtn'
-    };
-
-    Object.entries(mappings).forEach(([mobileId, originalId]) => {
-        const mobileBtn = document.getElementById(mobileId);
-        const originalBtn = document.getElementById(originalId);
-        if (mobileBtn && originalBtn) {
-            mobileBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                originalBtn.click();
-            });
-        }
-    });
+    // Workspace UI initialization complete
 });
 
 

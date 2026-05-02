@@ -25,4 +25,4 @@ class RedirectController {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => RedirectController.init());
+document.addEventListener('DOMContentLoaded', () => // RedirectController.init());

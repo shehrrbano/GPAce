@@ -1,175 +1,940 @@
 {
   "nodes": [
     {
-      "id": "daily_calendar_html",
-      "label": "daily-calendar.html",
-      "file_type": "document",
-      "source_file": "daily-calendar.html",
-      "rationale": "Main entry point for the daily calendar view. Contains the core UI layout and a heavy orchestration script that bridges data to the grid."
+      "id": "AcademicDetailsPage",
+      "type": "UI_PAGE",
+      "properties": {
+        "name": "Academic Details",
+        "file": "js/academic-details.js",
+        "description": "Manage subjects, credits and semester data."
+      }
     },
     {
-      "id": "bootstrap_fn",
-      "label": "bootstrap()",
-      "file_type": "code",
-      "source_file": "daily-calendar.html",
-      "rationale": "Main initialization function in daily-calendar.html. Fetches schedule, seeds inputs, and waits for CalendarManager to be ready."
+      "id": "WorkspacePage",
+      "type": "UI_PAGE",
+      "properties": {
+        "name": "Workspace (Modular Command Center)",
+        "layout": "Three-column grid",
+        "description": "Professional deep work environment."
+      }
     },
     {
-      "id": "renderstrip_fn",
-      "label": "renderStrip()",
-      "file_type": "code",
-      "source_file": "daily-calendar.html",
-      "rationale": "Calculates and renders the top 'Active window' strip (Wake to Sleep duration)."
+      "id": "GrindModePage",
+      "type": "UI_PAGE",
+      "properties": {
+        "name": "Grind Mode (Bento Grid 2.0)",
+        "layout": "12-column Bento Grid",
+        "description": "High-performance stats-heavy dashboard."
+      }
     },
     {
-      "id": "renderstats_fn",
-      "label": "renderStats()",
-      "file_type": "code",
-      "source_file": "daily-calendar.html",
-      "rationale": "Computes and renders the Total Available, Study Time, and Scheduled stats Pills."
+      "id": "ControlPod",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Control Pod",
+        "location": "Left Sidebar",
+        "width": "320px",
+        "description": "Houses primary Grind controls."
+      }
     },
     {
-      "id": "oncalendarrendered_fn",
-      "label": "onCalendarRendered()",
-      "file_type": "code",
-      "source_file": "daily-calendar.html",
-      "rationale": "Hook called after the grid renders. Updates axis labels, skins blocks with type marks (C/S/B), and picks the current task."
+      "id": "VitalsPod",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Vitals Pod",
+        "location": "Right Sidebar",
+        "width": "280px",
+        "collapsible": true
+      }
     },
     {
-      "id": "calendarmanager_js",
-      "label": "CalendarManager",
-      "file_type": "code",
-      "source_file": "js/calendarManager.js",
-      "rationale": "Orchestrator for the daily view. Manages the lifecycle: load -> render -> event-handling."
+      "id": "FocusZone",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Focus Zone",
+        "location": "Center Column",
+        "description": "Fluid editor area."
+      }
     },
     {
-      "id": "calendarrenderer_js",
-      "label": "CalendarRenderer",
-      "file_type": "code",
-      "source_file": "js/components/CalendarRenderer.js",
-      "rationale": "Pure UI renderer. Creates the 15-minute grid and maps events to pixel positions."
+      "id": "PomodoroTimerCard",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Pomodoro Timer",
+        "parent": "ControlPod",
+        "accentColor": "#FF2D55"
+      }
     },
     {
-      "id": "calendarevents_js",
-      "label": "CalendarEvents",
-      "file_type": "code",
-      "source_file": "js/controllers/CalendarEvents.js",
-      "rationale": "Interaction controller. Handles the snapping logic (20px per 15 mins) for drag and resize."
+      "id": "ActiveTaskCard",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Active Task Card",
+        "parent": "ControlPod"
+      }
     },
     {
-      "id": "calendarservice_js",
-      "label": "CalendarService",
-      "file_type": "code",
-      "source_file": "js/services/CalendarService.js",
-      "rationale": "Data model and logic service. Handles time-to-minutes conversions and API interactions."
+      "id": "StatsBentoGrid",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Stats Bento Grid",
+        "parent": "GrindModePage",
+        "metrics": [
+          "Fatigue",
+          "Sleep",
+          "Cognitive Load",
+          "Streak",
+          "Energy Curve"
+        ]
+      }
     },
     {
-      "id": "calendarviewmanager_js",
-      "label": "CalendarViewManager",
-      "file_type": "code",
-      "source_file": "js/calendar-views.js",
-      "rationale": "Manages switching between Daily, Weekly, and Monthly views. Potentially overlaps with CalendarManager."
+      "id": "NavigationComponent",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Standardized Navigation",
+        "file": "js/components/NavigationComponent.js",
+        "height": "72px"
+      }
+    },
+    {
+      "id": "SideDrawer",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Side Drawer",
+        "file": "js/sideDrawer.js",
+        "pattern": "Singleton Class"
+      }
+    },
+    {
+      "id": "SnippetManager",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Snippet Manager (Text Expansion)",
+        "trigger": "/",
+        "shortcut": "Alt+S"
+      }
+    },
+    {
+      "id": "GPAPredictor",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "GPA Predictor",
+        "file": "js/gpa-predictor.js"
+      }
+    },
+    {
+      "id": "GrindCheckHUD",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Biometric HUD (Grind Check)",
+        "tech": "PPG Signal Capture"
+      }
+    },
+    {
+      "id": "SyncStatusIndicator",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Sync Status Indicator",
+        "features": [
+          "Conflict Detection",
+          "Backup Recovery"
+        ]
+      }
+    },
+    {
+      "id": "ForceSyncBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Force Sync",
+        "status": "Redundant/Reliability",
+        "logic": "window.TaskRepository.forceRecoveryFromBackup"
+      }
+    },
+    {
+      "id": "GenerateFormsBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Generate Forms",
+        "parent": "AcademicDetailsPage"
+      }
+    },
+    {
+      "id": "SaveAllSubjectsBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Save All Subjects",
+        "parent": "AcademicDetailsPage"
+      }
+    },
+    {
+      "id": "MarkCompleteBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Mark Complete",
+        "context": "Grind/Workspace"
+      }
+    },
+    {
+      "id": "SwitchTaskBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Switch Task",
+        "context": "Grind/Workspace"
+      }
+    },
+    {
+      "id": "AskGeminiBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Ask Gemini",
+        "context": "AI Integration"
+      }
+    },
+    {
+      "id": "CalibrateBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Calibrate",
+        "context": "Grind Check"
+      }
+    },
+    {
+      "id": "ui_workspace_toolbar",
+      "label": "Workspace Toolbar",
+      "type": "UI_Component",
+      "metadata": {
+        "file": "workspace.html"
+      }
+    },
+    {
+      "id": "ui_study_spaces",
+      "label": "Study Spaces UI",
+      "type": "UI_Component",
+      "metadata": {
+        "file": "js/studySpacesManager.js"
+      }
+    },
+    {
+      "id": "ui_semester_manager",
+      "label": "Semester Manager UI",
+      "type": "UI_Component",
+      "metadata": {
+        "file": "js/semester-management.js"
+      }
+    },
+    {
+      "id": "ui_priority_list",
+      "label": "Priority List UI",
+      "type": "UI_Component",
+      "metadata": {
+        "file": "js/priority-list-utils.js"
+      }
+    },
+    {
+      "id": "btn_sync_now",
+      "label": "Sync Now Button",
+      "type": "Button",
+      "metadata": {
+        "id": "syncNowBtn"
+      }
+    },
+    {
+      "id": "btn_force_sync_priority",
+      "label": "Force Sync Priority",
+      "type": "Button",
+      "metadata": {
+        "text": "Force Sync"
+      }
+    },
+    {
+      "id": "fn_force_sync_study",
+      "label": "forceSyncStudySpaces",
+      "type": "Logic",
+      "metadata": {
+        "file": "js/studySpacesFirestore.js"
+      }
+    },
+    {
+      "id": "fn_force_sync_semester",
+      "label": "forceSyncSemester",
+      "type": "Logic",
+      "metadata": {
+        "file": "js/semester-management.js"
+      }
+    },
+    {
+      "id": "fn_force_sync_priority",
+      "label": "forceSyncPriorityTasks",
+      "type": "Logic",
+      "metadata": {
+        "file": "js/priority-sync-fix.js"
+      }
+    },
+    {
+      "id": "UI:ForceSyncButton",
+      "label": "Force Sync Button",
+      "type": "UI_Element",
+      "properties": {
+        "text": "\u00f0\u0178\u201d\u201e Force Sync",
+        "locations": [
+          "priority-list-utils.js",
+          "gpa-predictor.js"
+        ]
+      }
+    },
+    {
+      "id": "Logic:DataSyncManager",
+      "label": "Data Sync Manager",
+      "type": "Service",
+      "properties": {
+        "file": "js/data-sync-manager.js"
+      }
+    },
+    {
+      "id": "Logic:PrioritySyncFix",
+      "label": "Priority Sync Fix",
+      "type": "Service",
+      "properties": {
+        "file": "js/priority-sync-fix.js"
+      }
+    },
+    {
+      "id": "Logic:SemesterManagement",
+      "label": "Semester Management",
+      "type": "Service",
+      "properties": {
+        "file": "js/semester-management.js"
+      }
+    },
+    {
+      "id": "Logic:StudySpaceFirestore",
+      "label": "Study Space Firestore",
+      "type": "Service",
+      "properties": {
+        "file": "js/studySpacesFirestore.js"
+      }
+    },
+    {
+      "id": "Feature:ForceSync",
+      "label": "Force Sync Feature",
+      "type": "Feature",
+      "properties": {
+        "status": "Redundant/Distributed",
+        "description": "Manual cloud synchronization trigger"
+      }
+    },
+    {
+      "id": "ui_force_sync_btn",
+      "type": "UI_ELEMENT",
+      "label": "Force Sync Button",
+      "properties": {
+        "text": "\u00f0\u0178\u201d\u201e Force Sync",
+        "files": [
+          "js/priority-list-utils.js",
+          "js/gpa-predictor.js"
+        ]
+      }
+    },
+    {
+      "id": "logic_data_sync_manager",
+      "type": "CLASS",
+      "label": "DataSyncManager",
+      "properties": {
+        "method": "forceSync",
+        "file": "js/data-sync-manager.js"
+      }
+    },
+    {
+      "id": "logic_priority_sync_fix",
+      "type": "LOGIC",
+      "label": "PrioritySyncFix",
+      "properties": {
+        "function": "forceSyncPriorityTasks",
+        "file": "js/priority-sync-fix.js"
+      }
+    },
+    {
+      "id": "logic_study_space_controller",
+      "type": "CONTROLLER",
+      "label": "StudySpaceController",
+      "properties": {
+        "method": "forceSync",
+        "file": "js/controllers/StudySpaceController.js"
+      }
+    },
+    {
+      "id": "logic_semester_management",
+      "type": "LOGIC",
+      "label": "SemesterManagement",
+      "properties": {
+        "function": "forceSyncSemester",
+        "file": "js/semester-management.js"
+      }
+    },
+    {
+      "id": "ext_firestore",
+      "type": "DATABASE",
+      "label": "Firestore",
+      "properties": {
+        "provider": "Firebase"
+      }
+    },
+    {
+      "id": "image_1732749554068_timetable_fall_2023",
+      "label": "Timetable Fall 2023",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732749554068-590947980.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732749717062_timetable_fall_2024",
+      "label": "Timetable Fall 2024",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732749717062-684653347.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "dept_aeronautics_astronautics",
+      "label": "Department of Aeronautics & Astronautics",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732749554068-590947980.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848227184_force_sync_button",
+      "label": "Force Sync Button",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848227184-397887927.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848227184_sync_settings_panel",
+      "label": "Sync Settings Panel",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848227184-397887927.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848425929_auto_sync_toggle",
+      "label": "Auto Sync Toggle",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848425929-857821658.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848537899_manual_sync_redundancy",
+      "label": "Redundant Manual Sync Feature",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848537899-232958068.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "image_1732848719720_sync_status_indicator",
+      "label": "Sync Status Indicator",
+      "file_type": "image",
+      "source_file": "uploads\\default\\image-1732848719720-737429281.PNG",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "feat_force_sync",
+      "label": "Force Sync Feature",
+      "type": "Feature",
+      "description": "Manual synchronization mechanism identified as redundant in systems with active background auto-sync."
+    },
+    {
+      "id": "file_js_priority_list_utils_js",
+      "label": "priority-list-utils.js",
+      "type": "File",
+      "path": "js/priority-list-utils.js"
+    },
+    {
+      "id": "file_js_gpa_predictor_js",
+      "label": "gpa-predictor.js",
+      "type": "File",
+      "path": "js/gpa-predictor.js"
+    },
+    {
+      "id": "img_sync_evidence_01",
+      "label": "Sync UI Screenshot 01",
+      "type": "Visual Evidence",
+      "path": "uploads/default/image-1732947394515-681807177.png"
+    },
+    {
+      "id": "img_sync_evidence_02",
+      "label": "Sync UI Screenshot 02",
+      "type": "Visual Evidence",
+      "path": "uploads/default/image-1733024025576-923578314.PNG"
+    },
+    {
+      "id": "img_sync_evidence_25",
+      "label": "Sync UI Screenshot 25",
+      "type": "Visual Evidence",
+      "path": "uploads/default/image-1733741238342-138371976.jpg"
+    },
+    {
+      "id": "ui_force_sync_button",
+      "label": "Force Sync Button",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1741102659089-932219673.png"
+    },
+    {
+      "id": "ui_sync_status_indicator",
+      "label": "Sync Status Indicator",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1741103075402-31512396.png"
+    },
+    {
+      "id": "ui_settings_menu",
+      "label": "Settings Menu",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1742018564314-921624356.jpg"
+    },
+    {
+      "id": "ui_alarm_toggle",
+      "label": "Alarm Toggle Switch",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1742018805123-901377952.jpg"
+    },
+    {
+      "id": "audio_alarm_active",
+      "label": "Alarm Active Sound",
+      "file_type": "audio",
+      "source_file": "alarm-sounds/alarm1.mp3"
+    },
+    {
+      "id": "audio_notification_ping",
+      "label": "Notification Ping",
+      "file_type": "audio",
+      "source_file": "sounds/notification.mp3"
+    },
+    {
+      "id": "ui_redundant_sync_feature",
+      "label": "Redundant Sync Logic",
+      "file_type": "image",
+      "source_file": "uploads/default/image-1742020515985-220752860.jpg"
     }
   ],
   "edges": [
     {
-      "source": "daily_calendar_html",
-      "target": "bootstrap_fn",
+      "source": "WorkspacePage",
+      "target": "ControlPod",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "WorkspacePage",
+      "target": "VitalsPod",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "WorkspacePage",
+      "target": "FocusZone",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "ControlPod",
+      "target": "PomodoroTimerCard",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "ControlPod",
+      "target": "ActiveTaskCard",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "GrindModePage",
+      "target": "StatsBentoGrid",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "GrindModePage",
+      "target": "GrindCheckHUD",
+      "type": "TRIGGERS"
+    },
+    {
+      "source": "GrindCheckHUD",
+      "target": "CalibrateBtn",
+      "type": "HAS_ACTION"
+    },
+    {
+      "source": "SyncStatusIndicator",
+      "target": "ForceSyncBtn",
+      "type": "HAS_ACTION"
+    },
+    {
+      "source": "AcademicDetailsPage",
+      "target": "GenerateFormsBtn",
+      "type": "HAS_ACTION"
+    },
+    {
+      "source": "AcademicDetailsPage",
+      "target": "SaveAllSubjectsBtn",
+      "type": "HAS_ACTION"
+    },
+    {
+      "source": "WorkspacePage",
+      "target": "NavigationComponent",
+      "type": "USES"
+    },
+    {
+      "source": "GrindModePage",
+      "target": "NavigationComponent",
+      "type": "USES"
+    },
+    {
+      "source": "SideDrawer",
+      "target": "NavigationComponent",
+      "type": "INTEGRATED_WITH"
+    },
+    {
+      "source": "ui_study_spaces",
+      "target": "btn_sync_now",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "btn_sync_now",
+      "target": "fn_force_sync_study",
+      "type": "TRIGGERS"
+    },
+    {
+      "source": "ui_semester_manager",
+      "target": "fn_force_sync_semester",
+      "type": "TRIGGERS"
+    },
+    {
+      "source": "ui_priority_list",
+      "target": "btn_force_sync_priority",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "btn_force_sync_priority",
+      "target": "fn_force_sync_priority",
+      "type": "TRIGGERS"
+    },
+    {
+      "from": "UI:ForceSyncButton",
+      "to": "Logic:PrioritySyncFix",
+      "label": "triggers",
+      "properties": {
+        "context": "Priority Tasks"
+      }
+    },
+    {
+      "from": "UI:ForceSyncButton",
+      "to": "Logic:SemesterManagement",
+      "label": "triggers",
+      "properties": {
+        "context": "Semester Data"
+      }
+    },
+    {
+      "from": "UI:ForceSyncButton",
+      "to": "Logic:StudySpaceFirestore",
+      "label": "triggers",
+      "properties": {
+        "context": "Study Spaces"
+      }
+    },
+    {
+      "from": "Logic:PrioritySyncFix",
+      "to": "Logic:DataSyncManager",
+      "label": "uses",
+      "properties": {
+        "action": "Force upload"
+      }
+    },
+    {
+      "source": "ui_force_sync_btn",
+      "target": "logic_priority_sync_fix",
+      "type": "TRIGGERS",
+      "label": "onclick triggers sync"
+    },
+    {
+      "source": "logic_data_sync_manager",
+      "target": "ext_firestore",
+      "type": "WRITES_TO",
+      "label": "syncs queue"
+    },
+    {
+      "source": "logic_study_space_controller",
+      "target": "ext_firestore",
+      "type": "WRITES_TO",
+      "label": "syncs study spaces"
+    },
+    {
+      "source": "logic_semester_management",
+      "target": "ext_firestore",
+      "type": "WRITES_TO",
+      "label": "syncs semester data"
+    },
+    {
+      "source": "image_1732749554068_timetable_fall_2023",
+      "target": "dept_aeronautics_astronautics",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads\\default\\image-1732749554068-590947980.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732749717062_timetable_fall_2024",
+      "target": "dept_aeronautics_astronautics",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads\\default\\image-1732749717062-684653347.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732848227184_force_sync_button",
+      "target": "image_1732848227184_sync_settings_panel",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads\\default\\image-1732848227184-397887927.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732848227184_force_sync_button",
+      "target": "image_1732848537899_manual_sync_redundancy",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "uploads\\default\\image-1732848537899-232958068.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732848425929_auto_sync_toggle",
+      "target": "image_1732848537899_manual_sync_redundancy",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "uploads\\default\\image-1732848425929-857821658.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "image_1732848719720_sync_status_indicator",
+      "target": "image_1732848227184_force_sync_button",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "uploads\\default\\image-1732848719720-737429281.PNG",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "ui_force_sync_btn",
+      "target": "feat_force_sync",
+      "relation": "triggers"
+    },
+    {
+      "source": "file_js_priority_list_utils_js",
+      "target": "ui_force_sync_btn",
+      "relation": "defines"
+    },
+    {
+      "source": "file_js_gpa_predictor_js",
+      "target": "ui_force_sync_btn",
+      "relation": "implements"
+    },
+    {
+      "source": "img_sync_evidence_01",
+      "target": "ui_force_sync_btn",
+      "relation": "depicts"
+    },
+    {
+      "source": "feat_force_sync",
+      "target": "redundancy_group",
+      "relation": "belongs_to"
+    },
+    {
+      "source": "ui_force_sync_button",
+      "target": "ui_sync_status_indicator",
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "uploads/default/image-1741102659089-932219673.png"
+    },
+    {
+      "source": "ui_force_sync_button",
+      "target": "ui_redundant_sync_feature",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "uploads/default/image-1741102659089-932219673.png"
+    },
+    {
+      "source": "ui_settings_menu",
+      "target": "ui_force_sync_button",
       "relation": "contains",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "daily-calendar.html"
+      "source_file": "uploads/default/image-1742018564314-921624356.jpg"
     },
     {
-      "source": "bootstrap_fn",
-      "target": "calendarmanager_js",
-      "relation": "awaits",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "daily-calendar.html"
-    },
-    {
-      "source": "bootstrap_fn",
-      "target": "renderstrip_fn",
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "daily-calendar.html"
-    },
-    {
-      "source": "bootstrap_fn",
-      "target": "renderstats_fn",
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "daily-calendar.html"
-    },
-    {
-      "source": "daily_calendar_html",
-      "target": "oncalendarrendered_fn",
-      "relation": "observes",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "daily-calendar.html",
-      "rationale": "Uses MutationObserver on .calendar-grid to trigger onCalendarRendered."
-    },
-    {
-      "source": "oncalendarrendered_fn",
-      "target": "renderstats_fn",
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "daily-calendar.html"
-    },
-    {
-      "source": "calendarmanager_js",
-      "target": "calendarrenderer_js",
-      "relation": "instantiates",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "js/calendarManager.js"
-    },
-    {
-      "source": "calendarmanager_js",
-      "target": "calendarevents_js",
-      "relation": "instantiates",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "js/calendarManager.js"
-    },
-    {
-      "source": "calendarrenderer_js",
-      "target": "calendarservice_js",
-      "relation": "uses",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "js/components/CalendarRenderer.js"
-    },
-    {
-      "source": "calendarviewmanager_js",
-      "target": "daily_calendar_html",
-      "relation": "redirects_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "js/calendar-views.js",
-      "rationale": "switchView('daily') redirects to daily-calendar.html."
+      "source": "ui_alarm_toggle",
+      "target": "audio_alarm_active",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "uploads/default/image-1742018805123-901377952.jpg"
     }
   ],
   "hyperedges": [
     {
-      "id": "data_consistency_flow",
-      "label": "Data Consistency Flow",
-      "nodes": [
-        "calendarservice_js",
-        "renderstats_fn",
-        "renderstrip_fn"
+      "id": "DataSyncSystem",
+      "type": "SYSTEM",
+      "members": [
+        "SyncStatusIndicator",
+        "ForceSyncBtn",
+        "ConflictModal",
+        "RecoveryModal"
       ],
-      "relation": "synchronizes",
+      "properties": {
+        "version": "v5",
+        "description": "Cross-tab task synchronization and backup recovery."
+      }
+    },
+    {
+      "id": "GrindEcosystem",
+      "type": "FEATURE_SET",
+      "members": [
+        "GrindModePage",
+        "ControlPod",
+        "PomodoroTimerCard",
+        "GrindCheckHUD"
+      ],
+      "properties": {
+        "vibe": "High-intensity productivity"
+      }
+    },
+    {
+      "id": "he_redundant_sync",
+      "label": "Redundant Force Sync Implementation",
+      "members": [
+        "fn_force_sync_study",
+        "fn_force_sync_semester",
+        "fn_force_sync_priority"
+      ],
+      "type": "REDUNDANCY_PATTERN",
+      "description": "Manual force sync logic duplicated across domain managers instead of unified sync service."
+    },
+    {
+      "id": "HE:RedundantForceSync",
+      "label": "Redundant Force Sync Implementation",
+      "elements": [
+        "UI:ForceSyncButton",
+        "Logic:PrioritySyncFix",
+        "Logic:SemesterManagement",
+        "Logic:StudySpaceFirestore"
+      ],
+      "properties": {
+        "issue": "Decentralized manual sync triggers",
+        "recommendation": "Centralize in DataSyncManager"
+      }
+    },
+    {
+      "id": "redundant_sync_logic",
+      "type": "REDUNDANCY_GROUP",
+      "label": "Redundant Force Sync Implementations",
+      "members": [
+        "logic_data_sync_manager",
+        "logic_priority_sync_fix",
+        "logic_study_space_controller",
+        "logic_semester_management"
+      ],
+      "properties": {
+        "observation": "Multiple independent forceSync implementations across domains without central coordination."
+      }
+    },
+    {
+      "id": "aeronautics_timetables",
+      "label": "Aeronautics Timetables",
+      "nodes": [
+        "image_1732749554068_timetable_fall_2023",
+        "image_1732749717062_timetable_fall_2024",
+        "dept_aeronautics_astronautics"
+      ],
+      "relation": "participate_in",
       "confidence": "INFERRED",
       "confidence_score": 0.9,
-      "rationale": "All three nodes rely on the same StorageService 'dailySchedule' key for consistent time display."
+      "source_file": "uploads\\default\\image-1732749554068-590947980.PNG"
+    },
+    {
+      "id": "redundant_sync_controls",
+      "label": "Redundant Sync Controls",
+      "nodes": [
+        "image_1732848227184_force_sync_button",
+        "image_1732848425929_auto_sync_toggle",
+        "image_1732848537899_manual_sync_redundancy",
+        "image_1732848719720_sync_status_indicator"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "uploads\\default\\image-1732848227184-397887927.PNG"
+    },
+    {
+      "id": "sync_redundancy_cluster",
+      "label": "Sync Redundancy Subsystem",
+      "members": [
+        "feat_force_sync",
+        "ui_force_sync_btn",
+        "file_js_priority_list_utils_js"
+      ],
+      "context": "Identified redundant UI patterns across multiple modules."
+    },
+    {
+      "id": "sync_flow",
+      "label": "Data Synchronization Flow",
+      "nodes": [
+        "ui_force_sync_button",
+        "ui_sync_status_indicator",
+        "ui_redundant_sync_feature"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "uploads/default/image-1741102659089-932219673.png"
     }
   ],
-  "input_tokens": 0,
-  "output_tokens": 0
+  "input_tokens": 3500,
+  "output_tokens": 1100
 }

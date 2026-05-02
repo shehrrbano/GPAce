@@ -284,24 +284,3 @@ export function getCurrentUserId() {
   return auth && auth.currentUser ? auth.currentUser.uid : null;
 }
 
-/**
- * Force sync study spaces to Firestore
- * @returns {Promise<boolean>} - Success status
- */
-export async function forceSyncStudySpaces() {
-  try {
-    const storageHelper = getStorageHelper();
-    const localSpaces = storageHelper.get('studySpaces', null);
-    if (!localSpaces) {
-      console.log('No local study spaces to sync');
-      return false;
-    }
-
-    const success = await saveStudySpacesToFirestore(localSpaces);
-    return success;
-  } catch (error) {
-    console.error('Error force syncing study spaces:', error);
-    return false;
-  }
-}
-

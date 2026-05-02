@@ -324,9 +324,9 @@ class SyncStatusIndicator {
 /*
 if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-        // document.addEventListener('DOMContentLoaded', () => SyncStatusIndicator.init());
+        // document.addEventListener('DOMContentLoaded', () => // SyncStatusIndicator.init());
     } else {
-        SyncStatusIndicator.init();
+        // SyncStatusIndicator.init();
     }
 }
 */

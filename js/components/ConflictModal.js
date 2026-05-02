@@ -502,9 +502,9 @@ class ConflictModal {
 // Auto-init when DOM is ready
 if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-        // document.addEventListener('DOMContentLoaded', () => ConflictModal.init());
+        // document.addEventListener('DOMContentLoaded', () => // ConflictModal.init());
     } else {
-        ConflictModal.init();
+        // ConflictModal.init();
     }
 }
 

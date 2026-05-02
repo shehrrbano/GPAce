@@ -6,7 +6,6 @@
 
 import NavigationComponent from './components/NavigationComponent.js';
 import globals from './core/globals.js';
-import EnergyController from './controllers/EnergyController.js';
 
 // Storage helper with fallback
 const getStorage = () => window.getStorage?.() || window.StorageService || {
@@ -27,8 +26,8 @@ let editorState = {
  * Initialize the editor and set up event listeners
  */
 async function initWorkspace() {
-    // Inject standard navigation
-    NavigationComponent.injectNavigation();
+    // Navigation is handled by the parent container in grind.html
+    // NavigationComponent.injectNavigation();
 
     initQuillEditor();
     loadSavedContent();
@@ -36,15 +35,6 @@ async function initWorkspace() {
     startAutoSave();
     updateToolbarState();
 
-    // Initialize Energy Controller
-    try {
-        if (EnergyController && typeof EnergyController.init === 'function') {
-            EnergyController.init();
-            globals.register('energyController', EnergyController, { module: 'workspace-core' });
-        }
-    } catch (error) {
-        console.error('Error initializing EnergyController:', error);
-    }
 
     // Initialize task attachments
     if (typeof window.WorkspaceAttachments !== 'undefined') {
@@ -99,6 +89,17 @@ function initQuillEditor() {
 function loadSavedContent() {
     const storage = getStorage();
     const savedContent = storage.get('workspaceContent', null);
+    
+    // Sanitize corrupted debug data
+    if (savedContent && (
+        JSON.stringify(savedContent).includes('PageDconsdocument.body.innerText') || 
+        JSON.stringify(savedContent).includes('!!!TOP_THIN_ELEMENT:')
+    )) {
+        console.warn('Corrupted workspace data detected. Clearing storage.');
+        storage.set('workspaceContent', null);
+        return;
+    }
+
     if (savedContent) {
         quill.setContents(savedContent);
         updateCounts();
@@ -160,7 +161,7 @@ function setupToolbarEventListeners() {
     };
 
     // Document operations
-    safeAddListener('button[data-tooltip*="New Document"]', 'click', () => {
+    safeAddListener('button[data-tooltip*="New"]', 'click', () => {
         if (typeof window.newDocument === 'function') window.newDocument();
     });
     safeAddListener('button[data-tooltip*="Open"]', 'click', () => {
@@ -227,13 +228,13 @@ function setupToolbarEventListeners() {
     });
 
     // Image, link, table
-    safeAddListener('button[data-tooltip*="Insert Image"]', 'click', () => {
+    safeAddListener('button[data-tooltip="Insert Image"]', 'click', () => {
         if (typeof window.showImageOptions === 'function') window.showImageOptions();
     });
-    safeAddListener('button[data-tooltip*="Insert Link"]', 'click', () => {
+    safeAddListener('button[data-tooltip="Link"]', 'click', () => {
         if (typeof window.insertLink === 'function') window.insertLink();
     });
-    safeAddListener('button[data-tooltip*="Insert Table"]', 'click', () => {
+    safeAddListener('button[data-tooltip="Table"]', 'click', () => {
         if (typeof window.insertTable === 'function') window.insertTable();
     });
 
@@ -244,6 +245,11 @@ function setupToolbarEventListeners() {
     // Theme toggle
     safeAddListener('.theme-toggle', 'click', () => {
         if (typeof window.toggleTheme === 'function') window.toggleTheme();
+    });
+
+    // Task Extras Toggle
+    safeAddListener('toggleTaskExtrasBtn', 'click', () => {
+        if (typeof window.toggleTaskExtras === 'function') window.toggleTaskExtras();
     });
 
     // Drag and drop

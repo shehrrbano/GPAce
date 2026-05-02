@@ -1,0 +1,98 @@
+/* 
+ * Skeleton Screens - GPAce Modern Style
+ * Provides premium shimmering placeholders during data loading.
+ */
+
+:root {
+    --skeleton-bg: rgba(255, 255, 255, 0.05);
+    --skeleton-shimmer: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        transparent 100%
+    );
+}
+
+.skeleton {
+    background: var(--skeleton-bg);
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--skeleton-shimmer);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Sidebar Skeleton Card */
+.skeleton-card {
+    height: 72px;
+    margin: 12px;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skeleton-text {
+    height: 12px;
+    border-radius: 4px;
+}
+
+.skeleton-text.short { width: 40%; }
+.skeleton-text.medium { width: 70%; }
+.skeleton-text.long { width: 90%; }
+
+/* Main Content Skeletons */
+.skeleton-header {
+    height: 48px;
+    margin-bottom: 24px;
+    width: 60%;
+}
+
+.skeleton-box {
+    height: 300px;
+    margin-bottom: 24px;
+    border-radius: 16px;
+}
+
+.skeleton-list-item {
+    height: 60px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+}
+
+/* Fade out animation for when content arrives */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+    pointer-events: none;
+}
+
+.fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

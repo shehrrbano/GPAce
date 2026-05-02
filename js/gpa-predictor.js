@@ -57,8 +57,8 @@ class GPAPredictor {
                             </select>
                         </div>
                         <div class="input-mode-toggle" style="margin-top: 10px; display: flex; gap: 5px;">
-                            <button type="button" class="btn-legacy-action ${this.inputMode === 'marks' ? 'active' : ''}" data-mode="marks" style="font-size: 11px; padding: 4px 10px;">Marks</button>
-                            <button type="button" class="btn-legacy-action ${this.inputMode === 'grade' ? 'active' : ''}" data-mode="grade" style="font-size: 11px; padding: 4px 10px;">Grade</button>
+                            <button type="button" class="btn btn-outline-light btn-xs ${this.inputMode === 'marks' ? 'active' : ''}" data-mode="marks" style="font-size: 11px; padding: 2px 8px;">Marks</button>
+                            <button type="button" class="btn btn-outline-light btn-xs ${this.inputMode === 'grade' ? 'active' : ''}" data-mode="grade" style="font-size: 11px; padding: 2px 8px;">Grade</button>
                         </div>
                     </div>
                 </div>
@@ -98,14 +98,13 @@ class GPAPredictor {
                 </div>
 
                 <div style="margin-top: 20px;">
-                    <button type="button" class="btn-legacy-action" id="addSubjectBtn" style="width: 100%; justify-content: center; border-style: dashed; opacity: 0.7;">
-                        <i class="bi bi-plus-lg"></i> Add Subject Entry
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="addSubjectBtn" style="width: 100%; justify-content: center; border-style: dashed; opacity: 0.8;">
+                        <i class="bi bi-plus-circle"></i> Add Subject
                     </button>
-                </div>
-
-                <div class="predictor-actions-legacy">
-                    <button type="button" class="btn-legacy-action" id="syncBtn"><i class="bi bi-arrow-repeat"></i> Force Sync</button>
-                    <button type="button" class="btn-legacy-action danger" id="resetBtn" style="color: #ff4b5c;"><i class="bi bi-trash"></i> Reset</button>
+                    </div>
+                    <div class="d-flex gap-2 mt-3">
+                    <button type="button" class="btn btn-outline-danger btn-sm flex-grow-1" id="resetBtn"><i class="bi bi-trash"></i> Reset</button>
+                    </div>
                 </div>
             </div>
         `;

@@ -435,9 +435,9 @@ class RecoveryModal {
 // Auto-init when DOM is ready
 if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-        // document.addEventListener('DOMContentLoaded', () => RecoveryModal.init());
+        // document.addEventListener('DOMContentLoaded', () => // RecoveryModal.init());
     } else {
-        RecoveryModal.init();
+        // RecoveryModal.init();
     }
 }
 

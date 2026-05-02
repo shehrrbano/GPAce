@@ -12,10 +12,13 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    background: #0B1220;
+    background: transparent;
     overflow: hidden;
     position: relative;
+    color: var(--text-color, #F5F5F7);
 }
+
+
 
 /* Custom Scrollbar (Premium Dark Aesthetic) */
 ::-webkit-scrollbar {
@@ -45,99 +48,324 @@
 
 /* ─── Grouped Ribbon Toolbar (Cohesive Header Bar) ────────────────── */
 .toolbar-container {
-    background: #0F172A;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-    padding: 8px 16px;
+    background: var(--nav-bg, rgba(5, 5, 5, 0.8));
+    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    padding: 12px 24px;
     z-index: 1000;
     flex-shrink: 0;
     overflow-x: auto;
+    overflow-y: hidden;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    scrollbar-width: none;
+}
+
+.toolbar-container::-webkit-scrollbar {
+    display: none;
 }
 
 .toolbar-ribbon {
     display: flex;
-    align-items: center;
-    gap: 20px;
-    min-width: max-content;
+    align-items: stretch;
+    gap: 16px;
+    width: max-content;
+    height: 64px;
 }
 
-.toolbar-section {
+/* Bento Block Styling */
+.bento-toolbar-section {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 4px;
-    padding: 4px 0;
+    gap: 6px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.bento-toolbar-section:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bento-toolbar-section.primary {
+    background: rgba(0, 122, 255, 0.05);
+    border-color: rgba(0, 122, 255, 0.2);
+    box-shadow: inset 0 0 15px rgba(0, 122, 255, 0.05);
+}
+
+.bento-toolbar-section::after {
+    content: attr(aria-label);
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-color-secondary, #8E8E93);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    opacity: 0.6;
+    margin-top: 4px;
 }
 
 .toolbar-divider {
     width: 1px;
-    height: 32px;
-    background: rgba(148, 163, 184, 0.1);
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 8px;
+    align-self: center;
 }
 
 .toolbar-group {
     display: flex;
-    gap: 4px;
+    gap: 8px;
     align-items: center;
+}
+
+.timer-compact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 /* Compact Timer & Selects */
 .timer-digits-compact {
     font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 16px;
-    font-weight: 700;
-    color: #38BDF8;
-    background: rgba(56, 189, 248, 0.1);
-    padding: 4px 8px;
-    border-radius: 6px;
-    border: 1px solid rgba(56, 189, 248, 0.2);
-    margin-right: 4px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #007AFF;
+    background: rgba(0, 122, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 122, 255, 0.2);
+    box-shadow: inset 0 0 15px rgba(0, 122, 255, 0.1), 0 0 10px rgba(0, 122, 255, 0.1);
+    letter-spacing: 0.05em;
 }
 
 .task-select-compact {
-    max-width: 180px;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(148, 163, 184, 0.15) !important;
-    border-radius: 6px !important;
-    padding: 4px 8px !important;
-    font-size: 12px !important;
-    color: #B7C2D6 !important;
+    min-width: 220px;
+    max-width: 340px;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 10px !important;
+    padding: 8px 14px !important;
+    font-size: 13.5px !important;
+    color: #F5F5F7 !important;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.toolbar-section::after {
-    content: attr(aria-label);
-    font-size: 8px;
-    font-weight: 800;
-    color: #475569;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-top: 4px;
+.task-select-compact:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
+/* Custom Dropdown for Editor Tools */
+.editor-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.image-options-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 12px;
+    background: var(--glass-bg, rgba(20, 20, 20, 0.9));
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: var(--shadow-lg, 0 16px 48px rgba(0, 0, 0, 0.6));
+    z-index: 1050;
+    min-width: 160px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.editor-dropdown:hover .image-options-dropdown,
+.editor-dropdown:focus-within .image-options-dropdown {
+    display: block;
+}
+
+.image-options-dropdown .dropdown-item {
+    padding: 10px 14px;
+    color: var(--text-color-secondary, #8E8E93);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.image-options-dropdown .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+}
+
+/* Enhanced Select Styling */
+.toolbar-select {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.04) url('data:image/svg+xml;utf8,<svg fill="%238E8E93" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center !important;
+    background-size: 18px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+    padding: 8px 34px 8px 14px !important;
+    font-size: 13.5px !important;
+    color: var(--text-color, #F5F5F7) !important;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.toolbar-select:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.toolbar-select:focus {
+    outline: none;
+    border-color: #007AFF !important;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+.toolbar-select option {
+    background-color: #121212;
+    color: #F5F5F7;
+    padding: 10px;
+}
+
+.toolbar-select.font-family {
+    min-width: 160px;
+}
+
+.toolbar-select.font-size {
+    min-width: 80px;
+}
+
+/* Color Picker Wrapper */
+.color-picker-wrapper {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.color-picker-wrapper:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.color-picker-wrapper i {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary, #8E8E93);
+}
+
+.toolbar-color-picker {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* ─── Toolbar Buttons ────────────────────────────────────────── */
 .toolbar-button {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(148, 163, 184, 0.12);
-    color: #B7C2D6;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color-secondary, #8E8E93);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.toolbar-button i,
+.toolbar-button svg {
+    font-size: 1.15rem !important;
+    transition: transform 0.2s ease;
 }
 
 .toolbar-button:hover {
     background: rgba(255, 255, 255, 0.08);
     color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.toolbar-button:hover i {
+    transform: scale(1.1);
 }
 
 .toolbar-button.active {
-    background: rgba(96, 165, 250, 0.15);
-    color: #60A5FA !important;
-    border-color: #60A5FA;
+    background: rgba(0, 122, 255, 0.15);
+    color: #007AFF !important;
+    border-color: rgba(0, 122, 255, 0.4);
+    box-shadow: 0 0 15px rgba(0, 122, 255, 0.15);
 }
+
+.toolbar-button.primary-accent {
+    background: rgba(0, 122, 255, 0.1);
+    color: #007AFF;
+    border-color: rgba(0, 122, 255, 0.3);
+}
+
+.toolbar-button.pulse-accent {
+    background: #007AFF;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+}
+
+.toolbar-button.pulse-accent.running {
+    animation: accent-pulse 2s infinite;
+}
+
+@keyframes accent-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.6); }
+    70% { box-shadow: 0 0 0 12px rgba(0, 122, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
+}
+
+/* Attachment Badge */
+.attachment-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #EF4444;
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid #0B1220;
+}
+
 
 /* ─── Editor Content Area ────────────────────────────────────────── */
 .editor-container {
@@ -151,42 +379,65 @@
 
 .editor-content {
     width: 100%;
-    max-width: 900px;
-    background-color: #121212;
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    min-height: 80vh;
-    padding: 40px 60px;
-    border-radius: 8px 8px 0 0;
+    max-width: 1000px;
+    background: rgba(17, 26, 44, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+    min-height: calc(100vh - 120px);
+    padding: 60px 80px;
+    border-radius: 16px;
     position: relative;
+    transition: all 0.3s ease;
 }
+
+.ql-editor {
+    font-family: 'Inter', var(--font-sans, sans-serif) !important;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-color, #F5F5F7);
+    min-height: calc(100vh - 240px);
+}
+
+@media (max-width: 800px) {
+    .editor-content {
+        padding: 30px 20px;
+    }
+}
+
 
 /* ─── Task Extras Panel (Inline Footer) ───────────────────────── */
 .task-extras-panel {
     width: 100%;
-    max-width: 900px;
-    background: #0F172A;
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-top: none;
-    border-radius: 0 0 8px 8px;
+    background: #0B1220;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 500px;
+}
+
+.task-extras-panel.collapsed {
+    max-height: 0;
+    border-top-color: transparent;
 }
 
 .task-extras-header {
-    background: rgba(30, 41, 59, 0.5);
-    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 8px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .extras-label {
-    font-size: 10px;
-    font-weight: 800;
-    color: #60A5FA;
-    letter-spacing: 0.15em;
+    font-size: 11px;
+    font-weight: 700;
+    color: #38BDF8;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .close-extras-btn {
@@ -195,57 +446,48 @@
     color: #475569;
     cursor: pointer;
     transition: all 0.2s;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
 }
 
 .close-extras-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
     color: white;
 }
 
 .task-extras-content {
-    padding: 20px;
-    transition: max-height 0.3s ease-out;
-    max-height: 1000px;
-}
-
-.task-extras-panel.collapsed .task-extras-content {
-    max-height: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
-.task-extras-panel.collapsed .close-extras-btn i {
-    transform: rotate(180deg);
+    padding: 20px 24px;
 }
 
 .extras-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    min-height: 180px;
 }
 
-.energy-section-compact h4,
 .attachments-section-compact h4 {
-    font-size: 11px;
-    font-weight: 700;
-    color: #94A3B8;
-    margin-bottom: 12px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #64748B;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.energy-graph-container-compact {
-    height: 100px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
-    padding: 10px;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
 }
 
 .attachments-container {
+    flex: 1;
     background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
     padding: 12px;
-    min-height: 100px;
-    max-height: 300px;
     overflow-y: auto;
 }
 
@@ -315,20 +557,30 @@
 
 /* ─── Tablet (< 992px) ───────────────────────────────────────── */
 @media (max-width: 992px) {
-    .toolbar-section::after {
+    .bento-toolbar-section::after {
         display: none; /* Hide labels to save vertical space */
     }
 
+    .toolbar-ribbon {
+        height: 54px;
+        gap: 8px;
+    }
+
+    .bento-toolbar-section {
+        padding: 4px 8px;
+    }
+
     .toolbar-container {
-        padding: 4px 12px;
+        padding: 6px 12px;
     }
 
-    .editor-container {
-        padding: 10px;
+    .extras-grid {
+        grid-template-columns: 1fr;
+        height: auto;
     }
 
-    .editor-content {
-        padding: 30px 40px;
+    .task-extras-panel {
+        max-height: 1000px;
     }
 }
 
@@ -400,42 +652,10 @@
         display: none; /* Hide non-essential status items on mobile */
     }
 
-    .mobile-tab-bar {
-        display: flex; /* Shown in workspace.html footer */
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 60px;
-        background: #0F172A;
-        border-top: 1px solid rgba(148, 163, 184, 0.2);
-        z-index: 2000;
-        justify-content: space-around;
-        align-items: center;
-    }
 
-    .tab-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: transparent;
-        border: none;
-        color: #94A3B8;
-        font-size: 10px;
-        gap: 4px;
-    }
-
-    .tab-item i {
-        font-size: 18px;
-    }
-
-    .tab-item.active {
-        color: #38BDF8;
-    }
-
-    /* Add space for mobile tab bar */
+    /* Standardized mobile adjustments */
     .focus-zone {
-        padding-bottom: 60px;
+        padding-bottom: 20px;
     }
 }
 

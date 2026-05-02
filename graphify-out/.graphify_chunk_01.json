@@ -1,0 +1,285 @@
+{
+  "nodes": [
+    {
+      "id": "AcademicDetailsPage",
+      "type": "UI_PAGE",
+      "properties": {
+        "name": "Academic Details",
+        "file": "js/academic-details.js",
+        "description": "Manage subjects, credits and semester data."
+      }
+    },
+    {
+      "id": "WorkspacePage",
+      "type": "UI_PAGE",
+      "properties": {
+        "name": "Workspace (Modular Command Center)",
+        "layout": "Three-column grid",
+        "description": "Professional deep work environment."
+      }
+    },
+    {
+      "id": "GrindModePage",
+      "type": "UI_PAGE",
+      "properties": {
+        "name": "Grind Mode (Bento Grid 2.0)",
+        "layout": "12-column Bento Grid",
+        "description": "High-performance stats-heavy dashboard."
+      }
+    },
+    {
+      "id": "ControlPod",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Control Pod",
+        "location": "Left Sidebar",
+        "width": "320px",
+        "description": "Houses primary Grind controls."
+      }
+    },
+    {
+      "id": "VitalsPod",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Vitals Pod",
+        "location": "Right Sidebar",
+        "width": "280px",
+        "collapsible": true
+      }
+    },
+    {
+      "id": "FocusZone",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Focus Zone",
+        "location": "Center Column",
+        "description": "Fluid editor area."
+      }
+    },
+    {
+      "id": "PomodoroTimerCard",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Pomodoro Timer",
+        "parent": "ControlPod",
+        "accentColor": "#FF2D55"
+      }
+    },
+    {
+      "id": "ActiveTaskCard",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Active Task Card",
+        "parent": "ControlPod"
+      }
+    },
+    {
+      "id": "StatsBentoGrid",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Stats Bento Grid",
+        "parent": "GrindModePage",
+        "metrics": ["Fatigue", "Sleep", "Cognitive Load", "Streak", "Energy Curve"]
+      }
+    },
+    {
+      "id": "NavigationComponent",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Standardized Navigation",
+        "file": "js/components/NavigationComponent.js",
+        "height": "72px"
+      }
+    },
+    {
+      "id": "SideDrawer",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Side Drawer",
+        "file": "js/sideDrawer.js",
+        "pattern": "Singleton Class"
+      }
+    },
+    {
+      "id": "SnippetManager",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Snippet Manager (Text Expansion)",
+        "trigger": "/",
+        "shortcut": "Alt+S"
+      }
+    },
+    {
+      "id": "GPAPredictor",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "GPA Predictor",
+        "file": "js/gpa-predictor.js"
+      }
+    },
+    {
+      "id": "GrindCheckHUD",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Biometric HUD (Grind Check)",
+        "tech": "PPG Signal Capture"
+      }
+    },
+    {
+      "id": "SyncStatusIndicator",
+      "type": "UI_COMPONENT",
+      "properties": {
+        "name": "Sync Status Indicator",
+        "features": ["Conflict Detection", "Backup Recovery"]
+      }
+    },
+    {
+      "id": "ForceSyncBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Force Sync",
+        "status": "Redundant/Reliability",
+        "logic": "window.TaskRepository.forceRecoveryFromBackup"
+      }
+    },
+    {
+      "id": "GenerateFormsBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Generate Forms",
+        "parent": "AcademicDetailsPage"
+      }
+    },
+    {
+      "id": "SaveAllSubjectsBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Save All Subjects",
+        "parent": "AcademicDetailsPage"
+      }
+    },
+    {
+      "id": "MarkCompleteBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Mark Complete",
+        "context": "Grind/Workspace"
+      }
+    },
+    {
+      "id": "SwitchTaskBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Switch Task",
+        "context": "Grind/Workspace"
+      }
+    },
+    {
+      "id": "AskGeminiBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Ask Gemini",
+        "context": "AI Integration"
+      }
+    },
+    {
+      "id": "CalibrateBtn",
+      "type": "UI_ACTION",
+      "properties": {
+        "name": "Calibrate",
+        "context": "Grind Check"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "WorkspacePage",
+      "target": "ControlPod",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "WorkspacePage",
+      "target": "VitalsPod",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "WorkspacePage",
+      "target": "FocusZone",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "ControlPod",
+      "target": "PomodoroTimerCard",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "ControlPod",
+      "target": "ActiveTaskCard",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "GrindModePage",
+      "target": "StatsBentoGrid",
+      "type": "CONTAINS"
+    },
+    {
+      "source": "GrindModePage",
+      "target": "GrindCheckHUD",
+      "type": "TRIGGERS"
+    },
+    {
+      "source": "GrindCheckHUD",
+      "target": "CalibrateBtn",
+      "type": "HAS_ACTION"
+    },
+    {
+      "source": "SyncStatusIndicator",
+      "target": "ForceSyncBtn",
+      "type": "HAS_ACTION"
+    },
+    {
+      "source": "AcademicDetailsPage",
+      "target": "GenerateFormsBtn",
+      "type": "HAS_ACTION"
+    },
+    {
+      "source": "AcademicDetailsPage",
+      "target": "SaveAllSubjectsBtn",
+      "type": "HAS_ACTION"
+    },
+    {
+      "source": "WorkspacePage",
+      "target": "NavigationComponent",
+      "type": "USES"
+    },
+    {
+      "source": "GrindModePage",
+      "target": "NavigationComponent",
+      "type": "USES"
+    },
+    {
+      "source": "SideDrawer",
+      "target": "NavigationComponent",
+      "type": "INTEGRATED_WITH"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "DataSyncSystem",
+      "type": "SYSTEM",
+      "members": ["SyncStatusIndicator", "ForceSyncBtn", "ConflictModal", "RecoveryModal"],
+      "properties": {
+        "version": "v5",
+        "description": "Cross-tab task synchronization and backup recovery."
+      }
+    },
+    {
+      "id": "GrindEcosystem",
+      "type": "FEATURE_SET",
+      "members": ["GrindModePage", "ControlPod", "PomodoroTimerCard", "GrindCheckHUD"],
+      "properties": {
+        "vibe": "High-intensity productivity"
+      }
+    }
+  ]
+}

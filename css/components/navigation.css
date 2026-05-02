@@ -18,7 +18,19 @@
     align-items: center !important;
     height: var(--nav-height) !important;
     border-bottom: 1px solid var(--border-color) !important;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.3s ease !important;
+    box-shadow: none !important;
+    will-change: transform !important;
+}
+
+/* Premium scrolled state */
+.pm-nav.nav-scrolled {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+    background-color: rgba(5, 11, 24, 0.85) !important;
+}
+
+.pm-nav.nav-hidden {
+    transform: translateY(-110%) !important;
 }
 
 /* --- Brand --- */
@@ -138,25 +150,43 @@
     gap: 12px !important;
 }
 
+/* --- Global Premium Toggle Standard --- */
 .pm-drawer-toggle {
-    background: var(--glass-bg) !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid var(--glass-border) !important;
     color: var(--text-color) !important;
-    width: 42px !important;
-    height: 42px !important;
-    border-radius: 50% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     cursor: pointer !important;
-    transition: all 0.3s !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    font-size: 1.4rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
 .pm-drawer-toggle:hover {
-    background: var(--primary-color) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
     border-color: var(--primary-color) !important;
-    transform: rotate(45deg) !important;
+    color: #fff !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 15px rgba(0, 122, 255, 0.2) !important;
 }
+
+.pm-drawer-toggle:active {
+    transform: translateY(0) scale(0.96) !important;
+}
+
+.pm-drawer-toggle i {
+    pointer-events: none !important;
+}
+
+
 
 /* --- Mobile Logic --- */
 @media (max-width: 992px) {

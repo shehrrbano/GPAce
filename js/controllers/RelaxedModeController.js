@@ -119,9 +119,9 @@ const relaxedModeController = new RelaxedModeController();
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => relaxedModeController.init());
+    document.addEventListener('DOMContentLoaded', () => // relaxedModeController.init());
 } else {
-    relaxedModeController.init();
+    // relaxedModeController.init();
 }
 
 // Export for ES modules

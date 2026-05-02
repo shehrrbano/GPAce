@@ -8,7 +8,7 @@
  * - ToastService for notifications
  */
 
-import { getStorage, STORAGE_KEYS } from '../services/StorageService.js';
+import { getStorage, STORAGE_KEYS } from './services/StorageService.js';
 import { SemesterService } from './services/SemesterService.js';
 import { ToastService } from './services/ToastService.js';
 
@@ -1311,7 +1311,7 @@ function updateSyncStatus() {
             localOnlyBadge.classList.remove('d-none');
 
             if (window.auth?.currentUser) {
-                lastSyncTimeElem.textContent = 'Click "Force Sync" to upload to cloud';
+                lastSyncTimeElem.textContent = 'Auto-syncing to cloud enabled';
             } else {
                 lastSyncTimeElem.textContent = 'Sign in to enable cloud sync';
             }

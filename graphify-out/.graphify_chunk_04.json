@@ -1,0 +1,99 @@
+{
+  "nodes": [
+    {
+      "id": "ui_force_sync_btn",
+      "type": "UI_ELEMENT",
+      "label": "Force Sync Button",
+      "properties": {
+        "text": "🔄 Force Sync",
+        "files": ["js/priority-list-utils.js", "js/gpa-predictor.js"]
+      }
+    },
+    {
+      "id": "logic_data_sync_manager",
+      "type": "CLASS",
+      "label": "DataSyncManager",
+      "properties": {
+        "method": "forceSync",
+        "file": "js/data-sync-manager.js"
+      }
+    },
+    {
+      "id": "logic_priority_sync_fix",
+      "type": "LOGIC",
+      "label": "PrioritySyncFix",
+      "properties": {
+        "function": "forceSyncPriorityTasks",
+        "file": "js/priority-sync-fix.js"
+      }
+    },
+    {
+      "id": "logic_study_space_controller",
+      "type": "CONTROLLER",
+      "label": "StudySpaceController",
+      "properties": {
+        "method": "forceSync",
+        "file": "js/controllers/StudySpaceController.js"
+      }
+    },
+    {
+      "id": "logic_semester_management",
+      "type": "LOGIC",
+      "label": "SemesterManagement",
+      "properties": {
+        "function": "forceSyncSemester",
+        "file": "js/semester-management.js"
+      }
+    },
+    {
+      "id": "ext_firestore",
+      "type": "DATABASE",
+      "label": "Firestore",
+      "properties": {
+        "provider": "Firebase"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "ui_force_sync_btn",
+      "target": "logic_priority_sync_fix",
+      "type": "TRIGGERS",
+      "label": "onclick triggers sync"
+    },
+    {
+      "source": "logic_data_sync_manager",
+      "target": "ext_firestore",
+      "type": "WRITES_TO",
+      "label": "syncs queue"
+    },
+    {
+      "source": "logic_study_space_controller",
+      "target": "ext_firestore",
+      "type": "WRITES_TO",
+      "label": "syncs study spaces"
+    },
+    {
+      "source": "logic_semester_management",
+      "target": "ext_firestore",
+      "type": "WRITES_TO",
+      "label": "syncs semester data"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "redundant_sync_logic",
+      "type": "REDUNDANCY_GROUP",
+      "label": "Redundant Force Sync Implementations",
+      "members": [
+        "logic_data_sync_manager",
+        "logic_priority_sync_fix",
+        "logic_study_space_controller",
+        "logic_semester_management"
+      ],
+      "properties": {
+        "observation": "Multiple independent forceSync implementations across domains without central coordination."
+      }
+    }
+  ]
+}

@@ -50,30 +50,37 @@ class TaskSystem {
             lastError: null,
             sessionStart: Date.now()
         };
+        this._initPromise = null;
     }
 
     /**
      * Initialize the task system.
      */
     async init() {
-        if (this.initialized) return true;
+        if (this._initPromise) return this._initPromise;
         
-        console.log('[TaskSystem] Initializing...');
-        
-        // Ensure device identity
-        this._ensureDeviceId();
-        
-        // Handle migration if needed
-        const currentVersion = storageService.get(STORAGE_KEYS.SCHEMA_VERSION);
-        if (currentVersion !== SCHEMA_VERSION) {
-            await this._migrate();
-            storageService.set(STORAGE_KEYS.SCHEMA_VERSION, SCHEMA_VERSION);
-        }
+        this._initPromise = (async () => {
+            if (this.initialized) return true;
+            
+            console.log('[TaskSystem] Initializing...');
+            
+            // Ensure device identity
+            this._ensureDeviceId();
+            
+            // Handle migration if needed
+            const currentVersion = storageService.get(STORAGE_KEYS.SCHEMA_VERSION);
+            if (currentVersion !== SCHEMA_VERSION) {
+                await this._migrate();
+                storageService.set(STORAGE_KEYS.SCHEMA_VERSION, SCHEMA_VERSION);
+            }
 
-        this._registerCleanupHandlers();
-        this.initialized = true;
-        console.log('[TaskSystem] ✅ Unified task system active.');
-        return true;
+            this._registerCleanupHandlers();
+            this.initialized = true;
+            console.log('[TaskSystem] ✅ Unified task system active.');
+            return true;
+        })();
+
+        return this._initPromise;
     }
 
     // ========================================

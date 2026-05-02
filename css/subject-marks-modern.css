@@ -1,432 +1,334 @@
-/* ==========================================================================
-   Subject Marks / Performance Tracker — Modern Deep Blue Theme
-   Functional Parity with GPAce Legacy / Modern Visuals
-   ========================================================================== */
+/* subject-marks-modern.css */
 
 :root {
-  --dd-bg:           #050b18;
-  --dd-bg-2:         #0a1326;
-  --dd-card:         linear-gradient(180deg, rgba(31, 41, 55, 0.55), rgba(17, 26, 44, 0.55));
-  --dd-card-solid:   #0f1830;
-  --dd-line:         rgba(255, 255, 255, 0.08);
-  --dd-line-strong:  rgba(255, 255, 255, 0.14);
-  --dd-text:         #f1f5f9;
-  --dd-text-2:       #cbd5e1;
-  --dd-text-muted:   #64748b;
-
-  --accent-hue: 217;
-  --accent:        oklch(0.65 0.13 var(--accent-hue));
-  --accent-deep:   oklch(0.50 0.13 var(--accent-hue));
-  --accent-light:  oklch(0.82 0.10 var(--accent-hue));
-  --accent-soft:   oklch(0.55 0.12 var(--accent-hue) / 0.18);
-  --accent-border: oklch(0.55 0.12 var(--accent-hue) / 0.34);
-
-  --r-sm: 8px;
-  --r-md: 12px;
-  --r-lg: 16px;
-  --sidebar-width: 320px;
-  --shadow-card: 0 14px 40px rgba(0, 0, 0, 0.45);
+    --marks-sidebar-width: 320px;
+    --marks-accent: #007AFF;
+    --marks-accent-rgb: 0, 122, 255;
+    --marks-bg: #050505;
+    --marks-card-bg: rgba(20, 20, 20, 0.6);
+    --marks-border: rgba(255, 255, 255, 0.1);
+    --marks-text: #F5F5F7;
+    --marks-text-dim: #8E8E93;
 }
 
-body {
-  background: 
-    radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.40 0.10 var(--accent-hue) / 0.18), transparent 70%),
-    var(--dd-bg);
-  color: var(--dd-text);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  margin: 0;
-  padding-top: 72px;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
+body[data-bg="deep"] {
+    background-color: var(--marks-bg);
+    color: var(--marks-text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    margin: 0;
+    overflow: hidden;
 }
 
-/* ============================================
-   Master-Detail Layout
-   ============================================ */
+/* Layout Structure */
 .marks-layout {
-  display: flex;
-  min-height: calc(100vh - 72px);
-  position: relative;
+    display: flex;
+    height: calc(100vh - var(--nav-height));
+    margin-top: var(--nav-height);
+    background: radial-gradient(circle at top right, rgba(0, 122, 255, 0.05), transparent 400px),
+                radial-gradient(circle at bottom left, rgba(88, 86, 214, 0.05), transparent 400px);
 }
 
-/* Sidebar: Subject List */
+/* Sidebar Styling */
 .subject-sidebar {
-  width: var(--sidebar-width);
-  background: var(--dd-bg-2);
-  border-right: 1px solid var(--dd-line);
-  height: calc(100vh - 72px);
-  position: sticky;
-  top: 72px;
-  display: flex;
-  flex-direction: column;
-  z-index: 10;
+    width: var(--marks-sidebar-width);
+    border-right: 1px solid var(--marks-border);
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
 }
 
 .subject-list {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .subject-card {
-  padding: 18px 24px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--dd-line);
-  text-align: left;
-  transition: all 0.2s;
-  cursor: pointer;
-  width: 100%;
+    background: var(--marks-card-bg);
+    border: 1px solid var(--marks-border);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: left;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.subject-card:hover { background: rgba(255, 255, 255, 0.03); }
+.subject-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
 
 .subject-card.active {
-  background: var(--accent-soft);
-  border-left: 4px solid var(--accent);
+    background: rgba(0, 122, 255, 0.1);
+    border-color: var(--marks-accent);
+    box-shadow: 0 0 20px rgba(0, 122, 255, 0.1);
 }
 
-.subject-card .subject-name {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 4px;
+.subject-card.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    height: 60%;
+    width: 4px;
+    background: var(--marks-accent);
+    border-radius: 0 4px 4px 0;
 }
 
-.subject-card .subject-stats {
-  display: block;
-  font-size: 12px;
-  color: var(--dd-text-muted);
+.subject-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--marks-text);
 }
 
-.subject-card.active .subject-stats { color: var(--accent-light); }
+.subject-stats {
+    font-size: 0.75rem;
+    color: var(--marks-text-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-/* Main Content */
+/* Main Content Styling */
 .marks-content {
-  flex: 1;
-  padding: 40px;
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    position: relative;
 }
 
+.content-placeholder {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--marks-text-dim);
+    gap: 16px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.content-placeholder i {
+    font-size: 4rem;
+    opacity: 0.2;
+    background: linear-gradient(135deg, var(--marks-accent), #5856D6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Subject Header */
 .subject-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
 }
 
 .subject-header-row h2 {
-  font-size: 36px;
-  font-weight: 800;
-  margin: 0;
-  color: white;
-  letter-spacing: -0.02em;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1px;
 }
 
 .header-percentage {
-  font-size: 56px;
-  font-weight: 900;
-  color: var(--accent);
-  line-height: 1;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--marks-accent);
+    line-height: 1;
 }
 
 .header-divider {
-  height: 2px;
-  background: var(--dd-line-strong);
-  margin-bottom: 40px;
-  border-radius: 2px;
+    height: 1px;
+    background: linear-gradient(to right, var(--marks-border), transparent);
+    margin-bottom: 40px;
 }
 
-/* ============================================
-   Two-Column Grid
-   ============================================ */
+/* Grid Layout */
 .marks-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 40px;
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 40px;
 }
 
 .grid-column h3 {
-  font-size: 14px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 20px;
-  color: var(--dd-text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--marks-text-dim);
+    margin-bottom: 20px;
 }
 
-/* Weightages Box */
-.weightages-box {
-  background: var(--dd-card-solid);
-  border: 1px solid var(--dd-line);
-  border-radius: 12px;
-  padding: 0;
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
+/* Boxes */
+.weightages-box, .add-mark-box {
+    background: var(--marks-card-bg);
+    border: 1px solid var(--marks-border);
+    border-radius: 24px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
 }
 
 .weightage-item {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid var(--dd-line);
-  padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.weightage-item:last-child { border-bottom: none; }
+.weightage-item:last-child {
+    border-bottom: none;
+}
 
 .weightage-label {
-  flex: 1;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--dd-text-2);
+    font-size: 0.9rem;
+    color: var(--marks-text-dim);
 }
 
-.weightage-input-wrap {
-  width: 80px;
+.weightage-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--marks-border);
+    border-radius: 8px;
+    color: var(--marks-text);
+    width: 60px;
+    padding: 4px 8px;
+    text-align: center;
+    font-weight: 600;
 }
 
-.weightage-input-wrap input {
-  width: 100%;
-  background: rgba(0,0,0,0.2);
-  border: 1px solid var(--dd-line);
-  color: white;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 13px;
-  text-align: right;
-  transition: border-color 0.2s;
-}
-
-.weightage-input-wrap input:focus {
-  border-color: var(--accent);
-  outline: none;
+.weightage-input:focus {
+    outline: none;
+    border-color: var(--marks-accent);
+    background: rgba(0, 122, 255, 0.1);
 }
 
 .weightages-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  background: rgba(0,0,0,0.15);
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .total-weight-label {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--accent-light);
+    font-weight: 700;
+    font-size: 0.9rem;
 }
 
-/* Add Mark Box */
-.add-mark-box {
-  background: var(--dd-card-solid);
-  border: 1px solid var(--dd-line);
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: var(--shadow-card);
-}
-
+/* Add Entry Form */
 .add-mark-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .form-field label {
-  display: block;
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--dd-text-muted);
-  margin-bottom: 8px;
-  text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--marks-text-dim);
 }
 
 .form-field input, .form-field select {
-  width: 100%;
-  background: rgba(0,0,0,0.25);
-  border: 1px solid var(--dd-line);
-  color: white;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--marks-border);
+    border-radius: 12px;
+    color: var(--marks-text);
+    padding: 12px;
+    font-size: 0.9rem;
 }
 
-.form-field input:focus, .form-field select:focus {
-  border-color: var(--accent);
-  background: rgba(0,0,0,0.35);
-  outline: none;
+
+/* History List */
+.history-section {
+    margin-top: 40px;
 }
 
-.btn-add-legacy {
-  width: 100%;
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.btn-add-legacy:hover {
-  background: var(--accent-deep);
-  transform: translateY(-2px);
+.mark-entry-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--marks-border);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* History Section */
-.history-section { margin-top: 40px; }
-
-/* ============================================
-   GPA Predictor Styles
-   ============================================ */
-.predictor-wrapper {
-  margin-top: 60px;
-  padding: 0 40px 60px;
+.mark-info {
+    display: flex;
+    flex-direction: column;
 }
 
-.predictor-card-legacy {
-  background: var(--dd-card-solid);
-  border: 1px solid var(--dd-line);
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: var(--shadow-card);
+.mark-entry-title {
+    font-weight: 600;
+    font-size: 0.95rem;
 }
 
-.predictor-header-legacy {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
+.mark-entry-meta {
+    font-size: 0.75rem;
+    color: var(--marks-text-dim);
+    text-transform: capitalize;
 }
 
-.predictor-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.mark-values {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-.gpa-main-display-legacy {
-  background: rgba(0,0,0,0.15);
-  border-radius: 16px;
-  padding: 48px;
-  text-align: center;
-  margin-bottom: 32px;
-  border: 1px solid var(--dd-line);
+.mark-percentage {
+    font-weight: 700;
+    color: var(--success-color);
 }
 
-.gpa-value-large {
-  font-size: 96px;
-  font-weight: 900;
-  line-height: 1;
-  margin-bottom: 8px;
-  color: var(--accent);
+.btn-delete-mark {
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    opacity: 0.5;
+    transition: opacity 0.3s;
 }
 
-.gpa-label-sub {
-  font-size: 14px;
-  color: var(--dd-text-muted);
-  font-weight: 500;
+.btn-delete-mark:hover {
+    opacity: 1;
 }
 
-.predictor-stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 40px;
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
 }
 
-.stat-box-legacy {
-  background: rgba(0,0,0,0.15);
-  padding: 24px;
-  border-radius: 12px;
-  text-align: center;
-  border: 1px solid var(--dd-line);
+#activeContent:not(.d-none) {
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.stat-box-legacy .val {
-  display: block;
-  font-size: 32px;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 4px;
-}
-
-.stat-box-legacy .lbl {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--dd-text-muted);
-  letter-spacing: 0.05em;
-}
-
-.subjects-table-legacy {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.subjects-table-legacy th {
-  text-align: left;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: var(--dd-text-muted);
-  padding: 12px 10px;
-  border-bottom: 1px solid var(--dd-line);
-  letter-spacing: 0.1em;
-}
-
-.subjects-table-legacy td {
-  padding: 16px 10px;
-  border-bottom: 1px solid var(--dd-line);
-}
-
-.row-input-legacy {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--dd-line);
-  color: white;
-  width: 100%;
-  padding: 6px 0;
-  font-size: 14px;
-  transition: border-color 0.2s;
-}
-
-.row-input-legacy:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.predictor-actions-legacy {
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
-  margin-top: 32px;
-}
-
-.btn-legacy-action {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  border: 1px solid var(--dd-line-strong);
-  background: var(--dd-card-solid);
-  color: white;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  transition: all 0.2s;
-}
-
-.btn-legacy-action:hover {
-  background: rgba(255,255,255,0.05);
-  border-color: var(--accent);
-}
-
+/* Responsive */
 @media (max-width: 1100px) {
-  .marks-grid { grid-template-columns: 1fr; }
+    .marks-grid {
+        grid-template-columns: 1fr;
+    }
 }

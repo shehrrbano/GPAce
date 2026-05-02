@@ -27,7 +27,11 @@ class CalendarManager {
         
         window.addEventListener('storage', (e) => {
             if (e.key && e.key.includes('dailySchedule')) this.render();
+            if (e.key && e.key.includes('alarms')) this.render();
         });
+
+        // Use internal subscription for same-tab updates
+        storageService.subscribe('alarms', () => this.render());
     }
 
     get events() { return this.service.events; }

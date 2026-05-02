@@ -10,7 +10,6 @@
 // Import controllers
 import timerController from './TimerController.js';
 import taskDisplayController from './TaskDisplayController.js';
-import energyController from './EnergyController.js';
 import quoteController from './QuoteController.js';
 
 // Timer title functions - legacy compatibility
@@ -45,22 +44,11 @@ window.hashString = function (str) {
     return taskDisplayController.hashString(str);
 };
 
-// Energy functions
-window.updateEnergyChart = function () {
-    energyController.updateEnergyChart();
-};
-
-window.updateEnergyVisualization = function (level, description) {
-    energyController.updateEnergyVisualization(level, description);
-};
-
-window.showFatigueModal = function () {
-    energyController.showFatigueModal();
-};
-
-window.hideFatigueModal = function () {
-    energyController.hideFatigueModal();
-};
+// Energy functions (Disabled)
+window.updateEnergyChart = () => {};
+window.updateEnergyVisualization = () => {};
+window.showFatigueModal = () => {};
+window.hideFatigueModal = () => {};
 
 // Quote functions
 window.rotateQuote = function (direction) {

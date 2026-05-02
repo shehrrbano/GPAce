@@ -37,9 +37,13 @@ class TimerController {
             timerInterval: null,
             startTime: null,
             isRunning: false,
-            fatigueLogged: false,
-            originalTitle: 'GPAce - Current Task'
+            originalTitle: 'GPAce - Current Task',
+            endTime: null
         };
+
+        // Worker reference
+        this.worker = null;
+        this._initWorker();
 
         // Title update interval reference
         this.titleInterval = null;
@@ -72,6 +76,10 @@ class TimerController {
         this.startTimer = this.startTimer.bind(this);
         this.pauseTimer = this.pauseTimer.bind(this);
         this.resetTimer = this.resetTimer.bind(this);
+        this.handleReset = this.handleReset.bind(this);
+        this.handleToggle = this.handleToggle.bind(this);
+        this.skipSession = this.skipSession.bind(this);
+        this.skipBreak = this.skipBreak.bind(this);
         this.handleTimerComplete = this.handleTimerComplete.bind(this);
 
         // Initialize
@@ -83,12 +91,72 @@ class TimerController {
     }
 
     /**
+     * Initialize the Web Worker for reliable heartbeats
+     * @private
+     */
+    _initWorker() {
+        if (typeof Worker !== 'undefined') {
+            try {
+                // Use absolute path for worker to ensure it works across different pages
+                this.worker = new Worker('/js/timerWorker.js');
+                this.worker.onmessage = (e) => {
+                    if (e.data.type === 'tick') {
+                        this._handleTick();
+                    }
+                };
+                console.log('Timer Worker initialized');
+            } catch (e) {
+                console.error('Failed to initialize Timer Worker:', e);
+            }
+        }
+    }
+
+    /**
+     * Centralized tick handler for both Worker and Interval fallbacks
+     * @private
+     */
+    _handleTick() {
+        if (this.state.isRunning && this.state.endTime) {
+            const now = Date.now();
+            const newTimeLeft = Math.max(0, Math.ceil((this.state.endTime - now) / 1000));
+            
+            // Only update if the second has actually changed
+            if (newTimeLeft !== this.state.timeLeft) {
+                this.state.timeLeft = newTimeLeft;
+                this.ticksSinceLastSave++;
+
+                // Batched save: only save every 10 seconds OR on completion
+                if (this.ticksSinceLastSave >= this.SAVE_INTERVAL || this.state.timeLeft === 0) {
+                    this._saveState();
+                    this.ticksSinceLastSave = 0;
+                }
+
+                this.updateDisplay();
+                this._updateTitleDisplay(); // Specialized title update
+
+                if (this.state.timeLeft <= 0) {
+                    this.handleTimerComplete();
+                }
+            }
+        } else {
+            // Timer is not running, but we still update the title with the real-time clock
+            this._updateTitleDisplay();
+        }
+    }
+
+    /**
      * Initialize the timer controller
      */
     init() {
         this._setupEventListeners();
         this.updateDisplay();
-        this._updateTitleWithCurrentTime();
+        this._updateTitleDisplay();
+        
+        // Ensure heartbeat interval is running even if worker is not available
+        if (!this.state.timerInterval) {
+            this.state.timerInterval = setInterval(() => this._handleTick(), 1000);
+        }
+        
         console.log('TimerController initialized');
         return this;
     }
@@ -124,26 +192,24 @@ class TimerController {
 
         this.state.isRunning = true;
 
-        // Start the countdown interval
-        this.state.timerInterval = setInterval(() => {
-            if (this.state.timeLeft <= 0) {
-                this.handleTimerComplete();
-                return;
-            }
-            this.state.timeLeft--;
-            this.ticksSinceLastSave++;
+        // Set absolute end time
+        this.state.endTime = Date.now() + (this.state.timeLeft * 1000);
 
-            // Batched save: only save every 10 seconds OR on completion
-            if (this.ticksSinceLastSave >= this.SAVE_INTERVAL || this.state.timeLeft === 0) {
-                this._saveState();
-                this.ticksSinceLastSave = 0;
-            }
+        // Start the worker heartbeat
+        if (this.worker) {
+            this.worker.postMessage({ action: 'start' });
+        }
 
-            this.updateDisplay();
-        }, 1000);
+        // Ensure interval is running (init usually handles this)
+        if (!this.state.timerInterval) {
+            this.state.timerInterval = setInterval(() => {
+                this._handleTick();
+            }, 1000);
+        }
 
-        // Start title updates
-        this._startTitleUpdates();
+        // Update display immediately
+        this.updateDisplay();
+        this._updateTitleDisplay();
 
         // Update button UI
         this._updateButtonState('running');
@@ -174,11 +240,12 @@ class TimerController {
             this.stats.pausedTime += Date.now() - this.stats.activeTimerStart;
         }
 
+        // We don't stop the worker or interval anymore because they drive the clock
+        
         // Save state immediately on pause (important for data persistence)
         this._saveState();
         this._updateButtonState('paused');
-        this._stopTitleUpdates();
-        this._updateTitleWithCurrentTime();
+        this._updateTitleDisplay();
         this._showNotification('Timer paused', 'info');
     }
 
@@ -192,32 +259,39 @@ class TimerController {
             this.state.timerInterval = null;
         }
 
-        // Stop any active alarm
-        this._stopAlarm();
-
-        // Save work time before reset
-        if (this.stats.activeTimerStart && this.state.currentState === TIMER_STATES.FOCUS) {
-            const activeTime = Math.floor((Date.now() - this.stats.activeTimerStart - this.stats.pausedTime) / 1000);
-            this.stats.totalWorkTime += activeTime;
-            this._saveStats();
-        }
-
-        // Reset state
-        this.state.isRunning = false;
-        this.state.timeLeft = TIMER_DURATIONS.POMODORO;
-        this.state.currentState = TIMER_STATES.FOCUS;
-        this.state.startTime = null;
-        this.state.fatigueLogged = false;
-        this.stats.activeTimerStart = null;
-        this.stats.pausedTime = 0;
-
+        // We don't stop the worker or interval anymore because they drive the clock
+        
         this.updateDisplay();
         this._updateButtonState('paused');
         // Save state immediately on reset (important for data persistence)
         this._saveState();
-        this._stopTitleUpdates();
-        this._updateTitleWithCurrentTime();
+        this._updateTitleDisplay();
         this._showNotification('Timer reset', 'info');
+    }
+
+    /**
+     * UI Handler for resetting the timer
+     */
+    handleReset() {
+        this.resetTimer();
+    }
+
+    /**
+     * Skip the current session
+     */
+    skipSession() {
+        if (this.state.currentState === TIMER_STATES.FOCUS) {
+            this.startBreak();
+        } else {
+            this.startFocus();
+        }
+    }
+
+    /**
+     * Skip the current break (alias for skipSession)
+     */
+    skipBreak() {
+        this.skipSession();
     }
 
     /**
@@ -262,9 +336,9 @@ class TimerController {
      * Handle timer completion
      */
     handleTimerComplete() {
-        clearInterval(this.state.timerInterval);
-        this.state.timerInterval = null;
-
+        this.state.isRunning = false;
+        // We don't stop the worker or interval anymore because they drive the clock
+        
         // Play notification sound (Alarm loop)
         this._startAlarm();
 
@@ -279,51 +353,14 @@ class TimerController {
             this._saveStats();
 
             this.state.pomodoroCount++;
-
-            // Log current energy level after focus session (if we have one stored)
-            this._logSessionEnergy('Focus session completed');
-
             this.startBreak();
         } else {
-            // Break completed - prompt for new energy level before starting focus
-            // This helps track how refreshed the user feels after break
-            this._promptForEnergyLevel();
             this.startFocus();
         }
 
         this._saveState();
     }
 
-    /**
-     * Log energy level after a session and update chart
-     */
-    _logSessionEnergy(description) {
-        const storedLevel = storageService.get('currentEnergyLevel');
-        if (storedLevel && window.energyTracker) {
-            const level = parseInt(storedLevel);
-            if (level >= 1 && level <= 7) {
-                window.energyTracker.addEnergyLevel(level, description);
-
-                // Update the energy chart
-                if (window.energyController) {
-                    window.energyController.updateEnergyChart();
-                }
-            }
-        }
-    }
-
-    /**
-     * Prompt user for energy level (after break completes)
-     */
-    _promptForEnergyLevel() {
-        // Show fatigue modal if function is available
-        if (typeof window.showFatigueModal === 'function') {
-            // Slight delay to let the break sound play
-            setTimeout(() => {
-                window.showFatigueModal(false); // false = don't auto-start timer
-            }, 1500);
-        }
-    }
 
     /**
      * Update the timer display
@@ -402,13 +439,7 @@ class TimerController {
         if (this.state.isRunning) {
             this.pauseTimer();
         } else {
-            // Check if fatigue prompt is needed
-            const minutes = this.state.timeLeft / 60;
-            if (minutes >= 15 && !this.state.fatigueLogged && typeof window.showFatigueModal === 'function') {
-                window.showFatigueModal(true); // true = auto-start after selection
-            } else {
-                this.startTimer();
-            }
+            this.startTimer();
         }
     }
 
@@ -422,31 +453,30 @@ class TimerController {
     // ==================== Private Methods ====================
 
     /**
-     * Start updating the document title with timer info
+     * Dedicated method to update title based on current state
+     * @private
      */
-    _startTitleUpdates() {
-        this._stopTitleUpdates(); // Clear any existing interval
-
-        const updateTitle = () => {
+    _updateTitleDisplay() {
+        if (this.state.isRunning) {
             const minutes = Math.floor(this.state.timeLeft / 60);
             const seconds = this.state.timeLeft % 60;
             const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             const timerType = this.state.currentState === TIMER_STATES.FOCUS ? 'Focus' : 'Break';
             document.title = `${display} - ${timerType} - GPAce`;
-        };
-
-        updateTitle();
-        this.titleInterval = setInterval(updateTitle, 1000);
+        } else {
+            this._updateTitleWithCurrentTime();
+        }
     }
 
     /**
-     * Stop updating the document title with timer info
+     * Legacy title update methods - now using _updateTitleDisplay
      */
+    _startTitleUpdates() {
+        this._updateTitleDisplay();
+    }
+
     _stopTitleUpdates() {
-        if (this.titleInterval) {
-            clearInterval(this.titleInterval);
-            this.titleInterval = null;
-        }
+        // No-op, managed by _updateTitleDisplay
     }
 
     /**
@@ -456,13 +486,11 @@ class TimerController {
         const now = new Date();
         const hours = now.getHours();
         const minutes = now.getMinutes();
-        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        const seconds = now.getSeconds();
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         document.title = `${formattedTime} - GPAce`;
     }
 
-    /**
-     * Update button states
-     */
     _updateButtonState(state) {
         const startBtn = document.getElementById('startBtn');
         if (!startBtn) return;
@@ -470,9 +498,11 @@ class TimerController {
         if (state === 'running') {
             startBtn.innerHTML = '<i class="bi bi-pause-fill"></i>';
             startBtn.setAttribute('data-state', 'running');
+            startBtn.classList.add('running');
         } else {
             startBtn.innerHTML = '<i class="bi bi-play-fill"></i>';
             startBtn.setAttribute('data-state', 'paused');
+            startBtn.classList.remove('running');
         }
     }
 
@@ -486,27 +516,7 @@ class TimerController {
             startBtn.addEventListener('click', () => {
                 const state = startBtn.getAttribute('data-state');
                 if (state === 'paused') {
-                    // Show fatigue modal if appropriate (long session & not logged)
-                    const minutes = this.state.timeLeft / 60;
-                    if (minutes > 15 && !this.state.fatigueLogged && typeof window.showFatigueModal === 'function') {
-                        // Pass true to auto-start timer after selection
-                        window.showFatigueModal(true);
-                        // Mark as logged to prevent looping behavior if user cancels and clicks again immediately?
-                        // No, let them be prompted again if they cancel. 
-                        // But if they proceed, showFatigueModal -> EnergyController -> window.startTimer() -> this.startTimer().
-                        // So next time (after pause), fatigueLogged is still false unless we set it.
-                        // We should set it when timer starts successfully? or when fatigue is logged?
-                        // Ideally checking if(fatigueLogged) inside startTimer? No, logic is in click handler.
-                        // If auto-start works, it bypasses this handler.
-                        // If they pause and start again, we want to prompt again if long enough?
-                        // Maybe. For now, let's keep it simple.
-
-                        // We mark it true in the EnergyController flow implicitly by the fact that the timer starts.
-                        // But we need to track it here.
-                        // Let's rely on session duration check mainly.
-                    } else {
-                        this.startTimer();
-                    }
+                    this.startTimer();
                 } else if (state === 'running') {
                     this.pauseTimer();
                 }
@@ -560,11 +570,11 @@ class TimerController {
     _setupVisibilityHandler() {
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
-                if (this.state.isRunning) {
-                    this._startTitleUpdates();
-                } else {
-                    this._updateTitleWithCurrentTime();
+                // Force an immediate sync when returning to the tab
+                if (this.state.isRunning && this.state.endTime) {
+                    this._handleTick();
                 }
+                this._updateTitleDisplay();
             }
         });
     }

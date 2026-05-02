@@ -85,14 +85,6 @@ class StudySpacesManager {
             saveSettingsBtn.addEventListener('click', () => this.saveSettings());
         }
 
-        // Sync now button
-        const syncNowBtn = document.getElementById('syncNowBtn');
-        if (syncNowBtn) {
-            syncNowBtn.addEventListener('click', async () => {
-                await this.studySpaceController.forceSync();
-            });
-        }
-
         // Listen for schedule changes to save
         window.addEventListener('scheduleChanged', () => {
             this.saveSettings();

@@ -5,7 +5,7 @@
  * Refactored to use centralized StorageAdapter
  */
 
-import { getStorage, STORAGE_KEYS } from '../services/StorageService.js';
+import { getStorage, STORAGE_KEYS } from './services/StorageService.js';
 
 /**
  * Toggles between light and dark theme

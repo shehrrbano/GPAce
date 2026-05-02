@@ -27,18 +27,27 @@ function updateClock() {
     }
 
     // Update display
-    document.querySelector('.hour').textContent = hours.toString().padStart(2, '0');
-    document.querySelector('.minute').textContent = minutes.toString().padStart(2, '0');
-    document.querySelector('.second').textContent = seconds.toString().padStart(2, '0');
-    document.querySelector('.am-pm').textContent = is24HourFormat ? '' : ampm;
+    const hourEl = document.querySelector('.hour');
+    const minuteEl = document.querySelector('.minute');
+    const secondEl = document.querySelector('.second');
+    const ampmEl = document.querySelector('.am-pm');
+
+    if (hourEl) hourEl.textContent = hours.toString().padStart(2, '0');
+    if (minuteEl) minuteEl.textContent = minutes.toString().padStart(2, '0');
+    if (secondEl) secondEl.textContent = seconds.toString().padStart(2, '0');
+    if (ampmEl) ampmEl.textContent = is24HourFormat ? '' : ampm;
 
     // Update date
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
-    document.querySelector('.month').textContent = months[now.getMonth()];
-    document.querySelector('.day').textContent = days[now.getDay()];
-    document.querySelector('.date').textContent = now.getDate().toString().padStart(2, '0');
+    const monthEl = document.querySelector('.month');
+    const dayEl = document.querySelector('.day');
+    const dateEl = document.querySelector('.date');
+
+    if (monthEl) monthEl.textContent = months[now.getMonth()];
+    if (dayEl) dayEl.textContent = days[now.getDay()];
+    if (dateEl) dateEl.textContent = now.getDate().toString().padStart(2, '0');
 }
 
 /**
@@ -46,6 +55,7 @@ function updateClock() {
  */
 function initializeTimeFormatToggle() {
     const timeFormatToggle = document.querySelector('.time-format-toggle');
+    if (!timeFormatToggle) return;
     
     timeFormatToggle.addEventListener('click', () => {
         is24HourFormat = !is24HourFormat;
@@ -60,3 +70,4 @@ window.clockDisplay = {
     initializeTimeFormatToggle,
     updateClock
 };
+

@@ -243,15 +243,33 @@ class WorkspaceAttachments {
                 // Wait for auth if not ready
                 if (!gDrive.isAuthorized) {
                     try {
-                        console.log('[Workspace] Drive not authorized, waiting for handshake...');
-                        await gDrive.authorize(true); // Attempt silent auth first
+                        // If silent auth already failed in this session, don't try again automatically
+                        if (gDrive.silentAuthFailed) {
+                            throw new Error('interaction_required');
+                        }
+
+                        console.log('[Workspace] Drive not authorized, attempting silent handshake...');
+                        const token = await gDrive.authorize(true); // Attempt silent auth first
+                        
+                        if (!token) {
+                            throw new Error('interaction_required');
+                        }
                     } catch (authErr) {
-                        console.warn('[Workspace] Silent auth failed, user action required:', authErr);
-                        driveLoadingEl.innerHTML = '<button class="btn btn-sm btn-outline-primary" id="reconnectDriveBtn">Reconnect Google Drive</button>';
+                        console.warn('[Workspace] Silent auth not possible, user action required');
+                        driveLoadingEl.innerHTML = `
+                            <div class="drive-reconnect-box">
+                                <p class="smaller muted mb-2">Google Drive access required</p>
+                                <button class="btn btn-sm btn-outline-primary" id="reconnectDriveBtn">Connect Drive</button>
+                            </div>
+                        `;
                         driveLoadingEl.querySelector('#reconnectDriveBtn').addEventListener('click', async () => {
                             driveLoadingEl.innerHTML = '<i class="bi bi-cloud-arrow-down"></i> Connecting...';
-                            await gDrive.authorize();
-                            this.loadTaskAttachments(taskId); // Reload
+                            const token = await gDrive.authorize();
+                            if (token) {
+                                this.loadTaskAttachments(taskId); // Reload
+                            } else {
+                                this.showNoAttachmentsMessage('Drive connection failed');
+                            }
                         });
                         return; // Stop here if auth fails
                     }
@@ -285,6 +303,14 @@ class WorkspaceAttachments {
                 } else if (!hasFlashcards && (!taskObject || (!taskObject.subtasks?.length && !taskObject.relevantLinks?.length))) {
                     this.showNoAttachmentsMessage('No files found for this task');
                 }
+
+                // Update badge count
+                const totalCount = (taskObject?.subtasks?.length || 0) + 
+                                   (taskObject?.relevantLinks?.length || 0) + 
+                                   (this.attachments?.length || 0) + 
+                                   (hasFlashcards ? 1 : 0);
+                this.updateAttachmentBadge(totalCount);
+
             } else if (!hasFlashcards && (!taskObject || (!taskObject.subtasks?.length && !taskObject.relevantLinks?.length))) {
                 throw new Error('Google Drive API not available');
             }
@@ -422,6 +448,19 @@ class WorkspaceAttachments {
                 <p>${message}</p>
             </div>
         `;
+        this.updateAttachmentBadge(0);
+    }
+
+    updateAttachmentBadge(count) {
+        const badge = document.getElementById('attachmentCount');
+        if (badge) {
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
     }
 
     openFile(file) {

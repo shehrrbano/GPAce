@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    { "id": "ui_workspace_toolbar", "label": "Workspace Toolbar", "type": "UI_Component", "metadata": { "file": "workspace.html" } },
+    { "id": "ui_study_spaces", "label": "Study Spaces UI", "type": "UI_Component", "metadata": { "file": "js/studySpacesManager.js" } },
+    { "id": "ui_semester_manager", "label": "Semester Manager UI", "type": "UI_Component", "metadata": { "file": "js/semester-management.js" } },
+    { "id": "ui_priority_list", "label": "Priority List UI", "type": "UI_Component", "metadata": { "file": "js/priority-list-utils.js" } },
+    { "id": "btn_sync_now", "label": "Sync Now Button", "type": "Button", "metadata": { "id": "syncNowBtn" } },
+    { "id": "btn_force_sync_priority", "label": "Force Sync Priority", "type": "Button", "metadata": { "text": "Force Sync" } },
+    { "id": "fn_force_sync_study", "label": "forceSyncStudySpaces", "type": "Logic", "metadata": { "file": "js/studySpacesFirestore.js" } },
+    { "id": "fn_force_sync_semester", "label": "forceSyncSemester", "type": "Logic", "metadata": { "file": "js/semester-management.js" } },
+    { "id": "fn_force_sync_priority", "label": "forceSyncPriorityTasks", "type": "Logic", "metadata": { "file": "js/priority-sync-fix.js" } }
+  ],
+  "edges": [
+    { "source": "ui_study_spaces", "target": "btn_sync_now", "type": "CONTAINS" },
+    { "source": "btn_sync_now", "target": "fn_force_sync_study", "type": "TRIGGERS" },
+    { "source": "ui_semester_manager", "target": "fn_force_sync_semester", "type": "TRIGGERS" },
+    { "source": "ui_priority_list", "target": "btn_force_sync_priority", "type": "CONTAINS" },
+    { "source": "btn_force_sync_priority", "target": "fn_force_sync_priority", "type": "TRIGGERS" }
+  ],
+  "hyperedges": [
+    {
+      "id": "he_redundant_sync",
+      "label": "Redundant Force Sync Implementation",
+      "members": ["fn_force_sync_study", "fn_force_sync_semester", "fn_force_sync_priority"],
+      "type": "REDUNDANCY_PATTERN",
+      "description": "Manual force sync logic duplicated across domain managers instead of unified sync service."
+    }
+  ]
+}

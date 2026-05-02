@@ -49,7 +49,43 @@ class CalendarService {
 
     getEventsForDate(date) {
         const dateStr = date.toISOString().split('T')[0];
-        return this.events.filter(e => e.date === dateStr).sort((a, b) => {
+        
+        // Fetch regular events
+        const regularEvents = this.events.filter(e => e.date === dateStr);
+        
+        // Fetch alarms from storage
+        const alarms = storageService.get('alarms', []);
+        const alarmEvents = alarms
+            .filter(a => a.enabled)
+            .map(a => {
+                // Convert 12h AM/PM to 24h for the calendar
+                let h = a.hour;
+                if (a.ampm === 'PM' && h < 12) h += 12;
+                if (a.ampm === 'AM' && h === 12) h = 0;
+                
+                const startTime = `${String(h).padStart(2, '0')}:${String(a.minute).padStart(2, '0')}`;
+                
+                // For visualization, alarms have a 15-minute duration
+                let endH = h;
+                let endM = a.minute + 15;
+                if (endM >= 60) {
+                    endM -= 60;
+                    endH = (endH + 1) % 24;
+                }
+                const endTime = `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
+
+                return {
+                    id: `alarm-${a.id}`,
+                    title: a.label || 'Alarm',
+                    type: 'alarm',
+                    startTime,
+                    endTime,
+                    date: dateStr,
+                    isAlarm: true
+                };
+            });
+
+        return [...regularEvents, ...alarmEvents].sort((a, b) => {
             return this.timeToMinutes(a.startTime) - this.timeToMinutes(b.startTime);
         });
     }

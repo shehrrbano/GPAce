@@ -9,7 +9,7 @@
  */
 
 import sanitizer from './utils/Sanitizer.js';
-import { getStorage } from '../services/StorageService.js';
+import { getStorage } from './services/StorageService.js';
 import { getFirestore, doc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { computeObjectHash } from './utils/HashUtils.js';
 
@@ -165,28 +165,46 @@ async function ensureFirestoreFunctions() {
  */
 async function init() {
     try {
-        // Wait for auth
-        await waitForAuth();
-
-        // Ensure Firestore is ready
-        await ensureFirestoreFunctions();
-
-        // Load initial data
-        await loadSubjects();
-
-        // Set up event delegation
-        setupEventDelegation();
-
-        // Set up auth state listener
-        setupAuthStateListener();
-
-        // If there's a subject selected, load it
-        const selector = document.getElementById('subjectSelector');
-        if (selector && selector.value) {
-            await handleSubjectChange();
+        // Initial setup - Theme and skeletons
+        initTheme();
+        
+        // Step 1: Immediate render from Local Storage (Instant Feel)
+        const storage = getStorage();
+        const localSubjects = storage.get('academicSubjects', []);
+        if (localSubjects && localSubjects.length > 0) {
+            console.log('[SubjectMarks] Rendering from local cache...');
+            state.subjects = localSubjects;
+            renderSubjectList();
         }
 
-        console.log('[SubjectMarks] Initialization complete');
+        // Step 2: Background hydration (Firestore/Auth)
+        (async () => {
+            console.log('[SubjectMarks] Starting background hydration...');
+            
+            // Wait for auth and firestore functions in parallel
+            await Promise.all([
+                waitForAuth(),
+                ensureFirestoreFunctions()
+            ]);
+
+            // Load fresh subjects from Firestore
+            await loadSubjects();
+
+            // Set up event delegation (only once)
+            setupEventDelegation();
+
+            // Set up auth state listener
+            setupAuthStateListener();
+
+            // If there's a subject selected, load it
+            const selector = document.getElementById('subjectSelector');
+            if (selector && selector.value) {
+                await handleSubjectChange();
+            }
+
+            console.log('[SubjectMarks] Background initialization complete');
+        })();
+
     } catch (error) {
         console.error('[SubjectMarks] Initialization error:', error);
     }
@@ -212,7 +230,14 @@ function setupEventDelegation() {
     document.getElementById('saveWeightagesBtn')?.addEventListener('click', saveWeightages, { signal });
 
     // Add mark button
-    document.getElementById('addMarkBtn')?.addEventListener('click', addMark, { signal });
+    const addMarkBtn = document.getElementById('addMarkBtn');
+    if (addMarkBtn) {
+        addMarkBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            addMark();
+        }, { signal });
+    }
 
     // Weightage inputs
     document.querySelectorAll('.weightage-input').forEach(input => {
@@ -346,46 +371,52 @@ function initTheme() {
 async function loadSubjects() {
     const storage = getStorage();
 
+    // 1. Return current state if we already have data (local was loaded in init)
+    if (state.subjects.length > 0 && !window.auth?.currentUser) {
+        return state.subjects;
+    }
+
     try {
         if (!window.auth?.currentUser) {
-            console.log('[SubjectMarks] User not signed in');
-            return [];
+            console.log('[SubjectMarks] User not signed in, using local only');
+            return state.subjects;
         }
 
+        console.log('[SubjectMarks] Fetching fresh subjects from Firestore...');
         let loadedSubjects = null;
-        let retries = FIRESTORE_MAX_RETRIES;
-
-        while (retries > 0 && !loadedSubjects) {
-            try {
-                loadedSubjects = await window.loadSubjectsFromFirestore();
-                if (loadedSubjects && loadedSubjects.length > 0) {
+        
+        try {
+            loadedSubjects = await window.loadSubjectsFromFirestore();
+            if (loadedSubjects && loadedSubjects.length > 0) {
+                // Check if data actually changed before re-rendering
+                const currentHash = computeObjectHash(state.subjects);
+                const newHash = computeObjectHash(loadedSubjects);
+                
+                if (currentHash !== newHash) {
+                    console.log('[SubjectMarks] New subjects data received, updating UI');
                     storage.set('academicSubjects', loadedSubjects);
-                    break;
+                    state.subjects = loadedSubjects;
+                    renderSubjectList();
+                } else {
+                    console.log('[SubjectMarks] Subjects data identical to cache');
                 }
-            } catch (error) {
-                console.warn(`[SubjectMarks] Firestore load failed, ${retries - 1} retries left`);
-                retries--;
-                if (retries === 0) throw error;
-                await new Promise(resolve => setTimeout(resolve, FIRESTORE_RETRY_DELAY_MS));
             }
+        } catch (error) {
+            console.warn('[SubjectMarks] Firestore load failed, falling back to cache');
         }
 
-        if (!loadedSubjects || loadedSubjects.length === 0) {
-            console.warn('[SubjectMarks] Falling back to SemesterService/storage');
+        // Final fallback to SemesterService if still empty
+        if (state.subjects.length === 0) {
             if (window.SemesterService && window.SemesterService.initialized) {
-                loadedSubjects = window.SemesterService.getCurrentSubjects();
-            } else {
-                loadedSubjects = storage.get('academicSubjects', []);
+                state.subjects = window.SemesterService.getCurrentSubjects();
+                renderSubjectList();
             }
         }
-
-        state.subjects = loadedSubjects;
-        updateSubjectSelector();
 
         return state.subjects;
     } catch (error) {
         console.error('[SubjectMarks] Error loading subjects:', error);
-        return [];
+        return state.subjects;
     }
 }
 
@@ -409,13 +440,23 @@ function renderSubjectList() {
         const isActive = subject.tag === state.currentSubjectTag;
         const perfo = Math.round(Number(subject.academicPerformance) || 0);
 
-        const card = document.createElement('button');
+        const card = document.createElement('div');
         card.className = `subject-card ${isActive ? 'active' : ''}`;
         card.dataset.tag = subject.tag;
         card.innerHTML = `
-            <span class="subject-name">${escapeHtml(subject.name)} ${subject.creditHours} CH</span>
-            <span class="subject-stats">View Details ${perfo}%</span>
+            <span class="subject-name">${escapeHtml(subject.name)}</span>
+            <div class="subject-stats">
+                <span>${subject.creditHours} CH</span>
+                <span>${perfo}%</span>
+            </div>
         `;
+        
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSubjectSelect(subject.tag);
+        });
+
         container.appendChild(card);
     });
 }
@@ -899,13 +940,15 @@ function displayCategoryContributions(subjectTag) {
         const categoryName = escapeHtml(category.charAt(0).toUpperCase() + category.slice(1));
 
         div.innerHTML = `
-            <div class="d-flex justify-content-between">
-                <span>${categoryName} (${weight}%)</span>
-                <span>${hasCategoryMarks ? performance.toFixed(1) + '%' : 'No marks'}</span>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="weightage-label">${categoryName} <small class="text-muted">(${weight}%)</small></span>
+                <span class="fw-bold" style="color: ${hasCategoryMarks ? 'var(--success-color)' : 'var(--marks-text-dim)'}">
+                    ${hasCategoryMarks ? performance.toFixed(1) + '%' : 'N/A'}
+                </span>
             </div>
-            <div class="progress" role="progressbar" aria-label="${categoryName} performance">
-                <div class="progress-bar ${hasCategoryMarks ? '' : 'bg-secondary'}"
-                     style="width: ${hasCategoryMarks ? performance + '%' : '100%'}"
+            <div class="progress" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                <div class="progress-bar"
+                     style="width: ${hasCategoryMarks ? performance + '%' : '0%'}; background: var(--marks-accent); transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"
                      aria-valuenow="${hasCategoryMarks ? performance : 0}"
                      aria-valuemin="0"
                      aria-valuemax="100"></div>
@@ -929,64 +972,47 @@ function displayExistingMarks(subjectTag) {
     const subjectMarks = state.marks[subjectTag] || {};
     let hasAnyMarks = false;
 
-    // Build HTML with legacy table structure
-    let html = `
-        <table class="subjects-table-legacy">
-            <thead>
-                <tr>
-                    <th style="width: 30%;">CATEGORY</th>
-                    <th style="width: 30%;">TITLE</th>
-                    <th style="width: 25%;">SCORE</th>
-                    <th style="width: 15%;"></th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
+    // Build modern history list
+    let html = '<div class="history-list">';
 
-    for (const [category, marksList] of Object.entries(subjectMarks)) {
-        if (category === '_manualPerformance') continue;
-
+    const categoryOrder = ['assignment', 'quiz', 'midterm', 'final', 'revision'];
+    
+    categoryOrder.forEach(category => {
+        const marksList = subjectMarks[category];
         if (Array.isArray(marksList) && marksList.length > 0) {
             hasAnyMarks = true;
             const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
 
             marksList.forEach((mark, index) => {
+                const percentage = Math.round((mark.obtained / mark.total) * 100);
                 html += `
-                    <tr>
-                        <td style="font-size: 12px; color: #888;">${escapeHtml(categoryName)}</td>
-                        <td style="font-weight: 600;">${escapeHtml(mark.title || categoryName)}</td>
-                        <td style="font-weight: 700; color: #00ff88;">${mark.obtained} / ${mark.total}</td>
-                        <td style="text-align: right;">
+                    <div class="mark-entry-item">
+                        <div class="mark-info">
+                            <span class="mark-entry-title">${escapeHtml(mark.title || (categoryName + ' ' + (index + 1)))}</span>
+                            <span class="mark-entry-meta">${escapeHtml(categoryName)} • ${mark.obtained} / ${mark.total}</span>
+                        </div>
+                        <div class="mark-values">
+                            <span class="mark-percentage">${percentage}%</span>
                             <button type="button" 
+                                    class="btn-delete-mark"
                                     data-action="delete-mark"
                                     data-category="${escapeHtml(category)}"
                                     data-index="${index}"
-                                    style="background: none; border: none; color: #ff4b5c; cursor: pointer; font-size: 14px;">
+                                    title="Delete Entry">
                                 <i class="bi bi-trash"></i>
                             </button>
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
                 `;
             });
         }
-    }
+    });
 
     if (!hasAnyMarks) {
-        html += '<tr><td colspan="4" style="text-align: center; color: #666; padding: 20px;">No marks recorded yet.</td></tr>';
+        html += '<div class="text-center p-4 text-muted">No marks recorded yet. Add your first entry above.</div>';
     }
 
-    html += `
-            </tbody>
-        </table>
-        ${hasAnyMarks ? `
-            <div style="margin-top: 20px; text-align: right;">
-                <button class="btn-legacy-action" data-action="delete-all-marks" style="color: #ff4b5c; border-color: rgba(255,75,92,0.3); margin-left: auto;">
-                    <i class="bi bi-trash"></i> Clear All History
-                </button>
-            </div>
-        ` : ''}
-    `;
-
+    html += '</div>';
     container.innerHTML = html;
 }
 

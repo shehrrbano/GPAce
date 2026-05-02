@@ -13,16 +13,27 @@ import {
 import { firebaseConfig, getOrCreateFirebaseApp } from './firebaseConfig.js';
 import { storageService } from './services/StorageService.js'; // Import shared config and init function
 
-// Get or create the Firebase app instance safely
-const app = await getOrCreateFirebaseApp(initializeApp);
+// Initialize Firebase Auth asynchronously without blocking the module graph
+let auth = null;
+const authReady = (async () => {
+    try {
+        const app = await getOrCreateFirebaseApp(initializeApp);
+        auth = app ? getAuth(app) : null;
+        
+        if (auth) {
+            window.auth = auth;
+            console.log('[Auth] Firebase Auth instance ready');
+        } else {
+            console.error("Firebase Auth could not be initialized because the Firebase App instance is not available.");
+        }
+        return auth;
+    } catch (error) {
+        console.error('[Auth] Failed to initialize Firebase App:', error);
+        return null;
+    }
+})();
 
-// Get Auth instance only if app was successfully initialized
-export const auth = app ? getAuth(app) : null;
-
-// Log error if auth couldn't be initialized
-if (!auth) {
-    console.error("Firebase Auth could not be initialized because the Firebase App instance is not available.");
-}
+export { auth, authReady };
 const provider = new GoogleAuthProvider();
 
 // --- MODIFICATION START ---
@@ -106,6 +117,7 @@ export async function handleSignOut() {
 
 // Listen for auth state changes
 export async function initializeAuth() {
+    await authReady;
     if (!auth) return;
 
     try {
@@ -242,8 +254,9 @@ function updateUIForSignedOut() {
 
 
 // Automatically initialize auth when this script is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('🔒 Initializing Firebase authentication...');
+    await authReady;
     initializeAuth();
 
     // REMOVED: Pending firestore init check - DataInitializationService handles this now

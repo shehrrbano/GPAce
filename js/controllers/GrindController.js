@@ -117,4 +117,4 @@ export default grindController;
 // Register with globals for any remaining legacy needs
 globals.register('GrindController', grindController, { module: 'GrindController' });
 
-document.addEventListener('DOMContentLoaded', () => grindController.init());
+document.addEventListener('DOMContentLoaded', () => // grindController.init());

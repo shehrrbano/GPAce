@@ -1,539 +1,391 @@
-/* Refactored Side Drawer CSS based on modern best practices */
+/**
+ * Side Drawer Styles - Grind Mode Aesthetic
+ * Unified with the high-contrast, cyber/bento design language.
+ */
 
-/* Rule 1: Use max-width */
-/* Rule 2: Use rem for scalable typography & sizing */
-/* Rule 3: Use gap instead of margins in flex/grid */
-/* Rule 4: Use translate instead of negative margins */
-/* Rule 5: Use Logical Properties */
-/* Rule 6: Use :has() for parent-based styling */
-/* Rule 7: Use clamp() for responsive typography */
-/* Rule 8: Use flex: 1 instead of fixed widths in Flexbox */
-/* Rule 9: Use aspect-ratio */
-/* Rule 10: Use color-mix() for dynamic theming */
-
-/* Assuming :root variables from previous context are available */
-/* :root {
-    --primary-color: #fe2c55;
-    --card-bg: #1e1e1e;
-    --hover-bg: #2d2d2d;
-    --text-color: #ffffff;
-    --border-thin: 0.0625rem;
-    --border-medium: 0.125rem;
-} */
-
-/* Main side drawer container - slides in from right */
+/* ─── Drawer Container ─── */
 .side-drawer {
     position: fixed;
-    /* Rule 5 (logical), Rule 2 (rem) */
-    inset-block: 0; /* inset-block-start: 0; inset-block-end: 0; */
-    inset-inline-start: auto;
-    inset-inline-end: -18.75rem; /* -300px */
-    /* Rule 1 (max-width), Rule 2 (rem) */
-    max-width: 18.75rem; /* 300px */
-    width: 90%; /* Allow shrinking slightly on very narrow screens */
+    top: 0;
+    right: 0;
+    width: 380px;
+    max-width: 100vw;
     height: 100vh;
-    background: var(--card-bg);
-    /* Rule 2 (rem) - Note: Negative horizontal offset might not be ideal with logical props */
-    box-shadow: -0.125rem 0 0.3125rem rgba(0, 0, 0, 0.2); /* -2px 0 5px */
-    /* Rule 5 (logical) */
-    transition: inset-inline-end 0.3s ease;
-    z-index: 1000;
-    /* Apply gradient border to left side only */
-    /* Rule 5 (logical), Rule 2 (rem) */
-    border-inline-start-width: 0.1875rem; /* 3px */
-    border-style: solid;
-    border-image: linear-gradient(to bottom, var(--primary-color), transparent) 1;
+    z-index: 2000;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(100%);
 }
 
-/* Class added when drawer is opened */
 .side-drawer.open {
-    /* Rule 5 (logical), Rule 2 (rem) */
-    inset-inline-end: 0;
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
 }
 
-/* Container for drawer content with flex column layout */
+/* Ensure content is above overlay */
+.side-drawer.open .drawer-content {
+    z-index: 2002;
+}
+
+/* ─── Backdrop Overlay ─── */
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5); /* Slightly darker for better contrast */
+    backdrop-filter: blur(4px); /* Sharp but effective backdrop */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s;
+    z-index: 2001; /* Below content but above page */
+    pointer-events: auto; /* Allow overlay click to close */
+}
+
+.side-drawer.open ~ .drawer-overlay,
+.side-drawer.open .drawer-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ─── Drawer Content ─── */
 .drawer-content {
-    /* Rule 2 (rem) */
-    padding: 1.25rem; /* 20px */
+    position: relative;
+    width: 100%;
     height: 100%;
+    background: 
+        radial-gradient(circle at 100% 0%, oklch(0.35 0.12 var(--accent-hue) / 0.15), transparent 40%),
+        linear-gradient(180deg, rgba(17, 24, 39, 0.98), rgba(10, 15, 28, 0.99));
+    backdrop-filter: blur(12px); /* Premium glass effect for content background */
+    border-inline-start: 1px solid var(--line);
     display: flex;
     flex-direction: column;
-    /* Improve scrollbar handling */
-    overflow-y: auto;
-    /* Rule 3 (gap), Rule 2 (rem) */
-    gap: 1.5rem; /* 24px */
+    padding: 0;
+    box-shadow: -20px 0 50px rgba(0, 0, 0, 0.7);
+    z-index: 2002; /* Explicitly above overlay */
+    pointer-events: auto;
 }
 
-/* Custom scrollbar styling (optional) */
-.drawer-content::-webkit-scrollbar {
-    width: 0.5rem; /* Rule 2 */
-}
-.drawer-content::-webkit-scrollbar-track {
-    background: transparent;
-}
-.drawer-content::-webkit-scrollbar-thumb {
-    background: var(--hover-bg);
-    border-radius: 0.25rem; /* Rule 2 */
-}
-.drawer-content::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in srgb, var(--hover-bg) 70%, var(--text-color) 30%); /* Rule 10 */
-}
-
-
-/* Close button styling */
-.drawer-close {
-    position: absolute;
-    /* Rule 5 (logical), Rule 2 (rem) */
-    inset-block-start: 0.625rem; /* 10px */
-    inset-inline-end: 0.625rem; /* 10px */
-    background: none;
-    border: none;
-    color: var(--text-color);
-    /* Rule 2 (rem) */
-    font-size: 1.5rem; /* 24px */
-    cursor: pointer;
-    /* Rule 2 (rem) */
-    padding: 0.3125rem 0.625rem; /* 5px 10px */
-    border-radius: 0.25rem; /* 4px */
-    line-height: 1; /* Ensure consistent height */
-    transition: background-color 0.2s ease; /* Added transition */
-}
-
-/* Hover effect for close button */
-.drawer-close:hover {
-    background: var(--hover-bg);
-}
-
-/* Header section styling */
+/* ─── Header ─── */
 .drawer-header {
-    /* Rule 5 (logical), Rule 2 (rem) */
-    margin-block-end: 1.875rem; /* 30px */
-    padding-block-start: 0.625rem; /* 10px */
+    padding: 32px 24px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
-/* Header text styling */
-.drawer-header h3 {
-    margin: 0;
-    color: var(--text-color);
-    /* Rule 7 (clamp), Rule 2 (rem) */
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
-    /* Add dynamic pseudo-element with attr() */
-    position: relative;
-}
-.drawer-header h3::after {
-    content: attr(data-subtitle);
+.header-main .kicker {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent-light);
+    font-weight: 700;
     display: block;
-    /* Rule 2 (rem) - Using em for relative sizing */
-    font-size: 0.8em;
-    opacity: 0.7;
-    font-weight: normal;
-    margin-block-start: 0.25rem; /* Rule 5, Rule 2 */
+    margin-bottom: 4px;
 }
 
-/* Theme selection section container */
-.theme-section {
-    /* Rule 5 (logical), Rule 2 (rem) */
-    margin-block-end: 1.875rem; /* 30px */
-    padding: 0.9375rem; /* 15px */
-    background: var(--hover-bg);
-    border-radius: 0.5rem; /* 8px */
-    /* Better shadow for section */
-    /* Rule 2 (rem) */
-    filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.1)); /* 0 2px 4px */
+.header-main h3 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: white;
+    margin: 0;
 }
 
-/* Theme section heading */
-.theme-section h4 {
-    /* Rule 5 (logical), Rule 2 (rem) */
-    margin-block-start: 0;
-    margin-inline: 0;
-    margin-block-end: 0.9375rem; /* 15px */
-    color: var(--text-color);
-    font-size: 1.1rem; /* Rule 2 */
-}
-
-/* Grid container for theme buttons */
-.theme-buttons {
+.drawer-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--line);
+    color: var(--text-2);
     display: grid;
-    /* Rule 2 (rem) */
-    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); /* 120px */
-    /* Rule 3 (gap), Rule 2 (rem) */
-    gap: 0.625rem; /* 10px */
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-/* Base theme button styling */
-.theme-btn {
-    /* Rule 2 (rem) */
-    padding: 0.625rem; /* 10px */
-    border: none;
-    border-radius: 0.375rem; /* 6px */
+.drawer-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: rotate(90deg);
+}
+
+/* ─── Body ─── */
+.drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.drawer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.section-kicker {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding-left: 4px;
+}
+
+/* ─── User Profile Card ─── */
+.profile-section {
+    margin-top: 8px;
+}
+
+.profile-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 48px;
+    height: 48px;
+}
+
+.user-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--line-strong);
+    position: relative;
+    z-index: 2;
+}
+
+.avatar-glow {
+    position: absolute;
+    inset: -4px;
+    background: var(--accent);
+    filter: blur(8px);
+    opacity: 0.3;
+    border-radius: 12px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info .user-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+}
+
+.profile-info .user-status {
+    font-size: 11px;
+    color: var(--accent-light);
+    font-weight: 600;
+}
+
+.btn-logout {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    display: grid;
+    place-items: center;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: scale(1.05);
+}
+
+/* ─── Auth Button ─── */
+.btn-auth {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Rule 3 (gap), Rule 2 (rem) */
-    gap: 0.5rem; /* 8px */
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -6px oklch(0.55 0.20 var(--accent-hue) / 0.5);
     transition: all 0.2s ease;
-    font-size: 0.9rem; /* Rule 2 */
 }
 
-/* Light theme button specific styles */
-.theme-btn.light-theme {
-    /* Rule 10 (color-mix) */
-    background: color-mix(in srgb, #f8f9fa 90%, #000);
-    color: #212529;
+.btn-auth:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -6px oklch(0.55 0.20 var(--accent-hue) / 0.7);
 }
 
-/* Dark theme button specific styles */
-.theme-btn.dark-theme {
-    /* Rule 10 (color-mix) */
-    background: color-mix(in srgb, #212529 90%, #fff);
-    color: #f8f9fa;
+/* ─── Theme Segmented Control ─── */
+.theme-control {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 4px;
+    position: relative;
 }
 
-/* Hover effect for theme buttons */
-.theme-btn:hover {
-    /* Rule 4 (translate), Rule 2 (rem) */
-    transform: translateY(-0.125rem); /* -2px */
-    filter: brightness(1.1); /* Add subtle brightness */
+.theme-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    z-index: 2;
 }
 
-/* Active state for selected theme */
+.theme-btn {
+    background: transparent;
+    border: none;
+    padding: 10px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 3;
+}
+
 .theme-btn.active {
-    /* Rule 2 (rem) */
-    box-shadow: 0 0 0 var(--border-medium) var(--primary-color); /* 2px */
-    outline: var(--border-thin) solid transparent; /* Prevent overlap issues */
+    color: white;
 }
 
-/* Navigation links container */
+.theme-btn i {
+    font-size: 16px;
+}
+
+.theme-pill {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
+}
+
+/* Handle pill position based on active theme */
+.side-drawer:not(.light-theme-active) .theme-pill {
+    transform: translateX(100%);
+}
+.light-theme-active .theme-pill {
+    transform: translateX(0);
+}
+
+/* ─── Navigation Links ─── */
 .drawer-links {
     display: flex;
     flex-direction: column;
-    /* Rule 3 (gap), Rule 2 (rem) */
-    gap: 0.625rem; /* 10px */
+    gap: 8px;
 }
 
-/* User profile section (hidden by default) */
-.user-profile {
-    /* Rule 2 (rem) */
-    padding: 0.9375rem; /* 15px */
-    /* Rule 5 (logical), Rule 2 (rem) */
-    margin-block-end: 1.25rem; /* 20px */
-    background: var(--hover-bg);
-    border-radius: 0.5rem; /* 8px */
-    display: none; /* JS toggles this */
-}
-.user-profile.active { /* Add .active class when shown */
-    display: block;
-}
-
-/* Authentication button styling */
-.auth-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* Rule 3 (gap), Rule 2 (rem) */
-    gap: 0.5rem; /* 8px */
-    /* Rule 2 (rem) */
-    padding: 0.75rem; /* 12px */
-    /* Rule 5 (logical), Rule 2 (rem) */
-    margin-block-end: 1.25rem; /* 20px */
-    border: none;
-    border-radius: 0.5rem; /* 8px */
-    background: var(--primary-color);
-    color: white;
-    cursor: pointer;
-    /* Rule 2 (rem) */
-    font-size: 1rem; /* 16px */
-    transition: all 0.3s ease;
-    /* Add animated conic gradient border */
-    position: relative;
-    z-index: 1;
-    overflow: hidden; /* Contain pseudo-element */
-}
-
-.auth-button::before {
-    content: '';
-    position: absolute;
-    /* Rule 5 (logical), Rule 2 (rem) */
-    inset: -0.1875rem; /* -3px */
-    z-index: -1;
-    /* Rule 2 (rem) */
-    border-radius: 0.625rem; /* 10px (slightly larger than button's 8px) */
-    background: conic-gradient(
-        from var(--rotation), /* Animate 'from' */
-        var(--secondary-color, #25f4ee), /* Use secondary color */
-        var(--primary-color),
-        var(--secondary-color, #25f4ee)
-    );
-    --rotation: 0deg;
-    /* Rule 4 (translate) - Rotation is handled by animation */
-    animation: rotate-border 3s linear infinite;
-}
-
-@keyframes rotate-border {
-    to { --rotation: 360deg; }
-}
-
-/* Hover effect for auth button */
-.auth-button:hover {
-    /* Rule 4 (translate), Rule 2 (rem) */
-    transform: translateY(-0.125rem); /* -2px */
-    /* Rule 2 (rem) */
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2); /* 4px 8px */
-}
-
-/* User avatar in auth button */
-.auth-button .user-avatar {
-    /* Rule 2 (rem) */
-    width: 1.5rem; /* 24px */
-    /* Rule 9 (aspect-ratio) */
-    aspect-ratio: 1 / 1;
-    /* Use clip-path for unique image shape */
-    clip-path: circle(50%);
-    object-fit: cover;
-    background-color: var(--hover-bg); /* Added fallback background */
-}
-
-/* Username text in auth button with ellipsis */
-.auth-button .user-name {
-    /* Rule 1 (max-width), Rule 2 (rem) */
-    max-width: 9.375rem; /* 150px */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-grow: 1; /* Allow text to take available space */
-    text-align: start; /* Rule 5 */
-}
-
-/* Logout button in side drawer */
-.auth-button .logout-btn {
-    /* Rule 2 (rem) */
-    padding: 0.375rem 0.75rem; /* 6px 12px */
-    border-radius: 0.25rem; /* 4px */
-    background: rgba(255, 255, 255, 0.15); /* Slightly transparent white */
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    /* Rule 2 (rem) */
-    font-size: 0.875rem; /* 14px */
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    /* Glass effect */
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    /* Rule 5 (logical), Rule 2 (rem) */
-    margin-inline-start: auto; /* Push to right side */
-}
-
-.auth-button .logout-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    /* Rule 4 (translate), Rule 2 (rem) */
-    transform: translateY(-0.0625rem); /* -1px */
-    /* Rule 2 (rem) */
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1); /* 2px 4px */
-}
-
-/* Navigation link styling */
 .drawer-link {
     display: flex;
     align-items: center;
-    /* Rule 3 (gap), Rule 2 (rem) */
-    gap: 0.625rem; /* 10px */
-    /* Rule 2 (rem) */
-    padding: 0.75rem; /* 12px */
-    color: var(--text-color);
-    text-decoration: none;
-    border-radius: 0.375rem; /* 6px */
-    transition: background 0.2s ease, color 0.2s ease; /* Added color transition */
-    font-size: 0.95rem; /* Rule 2 */
+    gap: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    color: var(--text-2);
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
-/* Hover effect for navigation links */
-.drawer-link:hover {
-    background: var(--hover-bg);
-    color: var(--primary-color);
-}
-/* Active state for drawer link (if needed) */
-.drawer-link.active {
-    background: var(--primary-color);
-    color: white;
-    font-weight: 500;
-}
-
-
-/* Drawer toggle button styling (assuming this is outside the drawer) */
-.drawer-toggle {
-    background: none;
-    border: none;
-    color: var(--text-color); /* Should inherit from context or be set */
-    /* Rule 2 (rem) */
-    font-size: 1.25rem; /* 20px */
-    cursor: pointer;
-    /* Rule 2 (rem) */
-    padding: 0.3125rem 0.625rem; /* 5px 10px */
-    border-radius: 0.3125rem; /* 5px */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-}
-
-/* Hover effect for drawer toggle */
-.drawer-toggle:hover {
-    background-color: var(--hover-bg); /* Use appropriate hover color */
-}
-
-/* Icon alignment in drawer toggle */
-.drawer-toggle i {
-    line-height: 1;
-    /* Better shadow for icon */
-    /* Rule 2 (rem) */
-    filter: drop-shadow(0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2)); /* 0 1px 2px */
-}
-
-/* Collapsible accordion section */
-.accordion-section {
-    /* Rule 5 (logical), Rule 2 (rem) */
-    margin-block-end: 0.9375rem; /* 15px */
-}
-
-.accordion-section details {
+.drawer-link .link-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--line);
     display: grid;
-    /* Animate grid rows */
-    grid-template-rows: auto 0fr;
-    transition: grid-template-rows 0.3s ease;
-    background: var(--hover-bg); /* Added background */
-    border-radius: 0.375rem; /* Added radius */
-    overflow: hidden; /* Contain content */
+    place-items: center;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
 }
 
-.accordion-section details[open] {
-    grid-template-rows: auto 1fr;
+.drawer-link .link-label {
+    font-size: 15px;
+    font-weight: 600;
 }
 
-.accordion-section summary {
-    /* Rule 2 (rem) */
-    padding: 0.75rem; /* 12px */
-    /* background: var(--hover-bg); */ /* Moved background to details */
-    /* border-radius: 0.375rem; */ /* Moved radius to details */
-    cursor: pointer;
-    font-weight: bold;
-    list-style: none; /* Remove default marker */
-    display: flex; /* Added for icon alignment */
-    justify-content: space-between; /* Added */
-    align-items: center; /* Added */
+.drawer-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--line);
+    color: white;
 }
 
-/* Remove default markers */
-.accordion-section summary::marker,
-.accordion-section summary::-webkit-details-marker {
-    display: none;
+.drawer-link:hover .link-icon {
+    background: oklch(0.55 0.12 var(--accent-hue) / 0.1);
+    border-color: oklch(0.55 0.12 var(--accent-hue) / 0.3);
+    color: var(--accent-light);
 }
 
-/* Add custom marker */
-.accordion-section summary::after {
-    content: '+';
-    transition: transform 0.3s ease;
-    font-size: 1.2em; /* Rule 2 */
-    font-weight: normal;
-}
-.accordion-section details[open] summary::after {
-    transform: rotate(45deg);
+/* ─── Footer ─── */
+.drawer-footer {
+    padding: 24px;
+    border-top: 1px solid var(--line);
+    text-align: center;
 }
 
+.footer-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.6;
+}
 
-.accordion-section .content {
+/* ─── Theme Overrides ─── */
+/* ─── Premium Toggle Button Styles ─── */
+.pm-drawer-toggle {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
     overflow: hidden;
-    /* Rule 2 (rem), Rule 5 (logical) */
-    padding: 0.75rem; /* 12px */
-    padding-block-start: 0; /* Remove top padding */
-    font-size: 0.9rem; /* Rule 2 */
-    color: var(--text-secondary); /* Use secondary text color */
 }
 
-/* Form elements styling with accent colors */
-.drawer-content input[type="checkbox"],
-.drawer-content input[type="radio"],
-.drawer-content progress {
-    accent-color: var(--primary-color);
-    cursor: pointer; /* Added */
+.pm-drawer-toggle:hover {
+    background: oklch(0.55 0.12 var(--accent-hue) / 0.15);
+    border-color: var(--accent);
+    color: var(--accent-light);
+    box-shadow: 0 0 15px oklch(0.55 0.12 var(--accent-hue) / 0.3);
+    transform: translateY(-1px);
 }
 
-.drawer-content input[type="text"],
-.drawer-content input[type="email"],
-.drawer-content textarea {
-    caret-color: var(--primary-color);
-    /* Add basic input styling */
-    padding: 0.5rem; /* Rule 2 */
-    border-radius: 0.25rem; /* Rule 2 */
-    border: var(--border-thin) solid var(--border-color); /* Rule 2 */
-    background-color: var(--background-color); /* Or appropriate input bg */
-    color: var(--text-color);
-    width: 100%; /* Rule 1 */
-    margin-block-start: 0.25rem; /* Rule 5, Rule 2 */
+.pm-drawer-toggle:active {
+    transform: translateY(0) scale(0.95);
 }
 
-/* Masonry layout for image gallery */
-.image-gallery {
-    /* Rule 2 (rem) */
-    columns: 2 7.5rem; /* 120px */
-    /* Rule 5 (logical), Rule 2 (rem) */
-    column-gap: 0.625rem; /* 10px */
-}
-
-.image-gallery img {
-    display: block;
-    width: 100%;
-    /* Rule 5 (logical), Rule 2 (rem) */
-    margin-block-end: 0.625rem; /* 10px */
-    border-radius: 0.25rem; /* 4px */
-    /* Rule 9 (aspect-ratio) */
-    aspect-ratio: 16 / 9; /* Or desired ratio */
-    object-fit: cover; /* Ensure image covers area */
-    background-color: var(--hover-bg); /* Fallback background */
-}
-
-/* Parent-based styling using :has() */
-.drawer-content:has(.user-profile.active) {
-    /* Rule 5 (logical), Rule 2 (rem) */
-    /* Example: Adjust padding when user profile is active */
-    /* padding-block-start: 0.625rem; */
-    /* Example: Add border */
-    /* border-block-start: var(--border-thin) solid var(--border-color); */
-}
-
-/* Responsive container for any content sections */
-.content-section {
-    /* Rule 1 (max-width) */
-    max-width: 100%; /* Ensures it doesn't overflow parent */
-    width: 100%;
-}
-
-/* Flexbox items using flex: 1 instead of fixed widths */
-.flex-container {
-    display: flex;
-    /* Rule 3 (gap), Rule 2 (rem) */
-    gap: 0.625rem; /* 10px */
-}
-
-.flex-container .item {
-    /* Rule 8 (flex) */
-    flex: 1; /* Allows items to grow/shrink equally */
-    /* Add some basic styling for visibility */
-    background: var(--hover-bg);
-    padding: 1rem; /* Rule 2 */
-    border-radius: 0.25rem; /* Rule 2 */
-}
-
-/* Accessibility: Add focus styles */
-:is(.drawer-close, .theme-btn, .auth-button, .drawer-link, .drawer-toggle, .accordion-section summary):focus-visible {
-    outline: var(--border-medium) solid var(--primary-color); /* Rule 2 */
-    outline-offset: 0.125rem; /* Rule 2 */
-    box-shadow: 0 0 0 0.1875rem rgba(var(--primary-color-rgb, 254, 44, 85), 0.3); /* Rule 2 */
-}
-/* Remove default outline when :focus-visible is supported */
-:is(.drawer-close, .theme-btn, .auth-button, .drawer-link, .drawer-toggle, .accordion-section summary):focus {
-   outline: none;
+body.light-theme .side-drawer {
+    --bg-drawer: #ffffff;
 }

@@ -97,6 +97,14 @@ service cloud.firestore {
       }
       
       // ----------------------------------------
+      // SUBJECTS
+      // Path: users/{userId}/subjects/{documentId}
+      // ----------------------------------------
+      match /subjects/{documentId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // ----------------------------------------
       // ALARMS
       // Path: users/{userId}/alarms/{alarmId}
       // ----------------------------------------

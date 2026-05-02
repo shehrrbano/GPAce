@@ -30,13 +30,35 @@ class AlarmService {
     }
 
     loadAlarms() {
-        const savedAlarms = storageService.get('gpace_alarms');
-        this.alarms = savedAlarms ? JSON.parse(savedAlarms) : [];
+        const savedAlarms = storageService.get('alarms', []);
+        this.alarms = Array.isArray(savedAlarms) ? savedAlarms : [];
     }
 
     saveAlarms() {
-        storageService.set('gpace_alarms', this.alarms);
+        storageService.set('alarms', this.alarms);
         this.renderAlarms();
+        this.syncWithServiceWorker();
+    }
+
+    syncWithServiceWorker() {
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+            this.alarms.forEach(alarm => {
+                if (alarm.enabled) {
+                    // Convert 12h to 24h for SW
+                    let h = alarm.hour;
+                    if (alarm.ampm === 'PM' && h < 12) h += 12;
+                    if (alarm.ampm === 'AM' && h === 12) h = 0;
+                    const timeStr = `${h.toString().padStart(2, '0')}:${alarm.minute.toString().padStart(2, '0')}`;
+                    
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'SET_ALARM',
+                        id: alarm.id,
+                        time: timeStr,
+                        label: alarm.label
+                    });
+                }
+            });
+        }
     }
 
     setupKeyboardShortcuts() {
@@ -318,7 +340,7 @@ class AlarmService {
             alarmItem.className = 'alarm-item';
             alarmItem.innerHTML = `
                 <div class="alarm-details">
-                    <div class="alarm-time">${alarm.hour}:${alarm.minute.toString().padStart(2, '0')} ${alarm.ampm}</div>
+                    <div class="alarm-time">${alarm.hour}:${alarm.minute.toString().padStart(2, '0')} <span style="font-size: 0.6em; color: var(--accent);">${alarm.ampm}</span></div>
                     <div class="alarm-label">${alarm.label || 'Alarm'}</div>
                 </div>
                 <div class="alarm-controls">
@@ -473,8 +495,8 @@ function initializeAlarmFormToggle() {
         addAlarmBtn.addEventListener('click', () => {
             alarmForm.classList.toggle('active');
             addAlarmBtn.innerHTML = alarmForm.classList.contains('active')
-                ? '<i class="bi bi-x-circle-fill me-2"></i>Cancel'
-                : '<i class="bi bi-plus-circle-fill me-2"></i>Add Alarm';
+                ? '<i class="bi bi-x-circle-fill"></i>CANCEL'
+                : '<i class="bi bi-plus-circle-fill"></i>ADD ALARM';
         });
     }
 }
@@ -504,12 +526,16 @@ function initializeAlarmForm() {
 
     if (setAlarmBtn) {
         setAlarmBtn.addEventListener('click', () => {
-            const hour = parseInt(document.getElementById('hour').value);
-            const minute = parseInt(document.getElementById('minute').value);
+            const hourInput = document.getElementById('hour');
+            const minuteInput = document.getElementById('minute');
+            const labelInput = document.getElementById('alarm-label');
+            
+            const hour = parseInt(hourInput.value);
+            const minute = parseInt(minuteInput.value);
             const ampm = document.querySelector('.am-pm-toggle .active').textContent;
-            const label = document.getElementById('alarm-label').value;
+            const label = labelInput.value;
 
-            if (hour && !isNaN(hour) && minute && !isNaN(minute)) {
+            if (hour && !isNaN(hour) && minute !== undefined && !isNaN(minute)) {
                 if (hour < 1 || hour > 12) {
                     alert('Please enter a valid hour (1-12)');
                     return;
@@ -521,13 +547,12 @@ function initializeAlarmForm() {
 
                 window.alarmService.addAlarm(hour, minute, ampm, label);
                 alarmForm.classList.remove('active');
-                addAlarmBtn.innerHTML = '<i class="bi bi-plus-circle-fill me-2"></i>Add Alarm';
+                addAlarmBtn.innerHTML = '<i class="bi bi-plus-circle-fill"></i>ADD ALARM';
 
                 // Clear form
-                document.getElementById('hour').value = '';
-                document.getElementById('minute').value = '';
-                document.getElementById('second').value = '';
-                document.getElementById('alarm-label').value = '';
+                hourInput.value = '';
+                minuteInput.value = '';
+                labelInput.value = '';
             } else {
                 alert('Please enter valid hour and minute values');
             }
@@ -537,12 +562,11 @@ function initializeAlarmForm() {
     if (cancelAlarmBtn) {
         cancelAlarmBtn.addEventListener('click', () => {
             alarmForm.classList.remove('active');
-            addAlarmBtn.innerHTML = '<i class="bi bi-plus-circle-fill me-2"></i>Add Alarm';
+            addAlarmBtn.innerHTML = '<i class="bi bi-plus-circle-fill"></i>ADD ALARM';
 
             // Clear form
             document.getElementById('hour').value = '';
             document.getElementById('minute').value = '';
-            document.getElementById('second').value = '';
             document.getElementById('alarm-label').value = '';
         });
     }

@@ -12,7 +12,7 @@
 console.log('[SubjectManagement] Module loaded');
 
 import { saveSubjectsToFirestore, loadSubjectsFromFirestore } from './firestore.js';
-import { getStorage, STORAGE_KEYS } from '../services/StorageService.js';
+import { getStorage, STORAGE_KEYS } from './services/StorageService.js';
 import { SemesterService } from './services/SemesterService.js';
 import { ToastService } from './services/ToastService.js';
 import { getFirestore, onSnapshot, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';

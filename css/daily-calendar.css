@@ -536,10 +536,14 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border-style: dashed dashed dashed solid;
 }
-.task-block.meeting,
-.task-block.other {
-  border-left-color: oklch(0.62 0.14 195);
-  background: oklch(0.62 0.14 195 / 0.1);
+.task-block.alarm {
+  border-left-color: oklch(0.55 0.2 280);
+  background: linear-gradient(90deg, oklch(0.55 0.2 280 / 0.2), oklch(0.55 0.2 280 / 0.05));
+  box-shadow: 0 0 15px oklch(0.55 0.2 280 / 0.15);
+}
+.task-block.alarm::before {
+  background: oklch(0.55 0.2 280);
+  content: "A";
 }
 
 .task-block::before {
@@ -645,6 +649,7 @@ body {
 .legend-color.study-block { background: oklch(0.62 0.18 280); border-color: oklch(0.62 0.18 280 / 0.6); }
 .legend-color.break-block { background: oklch(0.65 0.14 160); border-color: oklch(0.65 0.14 160 / 0.6); }
 .legend-color.free-block { background: rgba(255, 255, 255, 0.05); border-style: dashed; }
+.legend-color.alarm-block { background: oklch(0.55 0.2 280); border-color: oklch(0.55 0.2 280 / 0.6); }
 .legend-summary {
   margin-left: auto;
   display: inline-flex; gap: 8px; align-items: center;

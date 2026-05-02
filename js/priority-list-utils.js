@@ -664,56 +664,6 @@ async function interleaveTask() {
  * UI Setup Functions
  */
 
-// Add a button to manually force sync
-function setupSyncButton() {
-    // Create a button to force sync
-    const syncButton = document.createElement('button');
-    syncButton.className = 'sync-button';
-    syncButton.innerHTML = '🔄 Force Sync';
-    syncButton.style.position = 'fixed';
-    syncButton.style.bottom = '20px';
-    syncButton.style.right = '20px';
-    syncButton.style.padding = '10px 15px';
-    syncButton.style.backgroundColor = '#ff4081';
-    syncButton.style.color = 'white';
-    syncButton.style.border = 'none';
-    syncButton.style.borderRadius = '5px';
-    syncButton.style.cursor = 'pointer';
-    syncButton.style.zIndex = '1000';
-    syncButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-
-    // Add click handler
-    syncButton.addEventListener('click', async () => {
-        if (window.prioritySyncFix) {
-            syncButton.innerHTML = '⏳ Syncing...';
-            syncButton.disabled = true;
-
-            const result = await window.prioritySyncFix.forceSyncPriorityTasks();
-
-            if (result.success) {
-                syncButton.innerHTML = '✅ Synced!';
-                setTimeout(() => {
-                    syncButton.innerHTML = '🔄 Force Sync';
-                    syncButton.disabled = false;
-                    // Reload the page to show updated tasks
-                    location.reload();
-                }, 1500);
-            } else {
-                syncButton.innerHTML = '❌ Failed!';
-                setTimeout(() => {
-                    syncButton.innerHTML = '🔄 Force Sync';
-                    syncButton.disabled = false;
-                }, 1500);
-            }
-        } else {
-            alert('Priority Sync Fix not loaded yet. Please try again in a moment.');
-        }
-    });
-
-    // Add to page
-    document.body.appendChild(syncButton);
-}
-
 // Setup profile icon scroll behavior
 function setupProfileIconBehavior() {
     let lastScrollTop = 0;
@@ -757,9 +707,6 @@ function initializePage() {
 
     // Setup profile icon behavior
     setupProfileIconBehavior();
-
-    // Setup sync button
-    setupSyncButton();
 
     // Update when storage changes
     window.addEventListener('storage', function (e) {

@@ -9,7 +9,7 @@
  * - Cross-tab synchronization
  */
 
-import { getStorage } from '../services/StorageService.js';
+import { getStorage } from './services/StorageService.js';
 import DataRepository from './services/DataRepository.js';
 
 // ============================================

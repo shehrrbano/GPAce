@@ -1,383 +1,347 @@
 /**
- * Settings Page Styles
- * 
- * Note: CSS variables are defined in design-tokens.css which should be
- * imported before this file in the HTML. This file only contains
- * settings-specific component styles.
+ * Settings Page Styles - Grind Mode Aesthetic
+ * Leverages classes and tokens from grind-react.css
  */
 
-body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-    min-height: 100vh;
-    padding-top: 60px;
-}
-
-.top-nav {
-    background-color: var(--nav-bg);
-    padding: 10px 30px;
-    /* Match extracted.html */
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    height: 60px;
-    /* Match extracted.html */
-    backdrop-filter: blur(10px);
-    /* Match extracted.html */
-}
-
-.nav-brand {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-.nav-links {
-    display: flex;
-    gap: 20px;
-}
-
-.nav-links a {
-    color: var(--text-color);
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.nav-links a:hover {
-    background-color: var(--hover-bg);
-}
-
-.nav-links a.active {
-    background-color: var(--primary-color);
-    color: white;
-}
-
+/* ─── Layout ─── */
 .container {
-    padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
-}
-
-.main-header {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.logo-section h1 {
-    color: var(--primary-color);
-    font-size: 48px;
-    margin-bottom: 10px;
-}
-
-.tagline {
-    color: var(--secondary-color);
-    font-size: 20px;
-}
-
-.account-section {
-    margin-top: 20px;
-}
-
-.login-btn,
-.interactive-button {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.login-btn:hover,
-.interactive-button:hover {
-    opacity: 0.9;
-}
-
-/* Using the global logout-btn styling from main.css */
-
-.todoist-section {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    margin-top: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.tasks-container {
-    margin-top: 20px;
-}
-
-.tasks-list {
-    background-color: var(--hover-bg);
-    border-radius: 8px;
-    padding: 15px;
-}
-
-.sound-controls {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.sound-toggle {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.sound-toggle:hover {
-    background-color: var(--hover-bg);
-}
-
-/* Theme toggle button */
-.theme-toggle {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 1001;
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
+    padding: 40px 20px;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    gap: 32px;
 }
 
-.theme-toggle:hover {
-    background-color: var(--hover-bg);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.theme-icon {
-    font-size: 16px;
-}
-
-/* Light theme is defined in design-tokens.css */
-
-.quotes-section,
-.role-models-section {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    margin-top: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.quote-input-container,
-.role-model-input-container {
-    display: flex;
-    gap: 15px;
+/* ─── Header ─── */
+.settings-header {
+    text-align: center;
     margin-bottom: 20px;
 }
 
-.quote-input-container input,
-.role-model-input-container input {
-    flex-grow: 1;
-    background-color: var(--hover-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    padding: 10px;
-    border-radius: 5px;
+.settings-header .brand-name {
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
 }
 
+.settings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* ─── Sections (Cards) ─── */
+.quotes-section,
+.role-models-section {
+    background: linear-gradient(180deg, rgba(31, 41, 55, 0.45), rgba(17, 26, 44, 0.45));
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(10px);
+}
+
+.quotes-section h2,
+.role-models-section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ─── Input Groups ─── */
+.quote-input-container,
+.role-model-input-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-items: end;
+}
+
+.role-model-input-container {
+    grid-template-columns: 1fr 1fr auto;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+input[type="text"],
+input[type="url"],
+input[type="password"] {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 14px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 2px oklch(0.70 0.15 var(--accent-hue) / 0.15);
+}
+
+/* ─── Buttons ─── */
+.interactive-button,
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 9px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px -4px oklch(0.55 0.20 var(--accent-hue) / 0.5);
+    white-space: nowrap;
+}
+
+.interactive-button:hover,
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px -4px oklch(0.55 0.20 var(--accent-hue) / 0.7);
+}
+
+.interactive-button:active,
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* ─── List Layouts ─── */
 .quote-list,
 .role-model-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
 }
 
+/* ─── Cards ─── */
 .quote-card,
 .role-model-card {
-    background-color: var(--hover-bg);
-    border-radius: 8px;
-    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
     position: relative;
+    transition: all 0.2s ease;
+}
+
+.quote-card:hover,
+.role-model-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--line-strong);
 }
 
 .quote-image,
 .role-model-image {
-    max-width: 100%;
-    height: 200px;
+    width: 100%;
+    height: 180px;
     object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
+    border: 1px solid var(--line);
 }
 
+.quote-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-style: italic;
+}
+
+.quote-author {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.role-model-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--accent-light);
+}
+
+/* ─── Delete Buttons ─── */
 .delete-quote,
 .delete-role-model {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 59, 48, 0.1);
+    border: 1px solid rgba(255, 59, 48, 0.2);
+    color: #ff3b30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0; /* Hide text if any */
 }
 
+.delete-quote:hover,
+.delete-role-model:hover {
+    background: rgba(255, 59, 48, 0.2);
+    border-color: rgba(255, 59, 48, 0.4);
+    transform: scale(1.1);
+}
+
+.delete-quote::before,
+.delete-role-model::before {
+    content: "\F622"; /* Bootstrap bi-trash */
+    font-family: "bootstrap-icons";
+    font-size: 16px;
+}
+
+/* ─── Research Section ─── */
 .role-model-research {
-    margin-top: 20px;
-    background-color: var(--hover-bg);
-    border-radius: 8px;
-    padding: 15px;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+}
+
+.role-model-research h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
 }
 
 .role-model-research-content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
 }
 
 .role-model-research-card {
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
 }
 
+.role-model-research-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--accent-light);
+}
+
+.role-model-research-card p {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.4;
+}
+
+/* ─── Loading & States ─── */
 .research-loading {
-    text-align: center;
-    color: var(--secondary-color);
-    padding: 20px;
-}
-
-.settings-section {
-    margin-top: 20px;
-}
-
-.task-navigation-card {
-    background-color: var(--card-bg);
-    border-radius: 15px;
-    padding: 30px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.task-navigation-card:hover {
-    transform: scale(1.02);
-}
-
-.task-portal-intro h3 {
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-
-.task-portal-btn {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px 25px;
-    margin: 20px 0;
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: 10px;
+    gap: 12px;
+    padding: 40px;
+    color: var(--text-muted);
 }
 
-.task-portal-btn .btn-subtext {
-    font-size: 0.7em;
-    color: rgba(255, 255, 255, 0.7);
-    margin-top: 5px;
-}
-
-.task-portal-features {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 20px;
-}
-
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--text-color);
-    opacity: 0.8;
-}
-
-.feature-item i {
-    font-size: 1.5em;
-    color: var(--primary-color);
-}
-
-/* Error message styling */
-.error-message {
-    background-color: rgba(255, 0, 0, 0.1);
-    border: 1px solid rgba(255, 0, 0, 0.3);
-    border-radius: 8px;
-    padding: 15px;
-    margin: 10px 0;
-    color: var(--text-color);
-}
-
-/* Spinner animation */
 .spinner {
-    animation: spin 2s linear infinite;
-    display: inline-block;
     font-size: 24px;
+    animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
 
-    100% {
-        transform: rotate(360deg);
+/* ─── Responsive ─── */
+@media (max-width: 992px) {
+    .quote-input-container,
+    .role-model-input-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .interactive-button {
+        grid-column: span 2;
     }
 }
 
-/* Role model research preview */
-.role-model-research-preview {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 5px;
+@media (max-width: 600px) {
+    .quote-input-container,
+    .role-model-input-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .interactive-button {
+        grid-column: span 1;
+    }
+    
+    .container {
+        padding: 20px 16px;
+    }
 }
 
-/* Role model actions */
+/* ─── Misc ─── */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .role-model-actions {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    justify-content: space-between;
+    gap: 8px;
+    margin-top: 16px;
 }
 
-/* Quote text styling */
-.quote-text {
-    font-style: italic;
-    margin-bottom: 5px;
+.research-button {
+    flex: 1;
+    font-size: 12px;
+    padding: 8px;
 }
 
-.quote-author {
-    text-align: right;
-    font-weight: bold;
-    color: var(--secondary-color);
+.role-model-research-preview {
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.role-model-research-preview h4 {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
 }
