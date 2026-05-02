@@ -9,7 +9,7 @@
     <!-- PWA Manifest & Branding -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#050b18">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="assets/images/gpace-logo-white.png">
     <title>Settings - GPAce</title>
@@ -104,6 +104,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core Services (loaded first) -->
+    <script type="module" src="js/core/BootstrapManager.js"></script>
     <script type="module" src="js/services/StorageService.js"></script>
     <script type="module" src="js/services/SecureStorage.js"></script>
     <script type="module" src="js/utils/Sanitizer.js"></script>
@@ -134,4 +135,5 @@
 </body>
 
 </html>
+
 

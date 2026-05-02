@@ -16,6 +16,7 @@ class GoogleDriveService {
         this.isAuthorized = false;
         this.tokenClient = null;
         this.accessToken = null;
+        this.tokenExpiry = 0; // Timestamp when token expires
 
         // Promise to wait for initialization
         this.readyPromise = null;
@@ -23,6 +24,8 @@ class GoogleDriveService {
         this.readyPromise = new Promise((resolve) => {
             this.resolveReady = resolve;
         });
+
+        this.silentAuthFailed = false; // Track if prompt:none is failing
     }
 
     /**
@@ -145,21 +148,57 @@ class GoogleDriveService {
                     }
 
 
-                    // Initialize GIS Token Client regardless of GAPI init status
+                    // Check for existing token in storage BEFORE initializing GIS callback
+                    const savedToken = storageService.get('gdrive_access_token');
+                    const savedExpiry = storageService.get('gdrive_token_expiry', 0);
+                    
+                    // Buffer of 5 minutes instead of 1 minute for better reliability
+                    if (savedToken && savedExpiry > Date.now() + 300000) { 
+                        console.log('[GoogleDrive] Found valid saved access token, restoring session');
+                        this.accessToken = savedToken;
+                        this.tokenExpiry = savedExpiry;
+                        this.isAuthorized = true;
+                        
+                        // Set GAPI token if client is ready
+                        if (typeof gapi !== 'undefined' && gapi.client && typeof gapi.client.setToken === 'function') {
+                            try { gapi.client.setToken({ access_token: savedToken }); } catch (e) {}
+                        }
+                    }
+
+                    // Initialize GIS Token Client
                     if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
                         this.tokenClient = google.accounts.oauth2.initTokenClient({
                             client_id: this.clientId.trim(),
                             scope: this.SCOPES,
+                            prompt: 'none', // Changed to 'none' to ensure background refreshes are silent by default
                             callback: (resp) => {
                                 console.log('[GoogleDrive] GIS callback received:', resp);
+                                
                                 if (resp.error) {
-                                    console.error('[GoogleDrive] Auth error:', resp.error);
-                                    if (this._authReject) this._authReject(resp);
+                                    if (resp.error === 'interaction_required') {
+                                        console.debug('[GoogleDrive] Silent auth interaction_required - user must click Connect');
+                                        this.isAuthorized = false;
+                                        this.silentAuthFailed = true; 
+                                    } else {
+                                        console.error('[GoogleDrive] Auth error:', resp.error);
+                                    }
+                                    
+                                    if (this._authResolve) {
+                                        this._authResolve(null); // Resolve with null for silent failure
+                                    }
+                                    this._authResolve = null;
+                                    this._authReject = null;
+                                    this._authPromise = null;
                                     return;
                                 }
+
                                 this.accessToken = resp.access_token;
+                                this.tokenExpiry = Date.now() + (resp.expires_in * 1000);
                                 this.isAuthorized = true;
+                                this.silentAuthFailed = false; // Reset on success
+                                
                                 storageService.set('gdrive_access_token', this.accessToken);
+                                storageService.set('gdrive_token_expiry', this.tokenExpiry);
                                 
                                 if (typeof gapi !== 'undefined' && gapi.client) {
                                     try { gapi.client.setToken({ access_token: this.accessToken }); } catch(e) {}
@@ -171,24 +210,10 @@ class GoogleDriveService {
                                     this._authResolve(this.accessToken);
                                     this._authResolve = null;
                                     this._authReject = null;
+                                    this._authPromise = null;
                                 }
                             },
                         });
-                    }
-
-                    // Check for existing token in storage
-                    const savedToken = storageService.get('gdrive_access_token');
-                    if (savedToken) {
-                        console.log('[GoogleDrive] Found saved access token');
-                        this.accessToken = savedToken;
-                        if (typeof gapi.client !== 'undefined' && typeof gapi.client.setToken === 'function') {
-                            try {
-                                gapi.client.setToken({ access_token: savedToken });
-                            } catch (e) {
-                                console.warn('[GoogleDrive] Failed to set token in GAPI client:', e);
-                            }
-                        }
-                        this.isAuthorized = true;
                     }
 
                     // ALWAYS resolve to prevent hanging the app initialization
@@ -208,24 +233,29 @@ class GoogleDriveService {
         if (result && result.credential && result.credential.accessToken) {
             console.log('[GoogleDrive] Using access token from Firebase login');
             this.accessToken = result.credential.accessToken;
+            this.tokenExpiry = Date.now() + 3500000; // Assume ~1 hour
             gapi.client.setToken({ access_token: this.accessToken });
             this.isAuthorized = true;
             storageService.set('gdrive_access_token', this.accessToken);
+            storageService.set('gdrive_token_expiry', this.tokenExpiry);
             window.dispatchEvent(new CustomEvent('google-drive-authenticated'));
             return;
         }
 
-        // Otherwise, trigger silent auth if we have a token, or wait for user action
-        if (!this.isAuthorized) {
+        // Otherwise, trigger silent auth ONLY if we don't have a valid session yet
+        // and we haven't already failed a silent attempt in this session
+        if (!this.isAuthorized && !this.silentAuthFailed) {
             console.log('[GoogleDrive] Triggering background authorization...');
-            this.authorize(true); 
+            this.authorize(true).catch(e => console.debug('[GoogleDrive] Silent auth failed on Firebase sign-in:', e)); 
         }
     }
 
     async handleFirebaseSignOut() {
         this.accessToken = null;
+        this.tokenExpiry = 0;
         this.isAuthorized = false;
         storageService.remove('gdrive_access_token');
+        storageService.remove('gdrive_token_expiry');
         if (typeof gapi !== 'undefined' && gapi.client) {
             gapi.client.setToken(null);
         }
@@ -247,52 +277,62 @@ class GoogleDriveService {
     }
 
     async authorize(silent = false) {
-        await this.init();
+        await this.waitForReady();
         
-        // If already authorized, just return
-        if (this.isAuthorized && this.accessToken) return this.accessToken;
+        // If already authorized and token is valid, just return
+        if (this.isAuthorized && this.accessToken && this.tokenExpiry > Date.now() + 60000) {
+            return this.accessToken;
+        }
 
-        return new Promise((resolve, reject) => {
-            // Store current resolvers to be called by the GIS callback
+        // If a silent request is being asked but we already know it fails, skip to avoid "One moment" popup flash
+        if (silent && this.silentAuthFailed) {
+            console.debug('[GoogleDrive] Skipping silent authorize: previous attempt failed interaction_required');
+            return null;
+        }
+
+        // If a request is already in progress, wait for it
+        if (this._authPromise) return this._authPromise;
+
+        this._authPromise = new Promise((resolve, reject) => {
             this._authResolve = resolve;
             this._authReject = reject;
 
             try {
                 if (silent) {
-                    console.debug('[GoogleDrive] Requesting silent token refresh...');
-                    // Use prompt: 'none' for truly silent, but handle interaction_required gracefully
+                    console.debug('[GoogleDrive] Attempting silent token refresh...');
                     this.tokenClient.requestAccessToken({ prompt: 'none' });
                 } else {
                     console.log('[GoogleDrive] Requesting user-interactive token...');
-                    // prompt: '' or prompt: 'select_account' for interactive
-                    this.tokenClient.requestAccessToken({ prompt: '' });
+                    // Use select_account to give user control if they explicitly clicked
+                    this.tokenClient.requestAccessToken({ prompt: 'select_account' });
                 }
                 
-                // Set a timeout to prevent hanging forever
+                // Set a timeout to prevent hanging
                 setTimeout(() => {
-                    if (!this.isAuthorized && this._authResolve) {
-                        // Resolve with null instead of rejecting on timeout for silent auth
-                        if (silent) {
-                            console.debug('[GoogleDrive] Silent auth timeout');
-                            this._authResolve(null);
-                        } else {
-                            if (this._authReject) this._authReject(new Error('Auth timeout'));
-                        }
+                    if (this._authResolve) {
+                        console.debug('[GoogleDrive] Auth request timed out');
+                        const res = this._authResolve;
                         this._authResolve = null;
                         this._authReject = null;
+                        this._authPromise = null;
+                        if (silent) resolve(null);
+                        else reject(new Error('Auth timeout'));
                     }
-                }, 30000); // 30s timeout
+                }, 30000); // 30s timeout is safer for mobile/slow networks
 
             } catch (err) {
-                if (silent) {
-                    console.debug('[GoogleDrive] Silent token request failed:', err);
-                    resolve(null);
-                } else {
-                    console.error('[GoogleDrive] Token request failed:', err);
-                    reject(err);
-                }
+                console.warn('[GoogleDrive] Token request exception:', err);
+                this._authResolve = null;
+                this._authReject = null;
+                this._authPromise = null;
+                if (silent) resolve(null);
+                else reject(err);
             }
+        }).finally(() => {
+            this._authPromise = null;
         });
+
+        return this._authPromise;
     }
 
     // --- API Methods ---
@@ -300,9 +340,13 @@ class GoogleDriveService {
     async getTaskFiles(taskId) {
         await this.waitForReady();
         console.log('[GoogleDrive] getTaskFiles called with taskId:', taskId);
-        if (!this.isAuthorized) {
-            console.log('[GoogleDrive] Not authorized, attempting to authorize...');
-            await this.authorize();
+        if (!this.isAuthorized || !this.accessToken || this.tokenExpiry < Date.now()) {
+            console.log('[GoogleDrive] Not authorized or expired, attempting silent authorize...');
+            const token = await this.authorize(true);
+            if (!token) {
+                console.warn('[GoogleDrive] Silent authorization failed for getTaskFiles. User must sign in.');
+                return [];
+            }
         }
 
         try {
@@ -331,44 +375,63 @@ class GoogleDriveService {
      * Shared logic to execute a query with 401 retry logic
      */
     async _executeDriveQuery(queryStr, retry = true) {
+        // Ensure initialized
+        await this.waitForReady();
+
+        // Check if we need to refresh token (if expired or not authorized)
+        if (!this.isAuthorized || !this.accessToken || this.tokenExpiry < Date.now() + 60000) {
+            // Only try silent refresh if it hasn't failed yet in this session
+            if (!this.silentAuthFailed) {
+                console.debug('[GoogleDrive] refreshing token for query...');
+                await this.authorize(true); // Try silent refresh
+            }
+        }
+
         if (!this.isAuthorized) {
-            console.log('[GoogleDrive] Not authorized, attempting to authorize...');
-            await this.authorize(true); // Try silent first
+            console.debug('[GoogleDrive] Query skipped: Not authorized and silent refresh not possible');
+            return [];
         }
 
         try {
+            let files = [];
+            
             if (typeof gapi.client.drive !== 'undefined') {
                 const response = await gapi.client.drive.files.list({
                     q: queryStr,
                     fields: 'files(id, name, mimeType, webViewLink, webContentLink, thumbnailLink, createdTime, iconLink, appProperties)',
                 });
-                return response.result.files || [];
+                files = response.result.files || [];
+            } else {
+                // Fallback to REST fetch
+                const query = encodeURIComponent(queryStr);
+                const response = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name,mimeType,webViewLink,webContentLink,thumbnailLink,createdTime,iconLink,appProperties)`, {
+                    headers: { 'Authorization': 'Bearer ' + this.accessToken }
+                });
+                
+                if (response.status === 401 && retry) {
+                    console.warn('[GoogleDrive] 401 detected in fetch, retrying after silent re-auth...');
+                    this.isAuthorized = false;
+                    const newToken = await this.authorize(true); // Try silent again
+                    if (newToken) return this._executeDriveQuery(queryStr, false);
+                    else throw new Error('Unauthorized');
+                }
+
+                if (!response.ok) throw new Error(`Query failed: ${response.status}`);
+                const data = await response.json();
+                files = data.files || [];
             }
 
-            // Fallback to REST fetch
-            const query = encodeURIComponent(queryStr);
-            const response = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name,mimeType,webViewLink,webContentLink,thumbnailLink,createdTime,iconLink,appProperties)`, {
-                headers: { 'Authorization': 'Bearer ' + this.accessToken }
-            });
-            
-            if (response.status === 401 && retry) {
-                console.warn('[GoogleDrive] 401 detected, retrying after re-auth...');
-                this.isAuthorized = false;
-                await this.authorize(false); // Interactive re-auth
-                return this._executeDriveQuery(queryStr, false);
-            }
-
-            if (!response.ok) throw new Error(`Query failed: ${response.status}`);
-            const data = await response.json();
-            return data.files || [];
+            return files;
 
         } catch (err) {
-            if (err.status === 401 && retry) {
+            if ((err.status === 401 || (err.result?.error?.code === 401)) && retry) {
+                console.warn('[GoogleDrive] 401 detected in GAPI, retrying after silent re-auth...');
                 this.isAuthorized = false;
-                await this.authorize(false);
-                return this._executeDriveQuery(queryStr, false);
+                const newToken = await this.authorize(true);
+                if (newToken) return this._executeDriveQuery(queryStr, false);
             }
-            throw err;
+            console.error('[GoogleDrive] Query error:', err);
+            return [];
         }
     }
 
@@ -473,11 +536,6 @@ class GoogleDriveService {
 }
 
 const googleDriveService = new GoogleDriveService();
-
-// Auto-initialize when loaded
-if (typeof window !== 'undefined') {
-    googleDriveService.init().catch(err => console.debug('[GoogleDrive] Auto-init failed (expected if keys missing):', err));
-}
 
 export default googleDriveService;
 export { googleDriveService };

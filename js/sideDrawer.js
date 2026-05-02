@@ -8,12 +8,13 @@ class SideDrawer {
     constructor() {
         this.isOpen = false;
         this.initialized = false;
+        this.toggleButton = null;
     }
 
     init() {
         if (this.initialized) return;
-        this.initialized = true;
-        // Create drawer HTML
+        
+        console.log('[SideDrawer] Initializing...');
         const drawer = document.createElement('div');
         drawer.className = 'side-drawer';
         drawer.innerHTML = `
@@ -92,6 +93,9 @@ class SideDrawer {
 
         // Event listeners
         this.setupEventListeners();
+        this.initialized = true;
+        this.watchForNavigationChanges();
+        console.log('[SideDrawer] Component initialized and attached');
     }
 
     /**
@@ -99,13 +103,13 @@ class SideDrawer {
      * Creates one if missing, or just binds events if it exists
      */
     ensureToggleButton() {
-        const existingToggle = document.querySelector('.pm-drawer-toggle') || document.querySelector('.drawer-toggle');
+        const existingToggle = document.querySelector('.pm-drawer-toggle') || document.querySelector('.drawer-toggle') || document.getElementById('globalSettingsBtn');
         if (existingToggle) {
             console.log('[SideDrawer] Toggle button found, binding events');
-            return;
+            this.setupEventListeners();
+            return true;
         }
-
-        console.debug('[SideDrawer] No toggle button found in DOM yet. Will wait for NavigationComponent or event.');
+        return false;
     }
 
     /**
@@ -131,9 +135,10 @@ class SideDrawer {
                         console.log('[SideDrawer] New navigation detected, re-binding events');
                         // Small delay to ensure DOM is fully updated
                         setTimeout(() => {
-                            this.ensureToggleButton();
-                            this.setupEventListeners();
-                        }, 50);
+                            if (this.ensureToggleButton()) {
+                                this.setupEventListeners();
+                            }
+                        }, 100);
                     }
                 }
             }
@@ -162,8 +167,18 @@ class SideDrawer {
         drawerToggles.forEach(toggle => {
             if (!toggle.hasAttribute('data-drawer-bound')) {
                 toggle.setAttribute('data-drawer-bound', 'true');
-                toggle.addEventListener('click', () => this.toggleDrawer());
-                console.log('[SideDrawer] Toggle button event listener bound');
+                
+                // If this is the globalSettingsBtn, NavigationComponent already dispatches an event
+                // so we don't bind a direct click here to avoid double-toggle.
+                if (toggle.id !== 'globalSettingsBtn') {
+                    toggle.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.toggleDrawer();
+                    });
+                    console.log('[SideDrawer] Toggle button event listener bound');
+                } else {
+                    console.log('[SideDrawer] Skipping direct binding for globalSettingsBtn (handled by event)');
+                }
             }
         });
 
@@ -172,8 +187,12 @@ class SideDrawer {
             drawerClose.addEventListener('click', () => this.closeDrawer());
         }
 
-        if (overlay) {
-            overlay.addEventListener('click', () => this.closeDrawer());
+        if (overlay && !overlay.hasAttribute('data-drawer-bound')) {
+            overlay.setAttribute('data-drawer-bound', 'true');
+            overlay.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.closeDrawer();
+            });
         }
 
         if (authButton && !authButton.hasAttribute('data-drawer-bound')) {
@@ -327,11 +346,13 @@ class SideDrawer {
     }
 }
 
-// Instantiate and expose globally
-const sideDrawer = new SideDrawer();
-window.sideDrawer = sideDrawer;
+// Create global instance
+const sideDrawerInstance = new SideDrawer();
+
+// Expose to window for global access
+window.sideDrawer = sideDrawerInstance;
 
 // Also support module export
 export { SideDrawer };
-export default sideDrawer;
+export default sideDrawerInstance;
 

@@ -325,7 +325,7 @@ if (typeof window !== 'undefined') {
 
 // Self-init
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => controller.init());
+    // document.addEventListener('DOMContentLoaded', () => controller.init());
 } else {
     controller.init();
 }

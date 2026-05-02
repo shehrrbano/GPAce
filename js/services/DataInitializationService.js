@@ -32,11 +32,11 @@ if (typeof window.DataInitializationService === 'undefined') {
     class DataInitializationService {
         constructor() {
             this.initialized = false;
-            this.initializing = false;
             this.auth = centralizedAuth;
             this.db = null;
             this.subscriptions = new Map(); // projectId -> unsubscribe function
             this.taskService = taskSystem;
+            this._initPromise = null;
         }
 
         /**
@@ -45,71 +45,55 @@ if (typeof window.DataInitializationService === 'undefined') {
          * @returns {Promise<boolean>} Success status
          */
         async init(options = {}) {
-            if (this.initialized) {
-                console.log('[DataInitService] Already initialized');
-                return true;
-            }
+            if (this._initPromise) return this._initPromise;
 
-            if (this.initializing) {
-                console.log('[DataInitService] Initialization in progress, waiting...');
-                // Wait for existing initialization
-                return new Promise((resolve) => {
-                    const checkInterval = setInterval(() => {
-                        if (this.initialized) {
-                            clearInterval(checkInterval);
-                            resolve(true);
-                        }
-                    }, 100);
-
-                    // Timeout after 10 seconds
-                    setTimeout(() => {
-                        clearInterval(checkInterval);
-                        resolve(false);
-                    }, 10000);
-                });
-            }
-
-            this.initializing = true;
-            console.log('[DataInitService] Starting data initialization...');
-
-            try {
-                // Step 1: Initialize Firebase if needed
-                await this._ensureFirebase();
-
-                // Step 2: Wait for authentication
-                const user = await this._waitForAuth();
-
-                if (!user) {
-                    console.log('[DataInitService] No user authenticated, using local data only');
-                    this._loadLocalData();
-                    this.initialized = true;
-                    this.initializing = false;
-                    this._emitInitialized(false);
+            this._initPromise = (async () => {
+                if (this.initialized) {
+                    console.log('[DataInitService] Already initialized');
                     return true;
                 }
 
-                console.log(`[DataInitService] Authenticated as: ${user.email}`);
+                console.log('[DataInitService] Starting data initialization...');
 
-                // Step 3: Load subjects
-                await this._loadSubjects();
+                try {
+                    // Step 1: Ensure Firebase is initialized
+                    await this._ensureFirebase();
 
-                // Step 4: Subscribe to tasks for all subjects
-                await this._subscribeToAllTasks();
+                    // Step 2: Wait for authentication
+                    const user = await this._waitForAuth();
 
-                // Step 5: Mark as initialized
-                this.initialized = true;
-                this.initializing = false;
+                    if (!user) {
+                        console.log('[DataInitService] No user authenticated, using local data only');
+                        this._loadLocalData();
+                        this.initialized = true;
+                        this._emitInitialized(false);
+                        return true;
+                    }
 
-                console.log('[DataInitService] ✅ Data initialization complete');
-                this._emitInitialized(true);
+                    console.log(`[DataInitService] Authenticated as: ${user.email}`);
 
-                return true;
+                    // Step 3: Load subjects
+                    await this._loadSubjects();
 
-            } catch (error) {
-                console.error('[DataInitService] Initialization error:', error);
-                this.initializing = false;
-                return false;
-            }
+                    // Step 4: Subscribe to tasks for all subjects
+                    await this._subscribeToAllTasks();
+
+                    // Step 5: Mark as initialized
+                    this.initialized = true;
+
+                    console.log('[DataInitService] ✅ Data initialization complete');
+                    this._emitInitialized(true);
+
+                    return true;
+
+                } catch (error) {
+                    console.error('[DataInitService] Initialization error:', error);
+                    this._initPromise = null; // Allow retry on failure
+                    return false;
+                }
+            })();
+
+            return this._initPromise;
         }
 
         /**

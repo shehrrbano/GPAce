@@ -18,7 +18,7 @@ import storageService from './services/StorageService.js';
 // we use dynamic import with fallback
 const getStorageAdapter = async () => {
     try {
-        const { getStorage, STORAGE_KEYS } = await import('../services/StorageService.js');
+        const { getStorage, STORAGE_KEYS } = await import('./services/StorageService.js');
         return { getStorage, STORAGE_KEYS };
     } catch {
         // Fallback for non-module contexts
@@ -63,14 +63,14 @@ async function initializeCommonComponents() {
     // Load alarm handler module
     loadAlarmHandler();
 
-    // Initialize service worker for alarms
-    await initializeAlarmServiceWorker(STORAGE_KEYS);
+    // Initialize service worker for alarms (Background)
+    initializeAlarmServiceWorker(STORAGE_KEYS);
 
     // Request notification permission
     requestNotificationPermission();
 
-    // Inject navigation if NavigationComponent is available
-    await injectNavigationIfAvailable();
+    // Inject navigation if NavigationComponent is available (Background)
+    injectNavigationIfAvailable();
 
     // Inject Side Drawer component
     injectSideDrawer();
@@ -109,12 +109,12 @@ function injectScrollHideStyles() {
     const style = document.createElement('style');
     style.id = 'nav-scroll-hide-styles';
     style.textContent = `
-        .top-nav {
-            transition: transform 0.3s ease-in-out !important;
+        .pm-nav, .top-nav {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
             will-change: transform;
         }
-        .top-nav.nav-hidden {
-            transform: translateY(-100%) !important;
+        .pm-nav.nav-hidden, .top-nav.nav-hidden {
+            transform: translateY(-110%) !important;
         }
     `;
     document.head.appendChild(style);
@@ -282,93 +282,66 @@ async function injectNavigationIfAvailable() {
  * - Always visible at the very top of the page
  */
 function setupScrollHide() {
-    const nav = document.querySelector('.top-nav');
+    const nav = document.querySelector('.pm-nav') || document.querySelector('.top-nav');
     if (!nav) {
-        console.debug('[InjectHeader] No .top-nav found for scroll-hide');
+        console.debug('[InjectHeader] No navigation element found for scroll-hide');
         return;
     }
 
     let lastScrollY = window.scrollY;
     let ticking = false;
-    let hideTimer = null;
-    const scrollThreshold = 10;
-    const autoHideDelay = 2000; // 2 seconds
-
-    // Function to hide the nav (only if not at the very top)
-    function hideNav() {
-        if (window.scrollY > 0) {
-            nav.classList.add('nav-hidden');
-        }
-    }
-
-    // Function to show the nav
-    function showNav() {
-        nav.classList.remove('nav-hidden');
-    }
-
-    // Start or reset the auto-hide timer
-    function startAutoHideTimer() {
-        if (hideTimer) {
-            clearTimeout(hideTimer);
-        }
-        hideTimer = setTimeout(hideNav, autoHideDelay);
-    }
-
-    // Stop the auto-hide timer
-    function stopAutoHideTimer() {
-        if (hideTimer) {
-            clearTimeout(hideTimer);
-            hideTimer = null;
-        }
-    }
+    const scrollThreshold = 10; // Slightly lower for more responsive "up" detection
 
     function handleScroll() {
         const currentScrollY = window.scrollY;
-        const scrollDelta = currentScrollY - lastScrollY;
+        
+        // Premium touch: Add a shadow/border when not at the very top
+        if (currentScrollY > 10) {
+            nav.classList.add('nav-scrolled');
+        } else {
+            nav.classList.remove('nav-scrolled');
+        }
 
-        // At the very top - always show, no auto-hide
-        if (currentScrollY <= 0) {
-            showNav();
-            stopAutoHideTimer();
+        // Always show at top (prevents mobile bounce issues)
+        if (currentScrollY <= 60) {
+            nav.classList.remove('nav-hidden');
             lastScrollY = currentScrollY;
             ticking = false;
             return;
         }
 
-        // Trigger show/hide based on scroll direction
-        if (Math.abs(scrollDelta) >= scrollThreshold) {
-            if (scrollDelta < 0) {
-                // Scrolling UP - show nav, then start timer to hide after 2s
-                showNav();
-                startAutoHideTimer();
-            } else {
-                // Scrolling DOWN - hide immediately
-                hideNav();
-                stopAutoHideTimer(); // No need for timer when already hidden
-            }
+        // Calculate delta
+        const delta = currentScrollY - lastScrollY;
+
+        // Hide when scrolling DOWN past threshold
+        if (delta > scrollThreshold) {
+            nav.classList.add('nav-hidden');
+            lastScrollY = currentScrollY; // Reset anchor
+        } 
+        // Show when scrolling UP past threshold
+        else if (delta < -scrollThreshold) {
+            nav.classList.remove('nav-hidden');
+            lastScrollY = currentScrollY; // Reset anchor
         }
 
-        lastScrollY = currentScrollY;
         ticking = false;
     }
 
     window.addEventListener('scroll', () => {
         if (!ticking) {
-            requestAnimationFrame(handleScroll);
+            window.requestAnimationFrame(handleScroll);
             ticking = true;
         }
     }, { passive: true });
 
-    // Start auto-hide timer on page load (will hide after 2 seconds)
-    startAutoHideTimer();
-
-    console.log('[InjectHeader] Scroll-hide behavior initialized with auto-hide');
+    console.log('[InjectHeader] Smart scroll-hide behavior initialized');
 }
 
-// Initialize on DOM ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeCommonComponents);
-} else {
-    initializeCommonComponents();
+// Export for module support
+export { initializeCommonComponents };
+
+// Expose to window for global access
+if (typeof window !== 'undefined') {
+    window.initializeCommonComponents = initializeCommonComponents;
 }
 

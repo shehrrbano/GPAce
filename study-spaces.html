@@ -9,7 +9,7 @@
     <!-- PWA Manifest & Branding -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#050b18">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="assets/images/gpace-logo-white.png">
     <title>GPAce — Daily Setup</title>
@@ -231,9 +231,6 @@
                 </div>
                 <div class="d-flex gap-2 align-items-center">
                     <div class="sync-status d-none" id="syncStatus"></div>
-                    <button class="btn-ghost" id="syncNowBtn" title="Sync now">
-                        <i class="bi bi-arrow-repeat"></i> Sync
-                    </button>
                     <button class="btn-ghost" id="helpBtn" data-bs-toggle="modal" data-bs-target="#helpModal" title="Help">
                         <i class="bi bi-question-circle"></i>
                     </button>
@@ -444,14 +441,12 @@
         import {
             saveStudySpacesToFirestore,
             loadStudySpacesFromFirestore,
-            deleteStudySpaceFromFirestore,
-            forceSyncStudySpaces
+            deleteStudySpaceFromFirestore
         } from './js/studySpacesFirestore.js';
 
         window.saveStudySpacesToFirestore = saveStudySpacesToFirestore;
         window.loadStudySpacesFromFirestore = loadStudySpacesFromFirestore;
         window.deleteStudySpaceFromFirestore = deleteStudySpaceFromFirestore;
-        window.forceSyncStudySpaces = forceSyncStudySpaces;
 
         window.dispatchEvent(new Event('firestoreFunctionsReady'));
     </script>
@@ -713,10 +708,12 @@
     </script>
 
     <!-- Sidebar + cross-tab sync + injected header -->
+    <script type="module" src="js/core/BootstrapManager.js"></script>
     <script type="module" src="js/sideDrawer.js"></script>
     <script type="module" src="js/cross-tab-sync.js"></script>
     <script type="module" src="/js/inject-header.js"></script>
 </body>
 
 </html>
+
 

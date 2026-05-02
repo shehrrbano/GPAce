@@ -9,7 +9,7 @@
   <!-- PWA Manifest & Branding -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#050b18">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="assets/images/gpace-logo-white.png">
   
@@ -68,44 +68,31 @@
 
   <!-- ESM Bridge: Bootstraps core services -->
   <script type="module">
-    console.log('[Grind] Bootstrapping services...');
+    import bootstrapManager from './js/core/BootstrapManager.js';
+    
+    console.log('[Grind] Bootstrapping app...');
     try {
-        // Core Services
-        const { storageService } = await import('./js/services/StorageService.js');
+        // Initial setup for controllers/services that might be needed globally
         const SemesterService = (await import('./js/services/SemesterService.js')).default;
-        const taskSystem = (await import('./js/core/TaskSystem.js')).default;
-        const DataInitializationService = (await import('./js/services/DataInitializationService.js')).default;
-        
-        // Controllers
         const TimerController = (await import('./js/controllers/TimerController.js')).default;
-        const EnergyController = (await import('./js/controllers/EnergyController.js')).default;
         const noteToTaskController = (await import('./js/controllers/NoteToTaskController.js')).default;
         
-        // Global Mapping
-        window.storageService = storageService;
         window.SemesterService = SemesterService;
-        window.TaskSystem = taskSystem;
-        window.DataInitializationService = DataInitializationService;
         window.timerController = TimerController;
-        window.energyController = EnergyController;
         window.noteToTaskController = noteToTaskController;
         
-        // Initialize
-        await DataInitializationService.init();
-        await SemesterService.initialize();
-        await taskSystem.init();
+        // Execute unified boot sequence
+        await bootstrapManager.boot('Grind Mode');
         
         console.log('[Grind] Services Ready');
         window.gpace_ready = true;
         window.dispatchEvent(new CustomEvent('gpace-ready'));
     } catch (e) {
         console.error('[Grind] Boot Error:', e);
-        window.onerror(e.message, '', 0);
     }
   </script>
 
   <!-- UI & Plugin Scripts -->
-  <script src="js/services/BiometricService.js"></script>
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/firestore.js"></script>
   <script type="module" src="js/sideDrawer.js"></script>
@@ -509,6 +496,7 @@
   </script>
 
   <!-- Research & Key Management Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script src="js/ai-latex-conversion.js"></script>
@@ -517,4 +505,5 @@
 
 </body>
 </html>
+
 
